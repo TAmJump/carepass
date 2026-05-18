@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="販促費を、地域貢献に変える。Care Support Pass の協力会社として、自社販促としてのクーポンを提供しながら、地域の先輩世代の住まいを支える参加制度です。">
+<title>協力会社の方へ | Care Support Pass</title>
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:title" content="販促費を、地域貢献に変える | Care Support Pass 協力会社制度">
+<meta property="og:description" content="クーポンは、寄附ではありません。地域の未来に参加する販促です。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://carepass.tamjump.com/partners.html">
+<meta property="og:image" content="https://carepass.tamjump.com/og.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+:root{ --warm:#F4A261; --warm-soft:#FCEFE0; }
+
+.partner-hero{
+  padding:120px 24px 96px;
+  background:radial-gradient(900px 500px at 80% 10%,rgba(244,162,97,.10),transparent 60%),radial-gradient(700px 400px at 20% 80%,rgba(47,125,92,.06),transparent 60%),#fff;
+  text-align:center;
+}
+.partner-hero .eyebrow{color:var(--warm);font-weight:700;letter-spacing:.18em}
+.partner-hero h1{
+  font-size:clamp(34px,5vw,60px);
+  line-height:1.25;font-weight:800;letter-spacing:-.015em;
+  margin:20px 0 24px;color:var(--ink);
+}
+.partner-hero h1 .em{
+  background:linear-gradient(transparent 60%,#FCEFE0 60%);padding:0 6px;
+}
+.partner-hero .lead{
+  font-size:17px;line-height:2;color:var(--sub);
+  max-width:720px;margin:0 auto 36px;
+}
+.partner-hero .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.btn-warm{background:var(--warm);color:#fff;border-color:var(--warm)}
+.btn-warm:hover{background:#E08A4B;border-color:#E08A4B;color:#fff}
+.partner-hero .micro{font-size:11.5px;color:var(--muted);max-width:680px;margin:0 auto;line-height:1.85;text-align:center;padding:14px 18px;background:var(--soft);border-radius:10px}
+
+.partner-hero-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:880px;margin:48px auto 0}
+.ph-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;text-align:left}
+.ph-card .ph-num{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.18em;color:var(--warm);font-weight:700;margin-bottom:8px}
+.ph-card h4{font-size:14px;font-weight:700;margin:0 0 6px;color:var(--ink)}
+.ph-card p{font-size:12.5px;line-height:1.8;color:var(--sub);margin:0}
+@media(max-width:680px){.partner-hero-3{grid-template-columns:1fr}}
+
+.partner-why{padding:96px 24px;background:var(--soft)}
+.partner-why .wrap{max-width:920px;margin:0 auto;text-align:center}
+.partner-why h2{font-size:clamp(26px,3.4vw,38px);line-height:1.4;font-weight:700;margin:14px 0 20px;color:var(--ink);letter-spacing:-.005em}
+.partner-why p{font-size:16px;line-height:2.05;color:var(--sub);max-width:680px;margin:0 auto}
+
+.benefits{padding:96px 24px}
+.benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1100px;margin:0 auto}
+.bn-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px 28px;transition:transform .2s ease}
+.bn-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.04)}
+.bn-icon{width:44px;height:44px;border-radius:12px;background:var(--warm-soft);color:var(--warm);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.bn-card h4{font-size:16px;font-weight:700;margin:0 0 10px;color:var(--ink)}
+.bn-card p{font-size:13.5px;line-height:1.85;color:var(--sub);margin:0}
+@media(max-width:880px){.benefits-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.benefits-grid{grid-template-columns:1fr}}
+
+.coupon-design{padding:96px 24px;background:var(--soft)}
+.coupon-design .wrap{max-width:1000px;margin:0 auto}
+.cd-table-wrap{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:32px 0}
+.cd-table{width:100%;border-collapse:collapse;font-size:14px}
+.cd-table thead th{background:var(--soft);color:var(--sub);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:14px 18px;text-align:left;border-bottom:2px solid var(--line)}
+.cd-table thead th.num{text-align:right}
+.cd-table tbody td{padding:16px 18px;border-bottom:1px solid var(--line-soft);color:var(--ink);font-size:14px}
+.cd-table tbody td.num{text-align:right;font-family:'Inter',sans-serif;font-weight:600}
+.cd-table tbody tr:last-child td{border-bottom:0}
+
+.safe-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:32px 0}
+.safe-card{border-radius:16px;padding:28px;border:1px solid var(--line)}
+.safe-card.ng{background:#FFF7EE;border-color:#F5D4B0;border-left:4px solid #B45528}
+.safe-card.ok{background:var(--accent-soft2);border-color:var(--accent-soft);border-left:4px solid var(--accent)}
+.safe-card h4{font-size:14px;font-weight:700;margin:0 0 14px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.safe-card.ng h4{color:#7A4E1F}
+.safe-card.ok h4{color:var(--accent-dark)}
+.safe-card ul{list-style:none;padding:0;margin:0}
+.safe-card li{font-size:13px;line-height:1.85;color:var(--ink);padding:6px 0 6px 22px;position:relative}
+.safe-card.ng li::before{content:"✕";position:absolute;left:0;color:#B45528;font-weight:700}
+.safe-card.ok li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
+@media(max-width:680px){.safe-grid{grid-template-columns:1fr}}
+
+.by-industry{padding:96px 24px}
+.industry-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1100px;margin:32px auto 0}
+.ind-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 24px}
+.ind-card h4{font-size:15px;font-weight:700;margin:0 0 14px;color:var(--ink);padding-bottom:10px;border-bottom:2px solid var(--accent-soft)}
+.ind-card ul{list-style:none;padding:0;margin:0}
+.ind-card li{font-size:13px;line-height:1.85;color:var(--ink);padding:7px 0 7px 18px;position:relative;border-bottom:1px solid var(--line-soft)}
+.ind-card li:last-child{border-bottom:0}
+.ind-card li::before{content:"";position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--warm)}
+@media(max-width:900px){.industry-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:580px){.industry-grid{grid-template-columns:1fr}}
+
+.partner-plans{padding:96px 24px;background:var(--soft)}
+.pp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1100px;margin:32px auto 0}
+.pp-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:32px 26px;position:relative;display:flex;flex-direction:column}
+.pp-card.featured{background:linear-gradient(180deg,var(--warm-soft),#fff 70%);border-color:var(--warm)}
+.pp-card .pp-name{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;color:var(--sub);font-weight:600;margin-bottom:8px;text-transform:uppercase}
+.pp-card.featured .pp-name{color:#9B5C2E}
+.pp-card h4{font-size:18px;font-weight:700;margin:0 0 8px;color:var(--ink)}
+.pp-card .pp-price{font-family:'Inter',sans-serif;font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-.015em;margin-bottom:18px}
+.pp-card .pp-price small{font-size:13px;color:var(--sub);font-weight:500;margin-left:2px}
+.pp-card ul{list-style:none;padding:0;margin:0 0 22px;flex:1}
+.pp-card li{font-size:12.5px;line-height:1.85;color:var(--ink);padding:6px 0 6px 18px;position:relative;border-bottom:1px solid var(--line-soft)}
+.pp-card li:last-child{border-bottom:0}
+.pp-card li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700;font-size:11px;top:7px}
+.pp-card .pp-target{font-size:11.5px;color:var(--muted);line-height:1.7;padding-top:12px;border-top:1px solid var(--line)}
+@media(max-width:900px){.pp-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.pp-grid{grid-template-columns:1fr}}
+
+.partner-flow{padding:96px 24px}
+.flow-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1100px;margin:32px auto 0}
+.flow-step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px 24px;position:relative}
+.flow-step .fs-step{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;color:var(--warm);font-weight:700;margin-bottom:12px}
+.flow-step h4{font-size:15px;font-weight:700;margin:0 0 8px;color:var(--ink)}
+.flow-step p{font-size:12.5px;line-height:1.8;color:var(--sub);margin:0}
+@media(max-width:900px){.flow-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.flow-grid{grid-template-columns:1fr}}
+
+.partner-faq{padding:96px 24px;background:var(--soft)}
+.faq-q{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin-bottom:12px}
+.faq-q h4{font-size:14.5px;font-weight:700;margin:0 0 10px;color:var(--ink)}
+.faq-q p{font-size:13.5px;line-height:1.95;color:var(--sub);margin:0}
+
+.partner-apply{padding:96px 24px}
+.apply-form{max-width:680px;margin:32px auto 0;background:#fff;border:1px solid var(--line);border-radius:22px;padding:48px}
+.apply-form h3{font-size:20px;font-weight:700;margin:0 0 8px;color:var(--ink)}
+.apply-form > p{font-size:13.5px;color:var(--sub);margin:0 0 28px}
+@media(max-width:600px){.apply-form{padding:32px 24px}}
+
+.final-section{padding:120px 24px;text-align:center;background:linear-gradient(180deg,#fff,var(--warm-soft) 100%)}
+.final-section h2{font-size:clamp(28px,4vw,46px);line-height:1.35;font-weight:800;letter-spacing:-.01em;margin:0 0 20px;color:var(--ink);max-width:780px;margin-left:auto;margin-right:auto}
+.final-section h2 .em{background:linear-gradient(transparent 60%,#FCEFE0 60%);padding:0 6px}
+.final-section p{font-size:15px;line-height:2;color:var(--sub);max-width:560px;margin:0 auto 36px}
+
+.legal-callout{max-width:880px;margin:48px auto 0;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:24px 28px;font-size:12px;line-height:1.95;color:var(--sub)}
+.legal-callout b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand"><a href="/"><span class="dot">●</span>Care Support Pass</a></div>
+    <div class="nav-menu">
+      <a class="nav-link" href="/#concept">コンセプト</a>
+      <a class="nav-link" href="/#plans">プラン</a>
+      <a class="nav-link" href="/#eligibility">加盟施設</a>
+      <a class="nav-link" href="/partners.html">協力会社</a>
+      <a class="nav-link" href="/#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn primary" href="#apply">協力会社として参加</a>
+    </div>
+  </div>
+</nav>
+
+<header class="partner-hero">
+  <div style="max-width:1000px;margin:0 auto">
+    <span class="eyebrow">For Partner Companies</span>
+    <h1>販促費を、<br><span class="em">地域貢献に変える。</span></h1>
+    <p class="lead">
+      Care Support Pass は、会員に生活応援クーポンを届ける月額会員サービスです。<br>
+      協力会社は、自社の商品・サービスに使えるクーポンを提供することで、地域の先輩世代の住まい支援に参加しながら、<b>新しい来店理由</b>をつくることができます。
+    </p>
+    <div class="cta-row">
+      <a class="btn primary large btn-warm" href="#apply">協力会社として参加する</a>
+      <a class="btn large" href="#plans-partner">プランを見る</a>
+    </div>
+
+    <div class="partner-hero-3">
+      <div class="ph-card">
+        <div class="ph-num">01</div>
+        <h4>クーポンは自社販促として発行</h4>
+        <p>Care Support Pass や TAMJ が金券を発行・精算するものではありません。</p>
+      </div>
+      <div class="ph-card">
+        <div class="ph-num">02</div>
+        <h4>会員に店舗を紹介</h4>
+        <p>支援参加済みの会員だけにクーポン配信。新規来店のきっかけに。</p>
+      </div>
+      <div class="ph-card">
+        <div class="ph-num">03</div>
+        <h4>地域貢献を見える化</h4>
+        <p>「Care Support Partner」として、地域支援への参加を発信できます。</p>
+      </div>
+    </div>
+
+    <p class="micro" style="margin-top:36px">
+      ※ クーポンは各協力会社が自社の商品・サービスに対して提供する会員向け優待です。Care Support Pass が金銭的価値を発行・販売・精算するものではありません。処方薬・保険調剤の自己負担分など、法令上割引が不適切な商品・サービスは対象外です。
+    </p>
+  </div>
+</header>
+
+<section class="partner-why">
+  <div class="wrap">
+    <span class="eyebrow">Why Partners Matter</span>
+    <h2>100円の会員サービスだけでは、社会は変わらない。<br>地域のお店が参加して、初めて仕組みになる。</h2>
+    <p>
+      Care Support Pass は、個人・企業・店舗・NPO・公益財団がつながり、先輩世代の住まいと暮らしを支える仕組みです。<br><br>
+      会員は、月100円から参加し、提携店舗の生活応援クーポンを利用します。協力会社は、クーポンを提供することで、会員に自社の商品・サービスを届けながら、地域の支え合いに参加できます。<br><br>
+      <b>これは寄附ではありません。地域の未来に参加する、新しい販促です。</b>
+    </p>
+  </div>
+</section>
+
+<section class="benefits">
+  <div class="wrap" style="max-width:1100px;margin:0 auto">
+    <div class="section-head center">
+      <span class="eyebrow">Partner Benefits</span>
+      <h2 class="section-title">地域貢献で終わらない。<br>ちゃんと、お店にも価値がある。</h2>
+    </div>
+    <div class="benefits-grid">
+      <div class="bn-card">
+        <div class="bn-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <h4>新しい来店理由ができる</h4>
+        <p>Care Support Pass 会員に、クーポンを通じて店舗を知ってもらえます。期限付きで来店動機が生まれます。</p>
+      </div>
+      <div class="bn-card">
+        <div class="bn-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h4>地域貢献を見える化</h4>
+        <p>「Care Support Partner」として、地域の先輩世代を支えるお店であることを発信できます。バッジ・ステッカーを提供。</p>
+      </div>
+      <div class="bn-card">
+        <div class="bn-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4>高齢者家族層に届く</h4>
+        <p>介護・住まい・生活支援に関心のある家族層にアプローチできます。購買力のある層への新規接点。</p>
+      </div>
+      <div class="bn-card">
+        <div class="bn-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h4>平日・昼間の集客に</h4>
+        <p>利用条件を設定することで、空き時間帯の集客施策として活用できます。月単位の販促予算で運用可能。</p>
+      </div>
+      <div class="bn-card">
+        <div class="bn-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h4>販促費として設計しやすい</h4>
+        <p>値引きは自社商品・サービスの販促として扱えます。寄附ではなく、会計上も販促費として計上可能。</p>
+      </div>
+      <div class="bn-card">
+        <div class="bn-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <h4>法人・施設ネットワークに広がる</h4>
+        <p>Care Support Pass の加盟施設、提携法人、NPO 連携先に店舗情報を届けられます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="coupon-design">
+  <div class="wrap">
+    <div class="section-head center">
+      <span class="eyebrow">Coupon Design</span>
+      <h2 class="section-title">クーポンは、会費額の<br>2倍相当を目安に。</h2>
+      <p class="section-lead">支援対象施設の規模に応じた会費に対し、2倍を目安としたクーポン提供をお願いしています。<br>ただし一律ではなく、各社が業種・商品単価に応じて利用条件を設計できます。</p>
+    </div>
+
+    <div class="cd-table-wrap">
+      <table class="cd-table">
+        <thead>
+          <tr><th>支援対象施設の規模</th><th class="num">会員1口</th><th class="num">クーポン目安</th><th class="num">有効期限</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>9〜29室</td><td class="num">月100円</td><td class="num">最大200円相当</td><td class="num">支援日から30日</td></tr>
+          <tr><td>30〜44室</td><td class="num">月150円</td><td class="num">最大300円相当</td><td class="num">支援日から30日</td></tr>
+          <tr><td>45〜59室</td><td class="num">月200円</td><td class="num">最大400円相当</td><td class="num">支援日から30日</td></tr>
+          <tr><td>60〜79室</td><td class="num">月250円</td><td class="num">最大500円相当</td><td class="num">支援日から30日</td></tr>
+          <tr><td>80室以上</td><td class="num">月300円</td><td class="num">最大600円相当</td><td class="num">支援日から30日</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:12.5px;color:var(--muted);line-height:1.85;margin:0 0 32px">
+      協力会社には、会費額の2倍を目安とした会員限定クーポンの提供をお願いしています。クーポン内容・対象商品・利用条件・有効期限・提供有無は、協力会社ごとに異なります。
+    </p>
+
+    <h3 style="font-size:20px;font-weight:700;margin:48px 0 18px;text-align:center;color:var(--ink)">最低利用金額を設定します。</h3>
+    <p style="font-size:14px;color:var(--sub);text-align:center;margin:0 0 24px">無条件の割引ではなく、店舗側の販促として自然に設計できる金額設定を推奨します。</p>
+    <div class="cd-table-wrap">
+      <table class="cd-table">
+        <thead>
+          <tr><th>クーポン額</th><th class="num">最低利用金額の目安</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>200円OFF</td><td class="num">1,000円以上のお買い物で</td></tr>
+          <tr><td>300円OFF</td><td class="num">1,500円以上のお買い物で</td></tr>
+          <tr><td>400円OFF</td><td class="num">2,000円以上のお買い物で</td></tr>
+          <tr><td>500円OFF</td><td class="num">2,500円以上のお買い物で</td></tr>
+          <tr><td>600円OFF</td><td class="num">3,000円以上のお買い物で</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:20px;font-weight:700;margin:64px 0 18px;text-align:center;color:var(--ink)">金券ではなく、自社サービスの値引きとして設計します。</h3>
+    <div class="safe-grid">
+      <div class="safe-card ng">
+        <h4>避ける設計</h4>
+        <ul>
+          <li>200円分の金券</li>
+          <li>どの商品にも使える現金同等券</li>
+          <li>他社でも使える共通券</li>
+          <li>TAMJ が後日精算するクーポン</li>
+          <li>処方薬・保険調剤の自己負担分への割引</li>
+          <li>現金化できるポイント</li>
+        </ul>
+      </div>
+      <div class="safe-card ok">
+        <h4>推奨する設計</h4>
+        <ul>
+          <li>1,000円以上の食事で200円OFF</li>
+          <li>2,000円以上の日用品購入で300円OFF</li>
+          <li>3,000円以上の介護用品購入で600円OFF</li>
+          <li>初回配食サービス500円OFF</li>
+          <li>タクシー予約手数料300円OFF</li>
+          <li>家財整理見積無料</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="by-industry">
+  <div class="wrap" style="max-width:1100px;margin:0 auto">
+    <div class="section-head center">
+      <span class="eyebrow">By Industry</span>
+      <h2 class="section-title">業種に合わせた優待設計が可能。</h2>
+    </div>
+    <div class="industry-grid">
+      <div class="ind-card">
+        <h4>飲食店</h4>
+        <ul>
+          <li>1,000円以上で200円OFF</li>
+          <li>平日ランチ100円OFF</li>
+          <li>テイクアウト弁当50円OFF</li>
+          <li>家族来店時のドリンクサービス</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>ドラッグストア</h4>
+        <ul>
+          <li>日用品2,000円以上で300円OFF</li>
+          <li>紙おむつ・口腔ケア用品5%OFF</li>
+          <li>介護用品3,000円以上で500円OFF</li>
+          <li>配送手数料割引</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>薬局</h4>
+        <ul>
+          <li>OTC医薬品・衛生用品の割引</li>
+          <li>口腔ケア用品の割引</li>
+          <li>介護用品相談</li>
+          <li>在宅用品セット割引</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>配食サービス</h4>
+        <ul>
+          <li>初回注文500円OFF</li>
+          <li>1週間お試しセット割引</li>
+          <li>高齢者向け弁当100円OFF</li>
+          <li>定期配送切替手数料無料</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>タクシー</h4>
+        <ul>
+          <li>予約配車手数料割引</li>
+          <li>初回利用300円OFF</li>
+          <li>通院同行提携プランの優待</li>
+          <li>家族同乗時の割引</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>理美容</h4>
+        <ul>
+          <li>カット500円OFF</li>
+          <li>訪問理美容初回割引</li>
+          <li>シニア向けメニュー優待</li>
+          <li>家族同伴予約優待</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>家財整理</h4>
+        <ul>
+          <li>見積無料</li>
+          <li>作業費1,000円OFF</li>
+          <li>入居前片付けパック割引</li>
+          <li>遺品整理優待</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>不動産・住み替え</h4>
+        <ul>
+          <li>高齢者住み替え相談無料</li>
+          <li>空き家相談無料</li>
+          <li>残置物整理提携割引</li>
+          <li>引越し業者連携優待</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <h4>介護用品店</h4>
+        <ul>
+          <li>3,000円以上で600円OFF</li>
+          <li>福祉用具レンタル相談無料</li>
+          <li>住宅改修見積無料</li>
+          <li>家族向け使い方相談</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:11.5px;color:var(--muted);max-width:760px;margin:24px auto 0;text-align:center;line-height:1.85">
+      ※ いずれも例示です。各協力会社が業種・商品単価・客層に合わせて利用条件を独自に設計できます。処方薬・保険調剤の自己負担分は対象外です。
+    </p>
+  </div>
+</section>
+
+<section id="plans-partner" class="partner-plans">
+  <div class="wrap" style="max-width:1100px;margin:0 auto">
+    <div class="section-head center">
+      <span class="eyebrow">Partner Plans</span>
+      <h2 class="section-title">まずは無料から、参加できます。</h2>
+      <p class="section-lead">店舗・企業の規模や目的に合わせて、4つの参加プランをご用意しています。</p>
+    </div>
+    <div class="pp-grid">
+      <div class="pp-card">
+        <div class="pp-name">Free Partner</div>
+        <h4>無料パートナー</h4>
+        <div class="pp-price">¥0<small>/月</small></div>
+        <ul>
+          <li>クーポン提供</li>
+          <li>店舗名掲載</li>
+          <li>Care Support Partner バッジ</li>
+          <li>月1回まで優待掲載</li>
+        </ul>
+        <div class="pp-target">まず試したい店舗</div>
+      </div>
+      <div class="pp-card">
+        <div class="pp-name">Local Partner</div>
+        <h4>地域パートナー</h4>
+        <div class="pp-price">¥3,000<small>/月</small></div>
+        <ul>
+          <li>店舗紹介ページ</li>
+          <li>優先掲載</li>
+          <li>クーポン月3本まで</li>
+          <li>活動レポート掲載</li>
+          <li>SNS紹介</li>
+        </ul>
+        <div class="pp-target">地域客を増やしたい店舗</div>
+      </div>
+      <div class="pp-card featured">
+        <div class="pp-name">Care Partner</div>
+        <h4>ケアパートナー</h4>
+        <div class="pp-price">¥10,000<small>/月</small></div>
+        <ul>
+          <li>重点掲載</li>
+          <li>クーポン月10本まで</li>
+          <li>法人/施設向けPR枠</li>
+          <li>特集記事掲載</li>
+          <li>店舗バナー掲載</li>
+        </ul>
+        <div class="pp-target">ドラッグストア・配食・介護用品・家財整理</div>
+      </div>
+      <div class="pp-card">
+        <div class="pp-name">Sponsor Partner</div>
+        <h4>スポンサー</h4>
+        <div class="pp-price">¥30,000<small>〜/月</small></div>
+        <ul>
+          <li>特集掲載</li>
+          <li>企業協賛枠</li>
+          <li>NPO/公益財団連携企画</li>
+          <li>地域キャンペーン連動</li>
+          <li>施設向け紹介枠</li>
+        </ul>
+        <div class="pp-target">地域企業・チェーン・法人向けサービス会社</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partner-flow">
+  <div class="wrap" style="max-width:1100px;margin:0 auto">
+    <div class="section-head center">
+      <span class="eyebrow">How to Join</span>
+      <h2 class="section-title">最短3ステップで参加できます。</h2>
+    </div>
+    <div class="flow-grid">
+      <div class="flow-step">
+        <div class="fs-step">STEP 01</div>
+        <h4>申し込み</h4>
+        <p>店舗情報、業種、提供できる優待内容を送信。</p>
+      </div>
+      <div class="flow-step">
+        <div class="fs-step">STEP 02</div>
+        <h4>クーポン内容の確認</h4>
+        <p>対象商品、利用条件、有効期限、除外商品を担当者と相談。</p>
+      </div>
+      <div class="flow-step">
+        <div class="fs-step">STEP 03</div>
+        <h4>掲載開始</h4>
+        <p>Care Support Pass サイト・会員ページ・メールで店舗優待を紹介。</p>
+      </div>
+      <div class="flow-step">
+        <div class="fs-step">STEP 04</div>
+        <h4>利用状況の共有</h4>
+        <p>利用数や反応を確認し、クーポン内容を継続的に改善。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partner-faq">
+  <div class="wrap" style="max-width:820px;margin:0 auto">
+    <div class="section-head center">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="section-title">よくある質問</h2>
+    </div>
+    <div class="faq-q"><h4>Q. クーポンは寄附ですか？</h4><p>A. いいえ。協力会社が自社商品・サービスに対して提供する販促用の会員優待です。</p></div>
+    <div class="faq-q"><h4>Q. 割引額は必ず2倍ですか？</h4><p>A. 原則として、会費額の2倍相当を目安としています。ただし、業種や商品単価に応じて個別に調整できます。</p></div>
+    <div class="faq-q"><h4>Q. TAMJ から割引分の精算はありますか？</h4><p>A. 原則ありません。クーポンは協力会社が自社販促として提供するものです。</p></div>
+    <div class="faq-q"><h4>Q. 処方薬にもクーポンを使えますか？</h4><p>A. 使えません。処方薬・保険調剤の自己負担分は対象外です。</p></div>
+    <div class="faq-q"><h4>Q. 小さな店舗でも参加できますか？</h4><p>A. はい。個人店・小規模店舗でも参加できます。まずは無料の Free Partner から始められます。</p></div>
+    <div class="faq-q"><h4>Q. クーポン内容は変更できますか？</h4><p>A. はい。利用状況を見ながら、対象商品・割引額・条件を変更できます。</p></div>
+    <div class="faq-q"><h4>Q. クーポンの有効期限はどうなりますか？</h4><p>A. 原則として、会員の支援日から30日間です。期限切れ後は自動失効します。</p></div>
+  </div>
+</section>
+
+<section id="apply" class="partner-apply">
+  <div class="wrap" style="max-width:880px;margin:0 auto">
+    <div class="section-head center">
+      <span class="eyebrow">Apply</span>
+      <h2 class="section-title">協力会社として参加する。</h2>
+    </div>
+    <div class="apply-form">
+      <h3>協力会社申し込みフォーム</h3>
+      <p>下記フォームにご記入ください。担当者より2〜3営業日以内にご連絡いたします。</p>
+      <form onsubmit="event.preventDefault();window.location.href='/thanks.html?type=store';">
+        <div class="form-grid-2">
+          <div class="form-row"><label>会社・店舗名<span class="req">必須</span></label><input type="text" required></div>
+          <div class="form-row"><label>業種<span class="req">必須</span></label>
+            <select required>
+              <option value="">選択してください</option>
+              <option>飲食店</option><option>カフェ</option><option>弁当店</option>
+              <option>スーパー</option><option>ドラッグストア</option><option>薬局</option>
+              <option>配食サービス</option><option>タクシー会社</option><option>理美容</option>
+              <option>クリーニング</option><option>介護用品店</option><option>家財整理</option>
+              <option>引越し</option><option>不動産</option><option>その他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row"><label>所在地<span class="req">必須</span></label><input type="text" placeholder="例：東京都渋谷区..." required></div>
+        <div class="form-grid-2">
+          <div class="form-row"><label>担当者名<span class="req">必須</span></label><input type="text" required></div>
+          <div class="form-row"><label>電話番号<span class="opt">任意</span></label><input type="tel"></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" required></div>
+          <div class="form-row"><label>Webサイト・SNS<span class="opt">任意</span></label><input type="url"></div>
+        </div>
+        <div class="form-row"><label>希望参加プラン<span class="req">必須</span></label>
+          <select required>
+            <option value="">選択してください</option>
+            <option>Free Partner（無料）</option>
+            <option>Local Partner（月3,000円）</option>
+            <option>Care Partner（月10,000円）</option>
+            <option>Sponsor Partner（月30,000円〜）</option>
+            <option>まずは相談したい</option>
+          </select>
+        </div>
+        <div class="form-row"><label>提供できるクーポン内容<span class="opt">任意</span></label><textarea placeholder="例：1,000円以上のお食事で200円OFF / 対象は通常メニュー、酒類のみ会計は除外 など"></textarea></div>
+        <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea></textarea></div>
+
+        <div class="consent-box">
+          <h5 style="font-size:13px;font-weight:700;color:var(--ink);margin:0 0 12px">同意事項</h5>
+          <ul>
+            <li>クーポンは自社商品・サービスの優待として提供します。</li>
+            <li>TAMJ に割引分の精算を求めません。</li>
+            <li>現金化・譲渡・払戻し不可の条件を設定します。</li>
+            <li>処方薬・保険調剤の自己負担分は対象外とします。</li>
+            <li>掲載内容の事前確認に同意します。</li>
+          </ul>
+          <label class="consent-check">
+            <input type="checkbox" required>
+            <span>上記条件と Care Support Pass の運営方針に同意します。</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn primary large btn-warm" style="width:100%">協力会社として申し込む</button>
+      </form>
+    </div>
+
+    <div class="legal-callout">
+      <p style="margin:0"><b>法的事項：</b>Care Support Pass 協力会社が提供するクーポンは、各協力会社が自社の商品・サービスに対して提供する会員向け優待です。Care Support Pass または TAMJ が、金銭的価値を発行・販売・精算するものではありません。クーポンの対象商品、利用条件、有効期限、割引額は各協力会社が定めます。処方薬・保険調剤の自己負担分など、法令上割引が不適切な商品・サービスは対象外です。</p>
+    </div>
+  </div>
+</section>
+
+<section class="final-section">
+  <div class="wrap">
+    <span class="eyebrow" style="color:var(--warm)">Join Us</span>
+    <h2>あなたのお店のクーポンが、<br><span class="em">地域の支え合いを動かす。</span></h2>
+    <p>
+      Care Support Pass は、支援する人だけに負担を求める仕組みではありません。<br>
+      会員は生活優待を使える。お店には新しい来店理由が生まれる。<br>
+      その一部が、先輩世代の住まいを支える力になる。
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn primary large btn-warm" href="#apply">協力会社として参加する</a>
+      <a class="btn large" href="https://tamjump.com/contact.html" target="_blank" rel="noopener">まずは相談する</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <div class="footer-brand"><span class="dot">●</span>Care Support Pass</div>
+        <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
+      </div>
+      <div class="footer-col">
+        <h5>Service</h5>
+        <a href="/#concept">コンセプト</a>
+        <a href="/#mechanism">仕組み</a>
+        <a href="/#plans">プラン</a>
+        <a href="/#coupons">優待例</a>
+        <a href="/#targets">支援先</a>
+      </div>
+      <div class="footer-col">
+        <h5>For Partners</h5>
+        <a href="/partners.html">協力会社の方</a>
+        <a href="/#eligibility">加盟施設</a>
+        <a href="/#corporate">法人の方</a>
+        <a href="https://tamjump.com/" target="_blank" rel="noopener">運営会社について</a>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <a href="/#faq">FAQ</a>
+        <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a>
+        <a href="/#apply">お申し込み</a>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <p><b style="color:#fff">Care Support Pass は、月額会員サービスです。</b></p>
+      <p>提携店優待は各店舗が提供する割引・特典であり、Care Support Pass が金銭的価値を発行・販売するものではありません。</p>
+      <p>会費は寄附金ではありません。寄附控除を希望される方には、NPO・公益財団等を通じた寄附窓口をご案内します。</p>
+      <p>処方薬・保険調剤の自己負担分への割引提供は行いません。対象は日用品・介護用品・店舗独自サービス等に限定します。</p>
+    </div>
+    <div class="footer-bot">
+      <div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div>
+      <div><a href="https://tamjump.com/terms.html" target="_blank" rel="noopener">利用規約</a> ・ <a href="https://tamjump.com/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> ・ <a href="https://tamjump.com/tokuteishou.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a></div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

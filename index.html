@@ -397,6 +397,24 @@ h2.section-title{
 
 /* ============ COUPONS ============ */
 .coupon-section{background:var(--soft)}
+.coupon-rules{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  max-width:1080px;margin:0 auto 56px;
+}
+.coupon-rules .cr-item{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:24px 22px;display:flex;flex-direction:column;
+}
+.coupon-rules .cr-icon{
+  width:40px;height:40px;border-radius:12px;
+  background:var(--accent-soft2);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+}
+.coupon-rules .cr-item h4{font-size:14px;font-weight:700;margin:0 0 8px;color:var(--ink)}
+.coupon-rules .cr-item p{font-size:12.5px;line-height:1.75;color:var(--sub);margin:0}
+@media(max-width:880px){.coupon-rules{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.coupon-rules{grid-template-columns:1fr}}
 .coupon-grid{
   display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
 }
@@ -868,6 +886,78 @@ section[id]{scroll-margin-top:80px}
 @media(max-width:900px){.mix-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.mix-grid{grid-template-columns:1fr}}
 
+/* ===== Facility Eligibility ===== */
+.eligibility{padding:96px 24px;background:#fff;border-top:1px solid var(--line-soft)}
+.eligibility-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:980px;margin:0 auto 64px}
+.elig-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 28px}
+.elig-card.good{background:linear-gradient(180deg,var(--accent-soft2),#fff 70%);border-color:var(--accent-soft)}
+.elig-card.bad{background:linear-gradient(180deg,#FBEEDC30,#fff 70%);border-color:#F5D4B0}
+.elig-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;font-weight:600;padding:6px 12px;border-radius:6px;margin-bottom:16px;text-transform:uppercase}
+.elig-tag.good{background:var(--accent-soft);color:var(--accent-dark)}
+.elig-tag.bad{background:#FBEEDC;color:#7A4E1F}
+.elig-card ul{list-style:none;padding:0;margin:0}
+.elig-card li{font-size:13.5px;line-height:1.85;color:var(--ink);padding:9px 0 9px 22px;position:relative;border-bottom:1px solid var(--line-soft)}
+.elig-card li:last-child{border-bottom:0}
+.elig-card.good li::before{content:"";position:absolute;left:0;top:17px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.elig-card.bad li::before{content:"×";position:absolute;left:2px;top:7px;color:#B45528;font-weight:700}
+@media(max-width:760px){.eligibility-grid{grid-template-columns:1fr}}
+
+.elig-funds{max-width:980px;margin:0 auto 64px;background:var(--soft);border:1px solid var(--line);border-radius:22px;padding:48px 40px}
+.elig-funds-head{text-align:center;margin-bottom:32px}
+.elig-funds-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:12px 0 0;color:var(--ink);letter-spacing:-.005em}
+.funds-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.funds-col{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 26px}
+.funds-col h4{font-size:14px;font-weight:700;margin:0 0 14px;color:var(--ink);padding-bottom:12px;border-bottom:2px solid var(--line)}
+.funds-col.ok h4{border-color:var(--accent)}
+.funds-col.ng h4{border-color:#B45528}
+.funds-col ul{list-style:none;padding:0;margin:0}
+.funds-col li{font-size:13px;line-height:1.85;color:var(--ink);padding:6px 0 6px 20px;position:relative}
+.funds-col.ok li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
+.funds-col.ng li::before{content:"✕";position:absolute;left:0;color:#B45528;font-weight:700}
+@media(max-width:680px){.funds-grid{grid-template-columns:1fr}.elig-funds{padding:32px 24px}}
+
+.elig-ranks{max-width:1100px;margin:0 auto 64px}
+.elig-ranks-head{text-align:center;margin-bottom:36px}
+.elig-ranks-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:12px 0 12px;color:var(--ink);letter-spacing:-.005em}
+.elig-ranks-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:600px;margin:0 auto}
+.rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rank-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px;position:relative;transition:transform .2s ease}
+.rank-card:hover{transform:translateY(-2px)}
+.rank-card.a{background:linear-gradient(180deg,var(--accent-soft2),#fff 60%);border-color:var(--accent-soft)}
+.rank-card .rank-label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;font-weight:600;color:var(--sub);margin-bottom:14px;text-transform:uppercase}
+.rank-card.a .rank-label{color:var(--accent-dark)}
+.rank-card h4{font-size:17px;font-weight:700;margin:0 0 12px;color:var(--ink)}
+.rank-card > p{font-size:13px;line-height:1.85;color:var(--sub);margin:0 0 18px}
+.rank-card ul{list-style:none;padding:0;margin:0;border-top:1px solid var(--line-soft);padding-top:14px}
+.rank-card li{font-size:12.5px;line-height:1.8;color:var(--ink);padding:4px 0 4px 16px;position:relative}
+.rank-card li::before{content:"";position:absolute;left:0;top:13px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+@media(max-width:880px){.rank-grid{grid-template-columns:1fr;gap:14px}}
+
+.elig-rooms{max-width:980px;margin:0 auto 64px}
+.elig-rooms-head{text-align:center;margin-bottom:36px}
+.elig-rooms-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:12px 0 12px;color:var(--ink);letter-spacing:-.005em}
+.elig-rooms-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:640px;margin:0 auto}
+.rooms-table-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:14px}
+.rooms-table{width:100%;border-collapse:collapse;font-size:14px}
+.rooms-table thead th{background:var(--soft);color:var(--sub);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:14px 18px;text-align:left;border-bottom:2px solid var(--line)}
+.rooms-table tbody td{padding:16px 18px;border-bottom:1px solid var(--line-soft);color:var(--ink);font-size:14px}
+.rooms-table tbody tr:last-child td{border-bottom:0}
+.rooms-table td.num{font-family:'Inter',sans-serif;font-weight:600}
+.elig-rooms-note{font-size:11.5px;color:var(--muted);line-height:1.85;margin:18px 0 0}
+
+.elig-ng{max-width:880px;margin:0 auto 64px;background:#FFF7EE;border:1px solid #F5D4B0;border-left:4px solid #B45528;border-radius:14px;padding:32px 36px}
+.elig-ng h3{font-size:16px;font-weight:700;margin:0 0 16px;color:#7A4E1F}
+.elig-ng ul{list-style:none;padding:0;margin:0;column-count:2;column-gap:30px}
+.elig-ng li{font-size:13px;line-height:1.85;color:var(--ink);padding:5px 0 5px 22px;position:relative;break-inside:avoid}
+.elig-ng li::before{content:"✕";position:absolute;left:0;color:#B45528;font-weight:700}
+@media(max-width:680px){.elig-ng ul{column-count:1}.elig-ng{padding:24px 22px}}
+
+.elig-cta{max-width:780px;margin:0 auto;text-align:center;padding:48px 32px;background:#1F2933;border-radius:24px;color:#fff}
+.elig-cta h3{font-size:clamp(22px,2.8vw,28px);line-height:1.55;font-weight:700;color:#fff;margin:0 0 14px;letter-spacing:-.005em}
+.elig-cta h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(47,125,92,.5) 60%);padding:0 4px}
+.elig-cta p{font-size:14px;line-height:2;color:#A8B2BA;margin:0 0 28px;max-width:560px;margin-left:auto;margin-right:auto}
+.elig-cta .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
 </style>
 </head>
 <body>
@@ -883,6 +973,7 @@ section[id]{scroll-margin-top:80px}
       <button class="nav-link" onclick="go('coupons')">優待例</button>
       <button class="nav-link" onclick="go('targets')">支援先</button>
       <button class="nav-link" onclick="go('pension')">年金余白型</button>
+      <button class="nav-link" onclick="go('eligibility')">加盟施設</button>
       <button class="nav-link" onclick="go('store')">店舗の方</button>
       <button class="nav-link" onclick="go('corporate')">法人の方</button>
       <button class="nav-link" onclick="go('faq')">FAQ</button>
@@ -1132,19 +1223,51 @@ section[id]{scroll-margin-top:80px}
   <div class="wrap">
     <div class="section-head center">
       <span class="eyebrow">Coupon Examples</span>
-      <h2 class="section-title">毎月、ちゃんと使える優待を。</h2>
-      <p class="section-lead">参加するだけで、生活が少しお得になる。<br>提携店が用意する具体的な優待は、たとえばこんな内容です。</p>
+      <h2 class="section-title">支援した日から30日間使える、<br>会員限定クーポン。</h2>
+      <p class="section-lead">クーポンは、支援参加済みの会員だけに配信されます。<br>有効期限は原則として支援日から30日間。提携サポート会社が自社販促として発行する、期間限定の優待です。</p>
     </div>
+
+    <div class="coupon-rules">
+      <div class="cr-item">
+        <div class="cr-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4>支援日から30日間</h4>
+        <p>会費決済日を起点に発行。30日経過後は自動失効します。</p>
+      </div>
+      <div class="cr-item">
+        <div class="cr-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h4>最低利用金額あり</h4>
+        <p>例：1,000円以上で200円OFF、3,000円以上で600円OFF。</p>
+      </div>
+      <div class="cr-item">
+        <div class="cr-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        </div>
+        <h4>現金化・譲渡不可</h4>
+        <p>会員本人のみ利用可能。譲渡・売買・換金はできません。</p>
+      </div>
+      <div class="cr-item">
+        <div class="cr-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h4>店舗が販促として発行</h4>
+        <p>Care Support Pass は金銭的価値を発行・精算しません。</p>
+      </div>
+    </div>
+
     <div class="coupon-grid">
       <div class="coupon-group">
         <h4><span class="ico">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v6a3 3 0 0 0 3 3v11"/><path d="M9 11a3 3 0 0 0 3-3V2"/><path d="M3 2v6"/><path d="M15 2c-1.7 0-3 1.3-3 3v6c0 1.7 1.3 3 3 3h2v8"/></svg>
         </span>飲食店</h4>
         <ul>
-          <li>定食割引<span class="v">−150円</span></li>
-          <li>コーヒー<span class="v">−100円</span></li>
-          <li>お弁当<span class="v">−50円</span></li>
-          <li>平日ランチ<span class="v">−5%</span></li>
+          <li>1,000円以上のお食事で<span class="v">−200円</span></li>
+          <li>平日ランチ<span class="v">−100円</span></li>
+          <li>テイクアウト弁当<span class="v">−50円</span></li>
+          <li>家族来店時のドリンクサービス<span class="v">無料</span></li>
         </ul>
       </div>
       <div class="coupon-group">
@@ -1152,10 +1275,10 @@ section[id]{scroll-margin-top:80px}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         </span>薬局・ドラッグ</h4>
         <ul>
-          <li>紙おむつ<span class="v">−150円</span></li>
-          <li>口腔ケア用品<span class="v">−100円</span></li>
-          <li>介護用品<span class="v">−5%</span></li>
-          <li>日用品<span class="v">−150円</span></li>
+          <li>日用品2,000円以上で<span class="v">−300円</span></li>
+          <li>介護用品3,000円以上で<span class="v">−600円</span></li>
+          <li>口腔ケア用品<span class="v">−5%</span></li>
+          <li>配送手数料<span class="v">割引</span></li>
         </ul>
       </div>
       <div class="coupon-group">
@@ -1163,10 +1286,10 @@ section[id]{scroll-margin-top:80px}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14l-1 7H6z"/><path d="M5 12V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5"/></svg>
         </span>配食・買い物</h4>
         <ul>
-          <li>配食初回<span class="v">−300円</span></li>
-          <li>買い物代行<span class="v">−500円</span></li>
+          <li>初回注文<span class="v">−500円</span></li>
+          <li>1週間お試しセット<span class="v">割引</span></li>
           <li>高齢者向け弁当<span class="v">−100円</span></li>
-          <li>定期配送<span class="v">割引</span></li>
+          <li>定期配送切替<span class="v">手数料無料</span></li>
         </ul>
       </div>
       <div class="coupon-group">
@@ -1174,15 +1297,15 @@ section[id]{scroll-margin-top:80px}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l3-9h12l3 9"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
         </span>生活サービス</h4>
         <ul>
-          <li>タクシー初回<span class="v">割引</span></li>
-          <li>理美容<span class="v">−500円</span></li>
+          <li>タクシー予約手数料<span class="v">−300円</span></li>
+          <li>理美容メニュー<span class="v">−500円</span></li>
           <li>クリーニング<span class="v">−10%</span></li>
           <li>家財整理見積<span class="v">無料</span></li>
         </ul>
       </div>
     </div>
     <div class="warn-callout">
-      <b>重要：</b>処方薬・保険調剤の自己負担分は、クーポン対象外です。対象は日用品・介護用品・店舗独自サービス等に限定します。各クーポンは提携店舗が独自に提供する優待であり、Care Support Pass が金券を発行するものではありません。
+      <b>重要：</b>処方薬・保険調剤の自己負担分は、クーポン対象外です。対象は日用品・介護用品・店舗独自サービス等に限定します。クーポン額・対象商品・利用条件・有効期限・除外商品は各提携サポート会社が独自に設定し、各社が自社販促として発行する会員限定優待です。Care Support Pass および TAMJ は金銭的価値の発行・販売・精算を行いません。
     </div>
   </div>
 </section>
@@ -1371,6 +1494,159 @@ section[id]{scroll-margin-top:80px}
     <div class="pension-quote">
       <h3>"払える人だけが入れる施設"ではなく、<br><span class="em">年金の中に人生の余白を残せる施設</span>を増やす。</h3>
       <p>これは、Care Support Pass 導入施設が目指す入居設計です。<br>運営事業者の方には、別途モデルの詳細をご案内します。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FACILITY ELIGIBILITY ============ -->
+<section id="eligibility" class="eligibility">
+  <div class="wrap">
+    <div class="section-head center">
+      <span class="eyebrow">Membership Criteria</span>
+      <h2 class="section-title">加盟施設の条件。<br>支援金は、不動産ではなく入居者の暮らしへ。</h2>
+      <p class="section-lead">Care Support Pass は、<b>土地建物を所有していない介護運営会社</b>に限定して加盟を受け付けます。支援金が不動産オーナーの賃料収益や借入返済に流れる構造を、入口から排除する設計です。</p>
+    </div>
+
+    <div class="eligibility-grid">
+      <div class="elig-card good">
+        <div class="elig-tag good">加盟できる施設</div>
+        <ul>
+          <li>建物賃借型の有料老人ホーム</li>
+          <li>サービス付き高齢者向け住宅の運営会社</li>
+          <li>住宅型有料老人ホームの運営会社</li>
+          <li>グループホーム等の運営会社</li>
+          <li>小規模高齢者住宅の運営会社</li>
+          <li>介護事業者が借り上げて運営する住まい</li>
+        </ul>
+      </div>
+      <div class="elig-card bad">
+        <div class="elig-tag bad">対象外となる施設</div>
+        <ul>
+          <li>土地建物を自社所有している施設</li>
+          <li>オーナー法人と運営法人が実質同一の施設</li>
+          <li>代表者・親族・関連会社が物件を所有</li>
+          <li>不動産収益を優先している施設</li>
+          <li>支援金が賃料保証・借入返済に流れる構造</li>
+          <li>「激安施設」「生活保護専門」として売りたい施設</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="elig-funds">
+      <div class="elig-funds-head">
+        <span class="eyebrow">Use of Funds</span>
+        <h3>支援金の使途は、入居者負担軽減に限定します。</h3>
+      </div>
+      <div class="funds-grid">
+        <div class="funds-col ok">
+          <h4>支援金が使えるもの</h4>
+          <ul>
+            <li>入居者の家賃負担軽減</li>
+            <li>共益費・生活支援費の軽減</li>
+            <li>入居初期費用の軽減</li>
+            <li>家財整理・住み替え費用の一部支援</li>
+            <li>生活用品・寝具・衣類等の初期支援</li>
+            <li>本人負担5万円以内の実現</li>
+          </ul>
+        </div>
+        <div class="funds-col ng">
+          <h4>支援金を使えないもの</h4>
+          <ul>
+            <li>役員報酬・株主配当</li>
+            <li>借入返済・不動産取得費</li>
+            <li>オーナーへの追加賃料</li>
+            <li>関連会社への不透明な委託費</li>
+            <li>広告宣伝費の補填</li>
+            <li>本人負担軽減と関係ない改修費</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="elig-ranks">
+      <div class="elig-ranks-head">
+        <span class="eyebrow">Partner Ranks</span>
+        <h3>加盟施設は3ランクで運用します。</h3>
+        <p>審査内容と現場体制に応じて、Certified / Partner / Trial の3段階で受け入れます。</p>
+      </div>
+      <div class="rank-grid">
+        <div class="rank-card a">
+          <div class="rank-label">A — Certified</div>
+          <h4>Care Support Certified</h4>
+          <p>賃借型かつ本人負担5万円以内枠あり。年金余白モデル適合・地域連携・使途報告すべて満たす最優先パートナー。</p>
+          <ul>
+            <li>サイト掲載・優先送客</li>
+            <li>支援対象施設として公開</li>
+            <li>支援金の優先配分</li>
+          </ul>
+        </div>
+        <div class="rank-card b">
+          <div class="rank-label">B — Partner</div>
+          <h4>Care Support Partner</h4>
+          <p>賃借型だが対象室が少ない、または5万円以内が現状難しい施設。改善計画付きで加盟。</p>
+          <ul>
+            <li>条件付き掲載</li>
+            <li>改善計画への合意</li>
+            <li>段階的な対象室拡大</li>
+          </ul>
+        </div>
+        <div class="rank-card c">
+          <div class="rank-label">C — Trial</div>
+          <h4>Care Support Trial</h4>
+          <p>3〜6ヶ月の試験導入。対象者数を限定し、支援金の使途確認後に本加盟へ移行します。</p>
+          <ul>
+            <li>試験期間限定</li>
+            <li>使途レポート提出必須</li>
+            <li>本加盟への移行審査</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="elig-rooms">
+      <div class="elig-rooms-head">
+        <span class="eyebrow">Target Rooms</span>
+        <h3>対象室の目安。施設規模に応じた最低設置数。</h3>
+        <p>本人負担5万円以内を目指す「Care Support Pass 対象室」を、規模に応じて一定数設けていただきます。</p>
+      </div>
+      <div class="rooms-table-wrap">
+        <table class="rooms-table">
+          <thead>
+            <tr><th>施設規模</th><th>対象室の最低設置数</th><th>月額加盟費（事務局運営費）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>9〜29室</td><td>2室以上 / 10%以上</td><td class="num">5,000円</td></tr>
+            <tr><td>30〜44室</td><td>4室以上 / 10%以上</td><td class="num">10,000円</td></tr>
+            <tr><td>45〜59室</td><td>6室以上 / 12%以上</td><td class="num">15,000円</td></tr>
+            <tr><td>60〜79室</td><td>8室以上 / 12%以上</td><td class="num">20,000円</td></tr>
+            <tr><td>80室以上</td><td>10室以上 / 10%以上</td><td class="num">30,000円</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="elig-rooms-note">※ 初期審査費：5万円〜10万円（書面確認・現地調査含む）。加盟費は事務局運営費であり、入居者支援金とは完全に分離して管理します。本人負担5万円は家賃・共益費・基本生活支援費の合計を指し、食費・医療費・介護保険自己負担は別設計とします。</p>
+    </div>
+
+    <div class="elig-ng">
+      <h3>以下に該当する場合、点数に関係なく加盟不可とします。</h3>
+      <ul>
+        <li>土地建物を自社または代表者・親族・関連会社が所有している</li>
+        <li>関連会社オーナーで賃料設定が不透明</li>
+        <li>支援金を賃料・借入・役員報酬に充当する意図がある</li>
+        <li>入居者負担軽減の対象室を設定しない</li>
+        <li>使途報告を拒む</li>
+        <li>過去に重大な行政処分・虐待・不正請求がある</li>
+        <li>処方薬等の危険なクーポン連携を希望する</li>
+        <li>「激安施設」「生活保護専門」として売りたい</li>
+        <li>現場人員が明らかに足りない</li>
+      </ul>
+    </div>
+
+    <div class="elig-cta">
+      <h3>空室を埋めるためではなく、<br><span class="em">入居できなかった人の選択肢を増やす</span>ために。</h3>
+      <p>Care Support Pass は、土地建物を所有しない介護運営会社を対象とした入居者負担軽減型の加盟制度です。<br>支援原資が不動産側に流れることを防ぎ、入居者の生活に直接つながる仕組みをつくります。</p>
+      <div class="cta-row">
+        <a class="btn primary large" href="#corporate">運営会社として相談する</a>
+      </div>
     </div>
   </div>
 </section>
@@ -1697,6 +1973,8 @@ section[id]{scroll-margin-top:80px}
       </div>
       <div class="footer-col">
         <h5>For Partners</h5>
+        <a href="/partners.html">協力会社の方</a>
+        <a href="#eligibility">加盟施設</a>
         <a href="#store">店舗の方</a>
         <a href="#corporate">法人の方</a>
         <a href="#split">NPO・公益財団</a>
