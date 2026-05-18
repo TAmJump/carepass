@@ -122,6 +122,35 @@
 .final-cta .cta-row{
   display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
 }
+
+/* ===== Concept banner (hero下のフルブリード画像) ===== */
+.concept-banner{margin:0;border-radius:0;overflow:hidden;background:#222;position:relative;aspect-ratio:21/9;max-height:520px}
+.concept-banner img{width:100%;height:100%;object-fit:cover;display:block}
+.concept-banner figcaption{position:absolute;left:32px;right:32px;bottom:32px;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-radius:14px;padding:18px 22px;font-size:14px;color:var(--ink);font-weight:600;line-height:1.6;max-width:560px}
+@media(max-width:760px){.concept-banner{aspect-ratio:16/10}.concept-banner figcaption{left:16px;right:16px;bottom:16px;padding:14px 16px;font-size:12.5px}}
+
+/* ===== Principle figure (各原則に画像) ===== */
+.principle.has-figure .principle-in{grid-template-columns:120px 1fr 1fr;gap:40px;align-items:center}
+.principle.has-figure.reverse .principle-in{grid-template-columns:1fr 1fr 120px}
+.principle.has-figure.reverse .principle-num{order:3}
+.principle.has-figure.reverse .principle-body{order:1}
+.principle.has-figure.reverse .principle-figure{order:2}
+.principle-figure{margin:0;border-radius:18px;overflow:hidden;background:#222;aspect-ratio:4/5;box-shadow:0 16px 32px rgba(0,0,0,.10);max-height:520px}
+.principle-figure img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:880px){
+  .principle.has-figure .principle-in,
+  .principle.has-figure.reverse .principle-in{grid-template-columns:1fr;gap:32px}
+  .principle.has-figure .principle-num,
+  .principle.has-figure.reverse .principle-num{order:0;font-size:54px}
+  .principle.has-figure .principle-body,
+  .principle.has-figure.reverse .principle-body{order:1}
+  .principle.has-figure .principle-figure,
+  .principle.has-figure.reverse .principle-figure{order:2;aspect-ratio:16/10;max-width:560px;margin:0 auto}
+}
+
+/* ===== Footer symbol ===== */
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-symbol{height:28px;width:auto;margin-left:8px;opacity:.85}
 </style>
 </head>
 <body>
@@ -151,6 +180,11 @@
   <div class="src">— Care Support Pass 中心思想</div>
 </header>
 
+<figure class="concept-banner">
+  <img src="/assets/images/person-older-woman-busy.jpg" alt="自分の人生を続けている先輩世代" loading="eager">
+  <figcaption>"支えられる人" ではなく、"今も自分の人生を生きている人"。</figcaption>
+</figure>
+
 <div class="notice">
   <div class="notice-in">
     ※ <b>Care Support Pass は寄附ではなく、月額会員サービスです。</b> 提携店優待は各店舗が提供する割引であり、Care Support Pass が金銭的価値を発行するものではありません。寄附控除を希望される方には、NPO・公益財団を通じた寄附窓口をご案内します。
@@ -171,7 +205,7 @@
   </div>
 </section>
 
-<section class="principle">
+<section class="principle has-figure">
   <div class="principle-in">
     <div class="principle-num">01</div>
     <div class="principle-body">
@@ -180,10 +214,13 @@
       <p>それなら、月100円でもいい。<b>自分が支払ったお金が、誰の住まいに、誰の生活に、どんな形で使われるのかが見える方が、支払う意味がある。</b></p>
       <p class="tag">使い道が見える100円をつくる。</p>
     </div>
+    <figure class="principle-figure">
+      <img src="/assets/images/lifestyle-cafe.jpg" alt="日常に組み込まれた支援" loading="lazy">
+    </figure>
   </div>
 </section>
 
-<section class="principle alt">
+<section class="principle alt has-figure reverse">
   <div class="principle-in">
     <div class="principle-num">02</div>
     <div class="principle-body">
@@ -193,10 +230,13 @@
       <p>参加する人は、毎月の生活で少し得をする。地域のお店には人が流れる。<b>その一部が、先輩世代の住まいを支える力になる。</b></p>
       <p class="tag">続けられる支援の形。</p>
     </div>
+    <figure class="principle-figure">
+      <img src="/assets/images/person-young-supporter.jpg" alt="若い世代の参加" loading="lazy">
+    </figure>
   </div>
 </section>
 
-<section class="principle">
+<section class="principle has-figure">
   <div class="principle-in">
     <div class="principle-num">03</div>
     <div class="principle-body">
@@ -206,10 +246,13 @@
       <p>その人たちが、年齢を重ねた後も、安心して暮らせる場所を失わない社会をつくる。これは、若い世代が一方的に負担する話ではない。<b>自分の親を守ること。未来の自分を守ること。社会の順番を守ること。</b></p>
       <p class="tag">受け継ぐ存在として。</p>
     </div>
+    <figure class="principle-figure">
+      <img src="/assets/images/hero-generational.jpg" alt="世代を超えて、同じテーブルに" loading="lazy">
+    </figure>
   </div>
 </section>
 
-<section class="principle alt">
+<section class="principle alt has-figure reverse">
   <div class="principle-in">
     <div class="principle-num">04</div>
     <div class="principle-body">
@@ -220,6 +263,9 @@
       <p>Care Support Pass は、寄附だけではない。行政だけでもない。介護事業者だけでもない。<b>地域全体で、先輩世代の暮らしを守るための民間インフラ。</b></p>
       <p class="tag">100円から、社会のインフラへ。</p>
     </div>
+    <figure class="principle-figure">
+      <img src="/assets/images/person-three-generations.jpg" alt="世代を超えた支え合い" loading="lazy">
+    </figure>
   </div>
 </section>
 
@@ -259,7 +305,7 @@
   <div class="footer-in">
     <div class="footer-top">
       <div class="footer-brand-col">
-        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"></div>
+        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"><img src="/assets/images/logo-symbol.png" alt="" class="footer-symbol" aria-hidden="true"></div>
         <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
       </div>
       <div class="footer-col">

@@ -146,6 +146,28 @@
 
 .partner-hero-img{margin:48px auto 0;max-width:880px;border-radius:24px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,.12),0 2px 8px rgba(0,0,0,.04)}
 .partner-hero-img img{width:100%;height:auto;display:block}
+
+/* ===== Industry strip (4 store images) ===== */
+.industry-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 56px}
+.industry-strip figure{margin:0;border-radius:16px;overflow:hidden;background:#222;position:relative;aspect-ratio:1/1;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.industry-strip img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+.industry-strip figure:hover img{transform:scale(1.05)}
+.industry-strip figcaption{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--ink);font-weight:700;text-align:center}
+@media(max-width:760px){.industry-strip{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== Partner portrait (hero-decisive section) ===== */
+.partner-portrait{padding:96px 24px;background:linear-gradient(180deg,var(--soft),#fff)}
+.pp-wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:0.85fr 1fr;gap:64px;align-items:center}
+.pp-image{margin:0;border-radius:24px;overflow:hidden;aspect-ratio:4/5;background:#222;box-shadow:0 24px 48px rgba(0,0,0,.12)}
+.pp-image img{width:100%;height:100%;object-fit:cover;display:block}
+.pp-text .eyebrow{margin-bottom:16px}
+.pp-text h3{font-size:clamp(26px,3.4vw,38px);line-height:1.35;font-weight:700;margin:0 0 20px;color:var(--ink);letter-spacing:-.01em}
+.pp-text p{font-size:15px;line-height:2.05;color:var(--sub);margin:0}
+@media(max-width:880px){.pp-wrap{grid-template-columns:1fr;gap:36px}.pp-image{max-width:520px;margin:0 auto;aspect-ratio:16/10}}
+
+/* ===== Footer symbol ===== */
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-symbol{height:28px;width:auto;margin-left:8px;opacity:.85}
 </style>
 </head>
 <body>
@@ -338,6 +360,26 @@
       <span class="eyebrow">By Industry</span>
       <h2 class="section-title">業種に合わせた優待設計が可能。</h2>
     </div>
+
+    <div class="industry-strip">
+      <figure>
+        <img src="/assets/images/store-pharmacy.jpg" alt="ドラッグストア・薬局" loading="lazy">
+        <figcaption>薬局・ドラッグストア</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/images/store-bento.jpg" alt="お弁当・配食サービス" loading="lazy">
+        <figcaption>配食・お弁当</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/images/store-cafe-owner.jpg" alt="個人経営のカフェ" loading="lazy">
+        <figcaption>飲食・カフェ</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/images/store-shop-dusk.jpg" alt="地域の専門店" loading="lazy">
+        <figcaption>不動産・家財整理</figcaption>
+      </figure>
+    </div>
+
     <div class="industry-grid">
       <div class="ind-card">
         <h4>飲食店</h4>
@@ -607,6 +649,19 @@
   </div>
 </section>
 
+<section class="partner-portrait">
+  <div class="pp-wrap">
+    <figure class="pp-image">
+      <img src="/assets/images/hero-decisive.jpg" alt="参加する人の顔">
+    </figure>
+    <div class="pp-text">
+      <span class="eyebrow">A Movement</span>
+      <h3>支援する側に立つ。<br>それが、新しい日常になる。</h3>
+      <p>「誰かを支える」ことが、特別なことではなく、生活の中に組み込まれる仕組みを。<br>Care Support Pass は、その第一歩を、月100円から始めます。</p>
+    </div>
+  </div>
+</section>
+
 <section class="final-section">
   <div class="wrap">
     <span class="eyebrow" style="color:var(--warm)">Join Us</span>
@@ -627,7 +682,7 @@
   <div class="footer-in">
     <div class="footer-top">
       <div class="footer-brand-col">
-        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"></div>
+        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"><img src="/assets/images/logo-symbol.png" alt="" class="footer-symbol" aria-hidden="true"></div>
         <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
       </div>
       <div class="footer-col">

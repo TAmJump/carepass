@@ -28,6 +28,17 @@
   margin:0 auto 32px;color:var(--accent);
   animation:popIn .6s cubic-bezier(.34,1.56,.64,1) both;
 }
+.thanks-mark{
+  width:120px;height:120px;border-radius:24px;
+  background:#fff;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 32px;
+  animation:popIn .6s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow:0 12px 28px rgba(0,0,0,.06);
+}
+.thanks-mark img{width:80px;height:80px;object-fit:contain}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-symbol{height:28px;width:auto;margin-left:8px;opacity:.85}
 @keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 .thanks h1{
   font-size:clamp(26px,3.4vw,36px);line-height:1.45;
@@ -81,10 +92,8 @@
 
 <main class="thanks">
   <div class="thanks-card">
-    <div class="thanks-icon">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
+    <div class="thanks-mark">
+      <img src="/assets/images/logo-monogram.png" alt="Care Support Pass">
     </div>
     <h1 id="title">お申し込みありがとうございます。</h1>
     <p class="lead" id="lead">
@@ -118,7 +127,7 @@
   <div class="footer-in">
     <div class="footer-top">
       <div class="footer-brand-col">
-        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"></div>
+        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"><img src="/assets/images/logo-symbol.png" alt="" class="footer-symbol" aria-hidden="true"></div>
         <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
       </div>
       <div class="footer-col">
