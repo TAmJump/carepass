@@ -5,6 +5,30 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Care Support Pass は、月100円から参加できる生活応援パスです。提携店優待を使えて、売上の一部が高齢者の住まい支援に活用されます。">
 <title>Care Support Pass | 月100円で、生活と住まいを支える</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<!-- OGP -->
+<meta property="og:title" content="Care Support Pass | 月100円で、社会の支え方を変える">
+<meta property="og:description" content="先輩世代の住まいと暮らしを、地域で支える新しい生活インフラ。月100円から参加できる月額会員サービスです。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://carepass.tamjump.com/">
+<meta property="og:image" content="https://carepass.tamjump.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Care Support Pass">
+<meta property="og:locale" content="ja_JP">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Care Support Pass | 月100円で、社会の支え方を変える">
+<meta name="twitter:description" content="先輩世代の住まいと暮らしを、地域で支える新しい生活インフラ。">
+<meta name="twitter:image" content="https://carepass.tamjump.com/og.png">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://carepass.tamjump.com/">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1310,7 +1334,7 @@ section[id]{scroll-margin-top:80px}
           </ul>
           <label class="consent-check"><input type="checkbox"> 上記内容を理解した上で、お申し込みに同意します。</label>
         </div>
-        <button class="btn primary large" style="width:100%">月額会員サービスに申し込む</button>
+        <button type="button" class="btn primary large" style="width:100%" onclick="window.location.href='/thanks.html?type=individual'">月額会員サービスに申し込む</button>
       </div>
     </div>
 
@@ -1342,7 +1366,7 @@ section[id]{scroll-margin-top:80px}
           </select>
         </div>
         <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea></textarea></div>
-        <button class="btn primary large" style="width:100%">提携店として申し込む</button>
+        <button type="button" class="btn primary large" style="width:100%" onclick="window.location.href='/thanks.html?type=store'">提携店として申し込む</button>
       </div>
     </div>
 
@@ -1377,7 +1401,7 @@ section[id]{scroll-margin-top:80px}
           </select>
         </div>
         <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea placeholder="ご検討中の背景・課題などをご記入ください"></textarea></div>
-        <button class="btn primary large" style="width:100%">法人導入を相談する</button>
+        <button type="button" class="btn primary large" style="width:100%" onclick="window.location.href='/thanks.html?type=corp'">法人導入を相談する</button>
       </div>
     </div>
   </div>
@@ -1403,12 +1427,13 @@ section[id]{scroll-margin-top:80px}
         <a href="#store">店舗の方</a>
         <a href="#corporate">法人の方</a>
         <a href="#split">NPO・公益財団</a>
+        <a href="/about.html">運営について</a>
       </div>
       <div class="footer-col">
         <h5>Support</h5>
         <a href="#faq">FAQ</a>
         <a href="#apply">お申し込み</a>
-        <a href="#">お問い合わせ</a>
+        <a href="/contact.html">お問い合わせ</a>
       </div>
     </div>
     <div class="footer-legal">
@@ -1420,7 +1445,7 @@ section[id]{scroll-margin-top:80px}
     </div>
     <div class="footer-bot">
       <div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div>
-      <div><a href="#" style="color:#8A949B;text-decoration:none">利用規約</a> ・ <a href="#" style="color:#8A949B;text-decoration:none">プライバシーポリシー</a> ・ <a href="#" style="color:#8A949B;text-decoration:none">特定商取引法に基づく表記</a></div>
+      <div><a href="/terms.html" style="color:#8A949B;text-decoration:none">利用規約</a> ・ <a href="/privacy.html" style="color:#8A949B;text-decoration:none">プライバシーポリシー</a> ・ <a href="/tokuteishou.html" style="color:#8A949B;text-decoration:none">特定商取引法に基づく表記</a></div>
     </div>
   </div>
 </footer>
