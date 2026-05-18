@@ -133,12 +133,12 @@
         <h5>For Partners</h5>
         <a href="/#store">店舗の方</a>
         <a href="/#corporate">法人の方</a>
-        <a href="/about.html">運営について</a>
+        <a href="https://tamjump.com/" target="_blank" rel="noopener">運営について</a>
       </div>
       <div class="footer-col">
         <h5>Support</h5>
         <a href="/#faq">FAQ</a>
-        <a href="/contact.html">お問い合わせ</a>
+        <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a>
         <a href="/#apply">お申し込み</a>
       </div>
     </div>
@@ -150,7 +150,7 @@
     </div>
     <div class="footer-bot">
       <div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div>
-      <div><a href="/terms.html">利用規約</a> ・ <a href="/privacy.html">プライバシーポリシー</a> ・ <a href="/tokuteishou.html">特定商取引法に基づく表記</a></div>
+      <div><a href="https://tamjump.com/terms.html" target="_blank" rel="noopener">利用規約</a> ・ <a href="https://tamjump.com/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> ・ <a href="https://tamjump.com/tokuteishou.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a></div>
     </div>
   </div>
 </footer>
@@ -163,12 +163,7 @@ const title=document.getElementById('title');
 const lead=document.getElementById('lead');
 const steps=document.getElementById('next-steps');
 
-if(type==='contact'){
-  title.textContent='お問い合わせありがとうございます。';
-  lead.innerHTML='担当者より<b>2〜3営業日以内</b>にご返信いたします。<br>ご登録のメールアドレスに、自動返信メールをお送りしました。';
-  steps.querySelector('h3').textContent='担当者からの連絡について';
-  steps.querySelector('ol').innerHTML='<li>自動返信メールが届いているかご確認ください。</li><li>担当者より、2〜3営業日以内にメールでご連絡いたします。</li><li>急ぎの場合は、再度フォームよりご連絡ください。</li>';
-}else if(type==='store'){
+if(type==='store'){
   title.textContent='提携店としてのお申し込み、ありがとうございます。';
   lead.innerHTML='Care Support Pass のネットワークにご参加いただき、感謝いたします。<br>担当者より<b>3〜5営業日以内</b>に、提携手続きのご案内をいたします。';
   steps.querySelector('ol').innerHTML='<li>担当者より、提携の詳細をメールでご案内します。</li><li>提供される優待内容のヒアリングを行います。</li><li>掲載準備が整い次第、店舗ページを公開します。</li><li>会員からの送客が開始されます。</li>';
