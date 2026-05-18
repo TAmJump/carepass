@@ -35,15 +35,15 @@
 <style>
 :root{
   --bg:#FFFFFF;
-  --soft:#F6F8F5;
-  --soft2:#F1F4EE;
+  --soft:#FFF8F2;
+  --soft2:#FFF4EE;
   --ink:#1F2933;
   --sub:#5F6B73;
   --muted:#8A949B;
-  --accent:#2F7D5C;
-  --accent-dark:#236046;
-  --accent-soft:#D9EADF;
-  --accent-soft2:#EAF3EE;
+  --accent:#E94436;
+  --accent-dark:#C9311F;
+  --accent-soft:#FBD9D4;
+  --accent-soft2:#FFF2EF;
   --line:#E5E7EB;
   --line-soft:#EFF1F3;
   --warn:#B45528;
@@ -83,6 +83,8 @@ button{font-family:inherit;cursor:pointer}
   color:var(--ink);white-space:nowrap;
 }
 .brand .dot{color:var(--accent);margin-right:2px}
+.brand img{height:22px;width:auto;display:block}
+.brand a{display:inline-flex;align-items:center;color:inherit;text-decoration:none}
 .nav-menu{display:flex;gap:6px;margin-left:24px;flex:1;overflow:auto;scrollbar-width:none}
 .nav-menu::-webkit-scrollbar{display:none}
 .nav-link{
@@ -114,55 +116,128 @@ button{font-family:inherit;cursor:pointer}
 
 /* ============ HERO ============ */
 .hero{
-  padding:96px 24px 72px;
+  padding:80px 24px 64px;
   background:
-    radial-gradient(1100px 500px at 80% -10%,rgba(47,125,92,.07),transparent 60%),
-    radial-gradient(800px 400px at 0% 30%,rgba(47,125,92,.04),transparent 60%),
+    radial-gradient(1100px 500px at 80% -10%,rgba(233,68,54,.07),transparent 60%),
+    radial-gradient(800px 400px at 0% 30%,rgba(233,68,54,.04),transparent 60%),
     #fff;
   position:relative;overflow:hidden;
 }
-.hero-in{max-width:1100px;margin:0 auto;text-align:center}
+.hero-in{
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1.05fr 1fr;gap:64px;
+  align-items:center;
+}
+.hero-text{text-align:left}
 .kicker{
   display:inline-flex;align-items:center;gap:8px;
   font-size:12px;letter-spacing:.18em;
-  color:var(--accent);font-weight:600;
+  color:var(--accent);font-weight:700;
   padding:6px 14px;border-radius:999px;
   background:var(--accent-soft2);
   border:1px solid var(--accent-soft);
   margin-bottom:28px;
+  text-transform:uppercase;
 }
 .kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
 h1.hero-title{
-  font-size:clamp(34px,5.4vw,64px);
-  line-height:1.22;font-weight:700;letter-spacing:-.01em;
-  margin:0 0 26px;color:var(--ink);
+  font-size:clamp(34px,5vw,62px);
+  line-height:1.18;font-weight:800;letter-spacing:-.02em;
+  margin:0 0 24px;color:var(--ink);
 }
 h1.hero-title .em{color:var(--accent)}
 .hero-sub{
-  font-size:clamp(15px,1.5vw,18px);
-  color:var(--sub);max-width:680px;margin:0 auto 40px;
-  line-height:1.9;
+  font-size:clamp(15px,1.4vw,17px);
+  color:var(--sub);max-width:540px;margin:0 0 36px;
+  line-height:1.85;
 }
-.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px}
 .hero-points{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
-  max-width:880px;margin:48px auto 0;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  margin:0;
 }
 .hero-point{
   background:#fff;border:1px solid var(--line);
-  border-radius:18px;padding:22px 22px;
-  text-align:left;display:flex;gap:14px;align-items:flex-start;
+  border-radius:14px;padding:14px 16px;
+  text-align:left;display:flex;gap:10px;align-items:flex-start;
 }
 .hp-icon{
-  width:36px;height:36px;border-radius:10px;
+  width:32px;height:32px;border-radius:9px;
   background:var(--accent-soft2);color:var(--accent);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;font-weight:700;
 }
-.hp-text{font-size:13.5px;line-height:1.7;color:var(--ink);font-weight:500}
+.hp-icon svg{width:16px;height:16px}
+.hp-text{font-size:12px;line-height:1.5;color:var(--ink);font-weight:500}
+
+/* Hero Visual (right column) */
+.hero-visual{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/5;background:#222;box-shadow:0 24px 48px rgba(0,0,0,.12),0 4px 12px rgba(0,0,0,.06)}
+.hero-visual img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-badge{
+  position:absolute;left:20px;bottom:20px;right:20px;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(14px);
+  border-radius:14px;padding:16px 18px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.hb-label{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.16em;color:var(--accent);font-weight:700;text-transform:uppercase}
+.hb-sub{font-size:13.5px;color:var(--ink);font-weight:600;line-height:1.5}
+
+@media(max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:40px}
+  .hero-visual{aspect-ratio:16/10;max-width:680px}
+  h1.hero-title{font-size:clamp(30px,7vw,42px)}
+}
 @media(max-width:760px){
-  .hero{padding:64px 20px 48px}
-  .hero-points{grid-template-columns:1fr;gap:12px}
+  .hero{padding:48px 20px 40px}
+  .hero-points{grid-template-columns:1fr;gap:10px}
+  .hero-cta .btn{flex:1;min-width:0}
+}
+
+/* ===== Figure utilities (画像 + キャプション) ===== */
+.concept-figure,.elig-figure,.coupon-figure{
+  margin:0 auto 56px;max-width:980px;
+  border-radius:24px;overflow:hidden;
+  background:#222;
+  box-shadow:0 24px 48px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.04);
+  position:relative;
+}
+.concept-figure img,.elig-figure img,.coupon-figure img{
+  width:100%;height:auto;display:block;
+}
+.concept-figure figcaption,.elig-figure figcaption,.coupon-figure figcaption{
+  position:absolute;left:24px;bottom:24px;right:24px;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(14px);
+  border-radius:12px;padding:14px 18px;
+  font-size:13.5px;color:var(--ink);font-weight:600;line-height:1.5;
+  display:inline-block;width:auto;max-width:520px;
+}
+.coupon-figure{max-width:760px;background:#FFF8F2}
+.coupon-figure figcaption{display:none}
+
+/* ===== Pension Figures (3枚並び) ===== */
+.pension-figures{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  max-width:1080px;margin:0 auto 56px;
+}
+.pension-figures figure{
+  margin:0;border-radius:18px;overflow:hidden;
+  background:#222;position:relative;aspect-ratio:1/1;
+  box-shadow:0 12px 28px rgba(0,0,0,.10);
+}
+.pension-figures img{width:100%;height:100%;object-fit:cover;display:block}
+.pension-figures figcaption{
+  position:absolute;left:14px;right:14px;bottom:14px;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(10px);
+  border-radius:10px;padding:10px 14px;
+  font-size:12.5px;color:var(--ink);font-weight:600;line-height:1.45;
+}
+@media(max-width:900px){
+  .pension-figures{grid-template-columns:1fr 1fr;gap:14px}
+  .pension-figures figure:nth-child(3){display:none}
+}
+@media(max-width:520px){
+  .pension-figures{grid-template-columns:1fr}
+  .pension-figures figure:nth-child(3){display:block}
 }
 
 /* ============ NOTICE BAR ============ */
@@ -209,7 +284,7 @@ h2.section-title{
 .concept-section{
   padding:120px 24px;
   background:
-    radial-gradient(900px 400px at 50% -10%,rgba(47,125,92,.05),transparent 60%),
+    radial-gradient(900px 400px at 50% -10%,rgba(233,68,54,.05),transparent 60%),
     #fff;
 }
 .concept-body{
@@ -711,7 +786,8 @@ details[open] .faq-icon::before{color:var(--accent)}
   display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
   padding-bottom:48px;border-bottom:1px solid #2E3942;
 }
-.footer-brand{font-size:18px;font-weight:700;color:#fff;margin-bottom:12px}
+.footer-brand{font-size:18px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center}
+.footer-brand img{height:22px;width:auto}
 .footer-brand .dot{color:var(--accent-soft)}
 .footer-tagline{font-size:13px;line-height:1.8;color:#8A949B;max-width:320px}
 .footer-col h5{
@@ -838,7 +914,7 @@ section[id]{scroll-margin-top:80px}
   padding:48px 32px;background:#1F2933;border-radius:24px;color:#fff;
 }
 .pension-quote h3{font-size:clamp(22px,2.8vw,28px);line-height:1.55;font-weight:700;color:#fff;margin:0 0 14px;letter-spacing:-.005em}
-.pension-quote h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(47,125,92,.5) 60%);padding:0 4px}
+.pension-quote h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(233,68,54,.5) 60%);padding:0 4px}
 .pension-quote p{font-size:14px;line-height:2;color:#A8B2BA;margin:0;max-width:560px;margin-left:auto;margin-right:auto}
 
 /* ===== Pension Breakdown (内訳テーブル) ===== */
@@ -954,7 +1030,7 @@ section[id]{scroll-margin-top:80px}
 
 .elig-cta{max-width:780px;margin:0 auto;text-align:center;padding:48px 32px;background:#1F2933;border-radius:24px;color:#fff}
 .elig-cta h3{font-size:clamp(22px,2.8vw,28px);line-height:1.55;font-weight:700;color:#fff;margin:0 0 14px;letter-spacing:-.005em}
-.elig-cta h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(47,125,92,.5) 60%);padding:0 4px}
+.elig-cta h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(233,68,54,.5) 60%);padding:0 4px}
 .elig-cta p{font-size:14px;line-height:2;color:#A8B2BA;margin:0 0 28px;max-width:560px;margin-left:auto;margin-right:auto}
 .elig-cta .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
@@ -1044,7 +1120,7 @@ section[id]{scroll-margin-top:80px}
 
 .report-conclusion{max-width:780px;margin:0 auto;text-align:center;padding:56px 36px;background:#1F2933;border-radius:24px;color:#fff}
 .report-conclusion h3{font-size:clamp(22px,2.8vw,30px);line-height:1.5;font-weight:700;color:#fff;margin:0 0 16px;letter-spacing:-.005em}
-.report-conclusion h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(47,125,92,.5) 60%);padding:0 4px}
+.report-conclusion h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(233,68,54,.5) 60%);padding:0 4px}
 .report-conclusion p{font-size:14px;line-height:2.05;color:#A8B2BA;margin:0;max-width:560px;margin-left:auto;margin-right:auto}
 
 </style>
@@ -1054,7 +1130,7 @@ section[id]{scroll-margin-top:80px}
 <!-- ============ NAV ============ -->
 <nav class="nav">
   <div class="nav-in">
-    <div class="brand"><span class="dot">●</span>Care Support Pass</div>
+    <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
     <div class="nav-menu">
       <button class="nav-link" onclick="go('concept')">コンセプト</button>
       <button class="nav-link" onclick="go('mechanism')">仕組み</button>
@@ -1077,31 +1153,40 @@ section[id]{scroll-margin-top:80px}
 <!-- ============ HERO ============ -->
 <header class="hero">
   <div class="hero-in">
-    <div class="kicker">月100円から始める、新しい生活インフラ</div>
-    <h1 class="hero-title">月<span class="em">100円</span>で、<br>あなたの生活も、<br>誰かの住まいも支える。</h1>
-    <p class="hero-sub">Care Support Pass は、飲食店・薬局・ドラッグストアなどの提携店優待を使える月額会員サービスです。<br>売上の一部は、高齢者の住まい支援に活用されます。</p>
-    <div class="hero-cta">
-      <button class="btn primary large" onclick="go('apply')">月100円で参加する</button>
-      <button class="btn large" onclick="goTab('store')">店舗・企業として参加する</button>
+    <div class="hero-text">
+      <div class="kicker">月100円から始める、新しい生活インフラ</div>
+      <h1 class="hero-title">月<span class="em">100円</span>で、<br>あなたの生活も、<br>誰かの住まいも支える。</h1>
+      <p class="hero-sub">Care Support Pass は、飲食店・薬局・ドラッグストアなどの提携店優待を使える月額会員サービスです。売上の一部は、高齢者の住まい支援に活用されます。</p>
+      <div class="hero-cta">
+        <button class="btn primary large" onclick="go('apply')">月100円で参加する</button>
+        <button class="btn large" onclick="goTab('store')">店舗・企業として参加する</button>
+      </div>
+      <div class="hero-points">
+        <div class="hero-point">
+          <div class="hp-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <div class="hp-text">毎月使える<br>生活応援クーポン</div>
+        </div>
+        <div class="hero-point">
+          <div class="hp-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="hp-text">支援先を選べる<br>高齢者住まい支援</div>
+        </div>
+        <div class="hero-point">
+          <div class="hp-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          </div>
+          <div class="hp-text">NPO・公益財団<br>との連携予定</div>
+        </div>
+      </div>
     </div>
-    <div class="hero-points">
-      <div class="hero-point">
-        <div class="hp-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        </div>
-        <div class="hp-text">毎月使える<br>生活応援クーポン</div>
-      </div>
-      <div class="hero-point">
-        <div class="hp-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </div>
-        <div class="hp-text">支援先を選べる<br>高齢者住まい支援</div>
-      </div>
-      <div class="hero-point">
-        <div class="hp-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
-        </div>
-        <div class="hp-text">NPO・公益財団<br>との連携予定</div>
+    <div class="hero-visual">
+      <img src="/assets/images/hero-movement.jpg" alt="若い世代と先輩世代が同じ街を歩く" loading="eager">
+      <div class="hero-badge">
+        <span class="hb-label">A movement, not charity.</span>
+        <span class="hb-sub">世代を超えて、社会を支える側に立つ。</span>
       </div>
     </div>
   </div>
@@ -1121,6 +1206,10 @@ section[id]{scroll-margin-top:80px}
       <span class="eyebrow">Concept</span>
       <h2 class="section-title">100円で、<br>社会の支え方を変える。</h2>
     </div>
+    <figure class="concept-figure">
+      <img src="/assets/images/person-three-generations.jpg" alt="若い世代・親世代・先輩世代が肩を並べる" loading="lazy">
+      <figcaption>世代を超えて、社会を支える側に立つ。</figcaption>
+    </figure>
     <div class="concept-body">
       <p>社会をつくり、家族を守り、地域を支えてきた人たちが、<br><b>年齢を重ねたその先で、安心して暮らせる場所を失ってしまう。</b></p>
       <p>そんな社会のままでいいのだろうか。</p>
@@ -1317,6 +1406,10 @@ section[id]{scroll-margin-top:80px}
       <p class="section-lead">クーポンは、支援参加済みの会員だけに配信されます。<br>有効期限は原則として支援日から30日間。提携サポート会社が自社販促として発行する、期間限定の優待です。</p>
     </div>
 
+    <figure class="coupon-figure">
+      <img src="/assets/images/ui-coupon-phone.jpg" alt="スマートフォン画面のクーポン表示" loading="lazy">
+    </figure>
+
     <div class="coupon-rules">
       <div class="cr-item">
         <div class="cr-icon">
@@ -1448,6 +1541,21 @@ section[id]{scroll-margin-top:80px}
         住まいに入るために、年金のほとんどが消えてしまう。<br>
         それでは、暮らしは守れても、人生の楽しみまでは守れません。
       </p>
+    </div>
+
+    <div class="pension-figures">
+      <figure>
+        <img src="/assets/images/lifestyle-flowers.jpg" alt="花を選ぶ" loading="lazy">
+        <figcaption>好きなものを、自分で選ぶ。</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/images/lifestyle-luxury.jpg" alt="小さなご褒美" loading="lazy">
+        <figcaption>頑張ってきた自分への、小さなご褒美を。</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/images/lifestyle-cafe.jpg" alt="第三のカフェで本を読む" loading="lazy">
+        <figcaption>趣味の時間を、しっかり持つ。</figcaption>
+      </figure>
     </div>
 
     <div class="pension-example">
@@ -1596,6 +1704,11 @@ section[id]{scroll-margin-top:80px}
       <h2 class="section-title">加盟施設の条件。<br>支援金は、不動産ではなく入居者の暮らしへ。</h2>
       <p class="section-lead">Care Support Pass は、<b>土地建物を所有していない介護運営会社</b>に限定して加盟を受け付けます。支援金が不動産オーナーの賃料収益や借入返済に流れる構造を、入口から排除する設計です。</p>
     </div>
+
+    <figure class="elig-figure">
+      <img src="/assets/images/housing-exterior.jpg" alt="モダンな小規模高齢者住宅の外観" loading="lazy">
+      <figcaption>"老人ホーム" ではなく、住み続けたい "住まい" を。</figcaption>
+    </figure>
 
     <div class="eligibility-grid">
       <div class="elig-card good">
@@ -2229,7 +2342,7 @@ section[id]{scroll-margin-top:80px}
   <div class="footer-in">
     <div class="footer-top">
       <div class="footer-brand-col">
-        <div class="footer-brand"><span class="dot">●</span>Care Support Pass</div>
+        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"></div>
         <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
       </div>
       <div class="footer-col">

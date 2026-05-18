@@ -4,15 +4,15 @@
 
 :root{
   --bg:#FFFFFF;
-  --soft:#F6F8F5;
-  --soft2:#F1F4EE;
+  --soft:#FFF8F2;
+  --soft2:#FFF4EE;
   --ink:#1F2933;
   --sub:#5F6B73;
   --muted:#8A949B;
-  --accent:#2F7D5C;
-  --accent-dark:#236046;
-  --accent-soft:#D9EADF;
-  --accent-soft2:#EAF3EE;
+  --accent:#E94436;
+  --accent-dark:#C9311F;
+  --accent-soft:#FBD9D4;
+  --accent-soft2:#FFF2EF;
   --line:#E5E7EB;
   --line-soft:#EFF1F3;
   --warn:#B45528;
@@ -50,8 +50,9 @@ section[id]{scroll-margin-top:80px}
   display:flex;align-items:center;gap:20px;
   padding:14px 24px;
 }
-.brand{font-size:17px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
-.brand a{color:var(--ink);text-decoration:none}
+.brand{font-size:17px;font-weight:700;letter-spacing:.02em;white-space:nowrap;display:flex;align-items:center}
+.brand a{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center}
+.brand img{height:22px;width:auto;display:block}
 .brand .dot{color:var(--accent);margin-right:2px}
 .nav-menu{display:flex;gap:6px;margin-left:24px;flex:1;overflow:auto;scrollbar-width:none}
 .nav-menu::-webkit-scrollbar{display:none}
@@ -106,7 +107,7 @@ h1.page-title,h2.section-title{
 /* ====== Sub-page hero ====== */
 .subhero{
   padding:96px 24px 64px;
-  background:radial-gradient(900px 400px at 50% -10%,rgba(47,125,92,.05),transparent 60%),#fff;
+  background:radial-gradient(900px 400px at 50% -10%,rgba(233,68,54,.05),transparent 60%),#fff;
   text-align:center;
   border-bottom:1px solid var(--line-soft);
 }
