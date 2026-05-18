@@ -958,6 +958,95 @@ section[id]{scroll-margin-top:80px}
 .elig-cta p{font-size:14px;line-height:2;color:#A8B2BA;margin:0 0 28px;max-width:560px;margin-left:auto;margin-right:auto}
 .elig-cta .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
+/* ===== Monthly Care Report ===== */
+.reporting{padding:96px 24px;background:linear-gradient(180deg,#fff,var(--soft) 80%)}
+
+.report-pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1080px;margin:0 auto 80px}
+.rp-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 26px;transition:transform .2s ease}
+.rp-card:hover{transform:translateY(-2px)}
+.rp-icon{width:44px;height:44px;border-radius:12px;background:var(--accent-soft2);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.rp-card h4{font-size:15px;font-weight:700;margin:0 0 10px;color:var(--ink)}
+.rp-card p{font-size:13px;line-height:1.85;color:var(--sub);margin:0}
+@media(max-width:900px){.report-pillars{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.report-pillars{grid-template-columns:1fr}}
+
+.report-flow{max-width:1100px;margin:0 auto 80px}
+.rf-head{text-align:center;margin-bottom:36px}
+.rf-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:12px 0 12px;color:var(--ink);letter-spacing:-.005em}
+.rf-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:560px;margin:0 auto}
+.flow-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative}
+.ft-step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px 26px;position:relative}
+.ft-step::before{content:"";position:absolute;left:26px;top:-8px;width:16px;height:16px;border-radius:50%;background:var(--accent);border:3px solid #fff}
+.ft-date{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.14em;color:var(--accent);font-weight:700;text-transform:uppercase;margin:8px 0 12px}
+.ft-step h4{font-size:15px;font-weight:700;margin:0 0 8px;color:var(--ink)}
+.ft-step p{font-size:12.5px;line-height:1.8;color:var(--sub);margin:0}
+@media(max-width:900px){.flow-timeline{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.flow-timeline{grid-template-columns:1fr}}
+
+.report-content{max-width:1080px;margin:0 auto 80px}
+.rc-head{text-align:center;margin-bottom:36px}
+.rc-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:12px 0 12px;color:var(--ink);letter-spacing:-.005em}
+.rc-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:640px;margin:0 auto}
+.rc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.rc-col{border-radius:18px;padding:30px 28px}
+.rc-col.public{background:linear-gradient(180deg,var(--accent-soft2),#fff 70%);border:1px solid var(--accent-soft)}
+.rc-col.private{background:var(--soft);border:1px solid var(--line)}
+.rc-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;font-weight:600;padding:6px 12px;border-radius:6px;margin-bottom:16px;text-transform:uppercase}
+.rc-tag.good{background:var(--accent-soft);color:var(--accent-dark)}
+.rc-tag.bad{background:#E5E7EB;color:#5F6B73}
+.rc-col ul{list-style:none;padding:0;margin:0}
+.rc-col li{font-size:13.5px;line-height:1.85;color:var(--ink);padding:9px 0 9px 22px;position:relative;border-bottom:1px solid var(--line-soft)}
+.rc-col li:last-child{border-bottom:0}
+.rc-col.public li::before{content:"✓";position:absolute;left:0;top:9px;color:var(--accent);font-weight:700}
+.rc-col.private li::before{content:"−";position:absolute;left:2px;top:8px;color:var(--muted);font-weight:700}
+.rc-note{font-size:11.5px;color:var(--muted);line-height:1.85;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line-soft)}
+@media(max-width:760px){.rc-grid{grid-template-columns:1fr}}
+
+.report-sample{max-width:880px;margin:0 auto 80px}
+.rs-head-outer{text-align:center;margin-bottom:32px}
+.rs-head-outer h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:12px 0 12px;color:var(--ink);letter-spacing:-.005em}
+.rs-head-outer p{font-size:13.5px;line-height:1.85;color:var(--sub);max-width:600px;margin:0 auto}
+.rs-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:40px;box-shadow:0 1px 0 rgba(0,0,0,.02),0 12px 32px rgba(0,0,0,.03)}
+.rs-card-head{padding-bottom:24px;border-bottom:1px solid var(--line)}
+.rs-card-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.18em;font-weight:700;color:var(--accent);background:var(--accent-soft2);padding:5px 11px;border-radius:6px;margin-bottom:14px}
+.rs-card-head h4{font-size:22px;font-weight:700;margin:0 0 6px;color:var(--ink);letter-spacing:-.005em}
+.rs-facility{font-size:13px;color:var(--sub);margin:0}
+.rs-summary{padding:22px 0;border-bottom:1px solid var(--line-soft)}
+.rs-summary p{font-size:14.5px;line-height:2;color:var(--ink);margin:0}
+.rs-summary b{color:var(--accent-dark);font-weight:700}
+.rs-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;padding-bottom:24px;border-bottom:1px solid var(--line-soft)}
+.rsn-item{background:var(--soft);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column}
+.rsn-label{font-size:11px;color:var(--sub);font-weight:500;margin-bottom:6px;letter-spacing:.02em}
+.rsn-val{font-family:'Inter',sans-serif;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.015em;line-height:1}
+.rsn-val small{font-size:11px;color:var(--sub);margin-left:3px;font-weight:500}
+.rs-usage{padding:6px 0 22px;border-bottom:1px solid var(--line-soft)}
+.rs-usage h5,.rs-comment h5{font-size:13px;font-weight:700;color:var(--ink);margin:0 0 14px;letter-spacing:.02em}
+.rs-usage ul{list-style:none;padding:0;margin:0}
+.rs-usage li{font-size:13.5px;line-height:1.85;color:var(--ink);padding:6px 0;display:flex;justify-content:space-between;border-bottom:1px solid var(--line-soft)}
+.rs-usage li:last-child{border-bottom:0}
+.rs-usage li b{font-family:'Inter',sans-serif;font-weight:600;color:var(--ink)}
+.rs-comment{padding-top:22px}
+.rs-comment p{font-size:13.5px;line-height:2;color:var(--sub);margin:0;padding:18px 20px;background:var(--soft);border-left:3px solid var(--accent);border-radius:0 10px 10px 0}
+@media(max-width:600px){.rs-card{padding:28px 22px}.rs-numbers{grid-template-columns:1fr 1fr}}
+
+.report-violation{max-width:880px;margin:0 auto 80px}
+.rv-head{text-align:center;margin-bottom:28px}
+.rv-head h3{font-size:clamp(20px,2.4vw,24px);line-height:1.5;font-weight:700;margin:0 0 12px;color:var(--ink);letter-spacing:-.005em}
+.rv-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:600px;margin:0 auto}
+.violation-table-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.violation-table{width:100%;border-collapse:collapse;font-size:14px}
+.violation-table thead th{background:var(--soft);color:var(--sub);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:14px 22px;text-align:left;border-bottom:2px solid var(--line)}
+.violation-table tbody td{padding:16px 22px;border-bottom:1px solid var(--line-soft);color:var(--ink);font-size:14px;line-height:1.7}
+.violation-table tbody tr:last-child td{border-bottom:0}
+.violation-table tbody tr.severe td{background:#FFF7EE;color:#7A4E1F}
+.violation-table tbody tr.severe td:first-child{font-weight:600}
+.rv-note{font-size:11.5px;color:var(--muted);line-height:1.85;margin:18px 0 0}
+
+.report-conclusion{max-width:780px;margin:0 auto;text-align:center;padding:56px 36px;background:#1F2933;border-radius:24px;color:#fff}
+.report-conclusion h3{font-size:clamp(22px,2.8vw,30px);line-height:1.5;font-weight:700;color:#fff;margin:0 0 16px;letter-spacing:-.005em}
+.report-conclusion h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(47,125,92,.5) 60%);padding:0 4px}
+.report-conclusion p{font-size:14px;line-height:2.05;color:#A8B2BA;margin:0;max-width:560px;margin-left:auto;margin-right:auto}
+
 </style>
 </head>
 <body>
@@ -974,6 +1063,7 @@ section[id]{scroll-margin-top:80px}
       <button class="nav-link" onclick="go('targets')">支援先</button>
       <button class="nav-link" onclick="go('pension')">年金余白型</button>
       <button class="nav-link" onclick="go('eligibility')">加盟施設</button>
+      <button class="nav-link" onclick="go('reporting')">月次報告</button>
       <button class="nav-link" onclick="go('store')">店舗の方</button>
       <button class="nav-link" onclick="go('corporate')">法人の方</button>
       <button class="nav-link" onclick="go('faq')">FAQ</button>
@@ -1650,6 +1740,184 @@ section[id]{scroll-margin-top:80px}
     </div>
   </div>
 </section>
+
+<!-- ============ MONTHLY CARE REPORT ============ -->
+<section id="reporting" class="reporting">
+  <div class="wrap">
+    <div class="section-head center">
+      <span class="eyebrow">Monthly Care Report</span>
+      <h2 class="section-title">支援金は、<br>報告する施設にだけ届く。</h2>
+      <p class="section-lead">Care Support Pass では、加盟施設に<b>月次活動報告の公開</b>を義務づけます。支援金が入居者の本人負担軽減や住まいの継続に使われていることを、支援する人が毎月確認できる仕組みです。報告できない月は、原則として翌月以降の支援金交付を停止または保留します。</p>
+    </div>
+
+    <div class="report-pillars">
+      <div class="rp-card">
+        <div class="rp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        </div>
+        <h4>支援者への説明責任</h4>
+        <p>支援者は、自分の100円が、どの施設で、どう使われたかを毎月確認できます。</p>
+      </div>
+      <div class="rp-card">
+        <div class="rp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h4>入居者の生活改善を確認</h4>
+        <p>支援金が利益補填ではなく、本人負担軽減や生活改善に使われていることを毎月数値で確認します。</p>
+      </div>
+      <div class="rp-card">
+        <div class="rp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h4>加盟施設の品質維持</h4>
+        <p>毎月の報告ができない施設は、そもそも支援金を扱う資格がないと考えています。</p>
+      </div>
+      <div class="rp-card">
+        <div class="rp-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+        </div>
+        <h4>仕組み全体の透明性</h4>
+        <p>支援者・施設・事務局・NPO・公益財団のすべてが同じ事実を見られる状態をつくります。</p>
+      </div>
+    </div>
+
+    <div class="report-flow">
+      <div class="rf-head">
+        <span class="eyebrow">Workflow</span>
+        <h3>月次報告のフロー</h3>
+        <p>提出→確認→公開→交付判断、を毎月の固定スケジュールで回します。</p>
+      </div>
+      <div class="flow-timeline">
+        <div class="ft-step">
+          <div class="ft-date">毎月 5日まで</div>
+          <h4>加盟施設が提出</h4>
+          <p>前月分の月次活動報告を Care Support Pass 事務局に提出。</p>
+        </div>
+        <div class="ft-step">
+          <div class="ft-date">毎月 10日まで</div>
+          <h4>事務局が内容確認</h4>
+          <p>必要に応じて修正依頼。個人情報を除く公開情報を整理。</p>
+        </div>
+        <div class="ft-step">
+          <div class="ft-date">毎月 15日</div>
+          <h4>サイト上で公開</h4>
+          <p>支援者・会員・一般の方が、施設ページから確認できます。</p>
+        </div>
+        <div class="ft-step">
+          <div class="ft-date">毎月 末</div>
+          <h4>翌月の支援金交付判断</h4>
+          <p>NPO・公益財団・支援基金から実績ベースで翌月の支援金を交付。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-content">
+      <div class="rc-head">
+        <span class="eyebrow">What's Reported</span>
+        <h3>毎月、何を報告するのか。</h3>
+        <p>個人情報は厳格に保護し、施設運営と支援金の使途に関する情報のみを公開します。</p>
+      </div>
+      <div class="rc-grid">
+        <div class="rc-col public">
+          <div class="rc-tag good">サイト上で公開する情報</div>
+          <ul>
+            <li>施設名・施設規模・所在地</li>
+            <li>Care Support Pass 対象室数</li>
+            <li>今月の対象入居者数</li>
+            <li>今月の支援金総額</li>
+            <li>本人負担軽減総額・平均軽減額</li>
+            <li>平均本人負担額</li>
+            <li>支援金の使途内訳（家賃軽減・共益費・初期費用等）</li>
+            <li>地域連携・協力会社との活動</li>
+            <li>来月の支援予定</li>
+            <li>施設責任者コメント</li>
+          </ul>
+        </div>
+        <div class="rc-col private">
+          <div class="rc-tag bad">非公開（内部監査のみ）</div>
+          <ul>
+            <li>入居者個別情報・氏名</li>
+            <li>顔写真・要介護度・病名</li>
+            <li>具体的な収入・年金額</li>
+            <li>契約書・請求明細</li>
+            <li>家族情報</li>
+            <li>苦情・事故の詳細</li>
+            <li>医療・介護記録</li>
+          </ul>
+          <p class="rc-note">個人名・顔写真・病名・要介護度等は、本人同意がない限り公開しません。事務局・NPO・公益財団・指定監査人のみが必要に応じて確認します。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-sample">
+      <div class="rs-head-outer">
+        <span class="eyebrow">Sample Report</span>
+        <h3>公開される月次レポートのイメージ</h3>
+        <p>下記は表示イメージのサンプルです。実際の公開レポートは、加盟施設の実数値に基づき毎月15日に公開されます。</p>
+      </div>
+      <div class="rs-card">
+        <div class="rs-card-head">
+          <span class="rs-card-tag">MONTHLY CARE REPORT</span>
+          <h4>2026年6月 月次ケアレポート</h4>
+          <p class="rs-facility">Care Support Pass 加盟施設：○○ホーム（サンプル）</p>
+        </div>
+
+        <div class="rs-summary">
+          <p>今月は、Care Support Pass 対象室10室のうち <b>8室に支援を実施</b>しました。支援金総額は <b>240,000円</b>。すべて入居者本人の月額負担軽減と入居初期用品の購入に充当しました。</p>
+        </div>
+
+        <div class="rs-numbers">
+          <div class="rsn-item"><span class="rsn-label">対象室数</span><span class="rsn-val">10<small>室</small></span></div>
+          <div class="rsn-item"><span class="rsn-label">対象入居者</span><span class="rsn-val">8<small>名</small></span></div>
+          <div class="rsn-item"><span class="rsn-label">支援金総額</span><span class="rsn-val">240,000<small>円</small></span></div>
+          <div class="rsn-item"><span class="rsn-label">平均本人負担</span><span class="rsn-val">48,500<small>円</small></span></div>
+          <div class="rsn-item"><span class="rsn-label">平均軽減額</span><span class="rsn-val">27,500<small>円</small></span></div>
+          <div class="rsn-item"><span class="rsn-label">年金生活者枠</span><span class="rsn-val">7<small>名</small></span></div>
+        </div>
+
+        <div class="rs-usage">
+          <h5>今月の使い道</h5>
+          <ul>
+            <li><span>家賃負担軽減</span><b>160,000円</b></li>
+            <li><span>共益費軽減</span><b>60,000円</b></li>
+            <li><span>寝具・生活用品支援</span><b>20,000円</b></li>
+          </ul>
+        </div>
+
+        <div class="rs-comment">
+          <h5>施設責任者コメント</h5>
+          <p>支援金により、今月は新たに2名の方が本人負担5万円以内で入居できました。継続入居中の6名についても、平均27,500円の月額負担軽減を行いました。今後も、年金の中に暮らしの余白を残せる運営を続けます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-violation">
+      <div class="rv-head">
+        <h3>未提出・虚偽報告への対応</h3>
+        <p>支援金は、報告できる施設にだけ届きます。報告がない施設、使途が確認できない施設には、支援金を交付しません。</p>
+      </div>
+      <div class="violation-table-wrap">
+        <table class="violation-table">
+          <thead><tr><th>状況</th><th>対応</th></tr></thead>
+          <tbody>
+            <tr><td>期限内に提出</td><td>通常支援金交付</td></tr>
+            <tr><td>7日以内の遅延</td><td>注意・支援金一部保留</td></tr>
+            <tr><td>15日以上遅延</td><td>支援金交付停止</td></tr>
+            <tr><td>2ヶ月連続未提出</td><td>加盟一時停止</td></tr>
+            <tr class="severe"><td>虚偽報告</td><td>即時加盟取消・既交付分の返還請求</td></tr>
+            <tr class="severe"><td>使途不明</td><td>支援金停止・第三者監査対象</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="rv-note">加盟契約には、月次報告義務・公開同意・支援金交付条件・虚偽報告時の対応・監査受入義務を明記します。年1回、第三者または NPO・公益財団による確認・監査を受けていただきます。</p>
+    </div>
+
+    <div class="report-conclusion">
+      <h3>支援金は、<span class="em">透明性のある施設にだけ届く。</span></h3>
+      <p>それが、Care Support Pass の信頼の土台です。<br>支援する人が、自分のお金の使い道を見られること。<br>それを Care Support Pass はルールとして守ります。</p>
+    </div>
+  </div>
+</section>
 <section id="split" class="npo-section">
   <div class="wrap">
     <div class="section-head center">
@@ -1970,6 +2238,7 @@ section[id]{scroll-margin-top:80px}
         <a href="#plans">プラン</a>
         <a href="#coupons">優待例</a>
         <a href="#targets">支援先</a>
+        <a href="#reporting">月次活動報告</a>
       </div>
       <div class="footer-col">
         <h5>For Partners</h5>
