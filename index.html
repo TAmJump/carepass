@@ -823,6 +823,51 @@ section[id]{scroll-margin-top:80px}
 .pension-quote h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(47,125,92,.5) 60%);padding:0 4px}
 .pension-quote p{font-size:14px;line-height:2;color:#A8B2BA;margin:0;max-width:560px;margin-left:auto;margin-right:auto}
 
+/* ===== Pension Breakdown (内訳テーブル) ===== */
+.pension-breakdown{max-width:920px;margin:64px auto 0;background:#fff;border:1px solid var(--line);border-radius:22px;padding:48px 40px}
+.pension-breakdown .pb-head{text-align:center;margin-bottom:36px}
+.pension-breakdown .pb-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.45;font-weight:700;margin:14px 0 14px;color:var(--ink);letter-spacing:-.005em}
+.pension-breakdown .pb-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:640px;margin:0 auto}
+.pb-table-wrap{overflow-x:auto}
+.pb-table{width:100%;border-collapse:collapse;font-size:14px}
+.pb-table thead th{background:var(--soft);color:var(--sub);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:14px 18px;text-align:left;border-bottom:2px solid var(--line)}
+.pb-table thead th.num{text-align:right}
+.pb-table tbody th{font-size:14px;font-weight:500;color:var(--ink);padding:18px;text-align:left;border-bottom:1px solid var(--line-soft);width:38%;vertical-align:middle}
+.pb-table tbody td{padding:18px;border-bottom:1px solid var(--line-soft);color:var(--sub);font-size:13.5px;line-height:1.7;vertical-align:middle}
+.pb-table tbody td.num{text-align:right;color:var(--ink);font-family:'Inter',sans-serif;font-weight:500;font-size:18px;white-space:nowrap;width:130px}
+.pb-table tbody td.num b{font-size:24px;font-weight:700}
+.pb-table tbody td.num small{font-size:11px;color:var(--sub);margin-left:2px;font-weight:400}
+.pb-table tr.row-self th,.pb-table tr.row-self td{background:var(--accent-soft2);font-weight:600;color:var(--accent-dark)}
+.pb-table tr.row-self td.num{color:var(--accent-dark)}
+.pb-table tr.row-total th,.pb-table tr.row-total td{background:#1F2933;color:#fff;font-weight:700;border-bottom:0}
+.pb-table tr.row-total td{color:#A8B2BA}
+.pb-table tr.row-total td.num{color:#fff}
+.pension-breakdown .pb-note{font-size:11.5px;color:var(--muted);line-height:1.85;margin:20px 0 0;text-align:left}
+@media(max-width:640px){
+  .pension-breakdown{padding:32px 20px}
+  .pb-table tbody th,.pb-table tbody td{padding:14px 12px;font-size:12.5px}
+  .pb-table tbody td.num{font-size:15px;width:auto;padding-right:14px}
+  .pb-table tbody td.num b{font-size:18px}
+}
+
+/* ===== Pension Mix (入居枠の構成) ===== */
+.pension-mix{max-width:1080px;margin:64px auto 0}
+.pension-mix .pm-head{text-align:center;margin-bottom:36px}
+.pension-mix .pm-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:14px 0;color:var(--ink);letter-spacing:-.005em}
+.pension-mix .pm-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:680px;margin:0 auto}
+.mix-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.mix-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 24px;position:relative;transition:transform .2s ease}
+.mix-card:hover{transform:translateY(-2px)}
+.mix-card.primary{background:linear-gradient(180deg,var(--accent-soft2),#fff 70%);border-color:var(--accent-soft)}
+.mix-card .mx-pct{font-family:'Inter',sans-serif;font-size:36px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:14px}
+.mix-card.primary .mx-pct{color:var(--accent)}
+.mix-card .mx-pct .mx-u{font-size:18px;color:var(--sub);font-weight:500;margin-left:2px}
+.mix-card.primary .mx-pct .mx-u{color:var(--accent-dark)}
+.mix-card h4{font-size:15px;font-weight:700;margin:0 0 10px;color:var(--ink)}
+.mix-card p{font-size:13px;line-height:1.85;color:var(--sub);margin:0}
+@media(max-width:900px){.mix-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.mix-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1242,6 +1287,84 @@ section[id]{scroll-margin-top:80px}
         <div class="pp-num">PILLAR 04</div>
         <h4>本人に現金は渡さない。</h4>
         <p>支援金は本人に現金給付するのではなく、NPO・公益財団を通じて施設への居住支援助成として活用し、月額負担を引き下げます。収入認定や金銭管理リスクを回避し、安全に長く支える仕組みです。</p>
+      </div>
+    </div>
+
+    <div class="pension-breakdown">
+      <div class="pb-head">
+        <span class="eyebrow">Cost Breakdown</span>
+        <h3>月12万円の住まいを、本人負担5万円で住める設計に。</h3>
+        <p>実際にかかる月額費用を、本人と複数の支払元で分担します。本人負担は全体の約42%。残りは、Care Support Pass 会員、サポート会社、NPO・公益財団、住宅セーフティネット制度等から積み上げます。</p>
+      </div>
+      <div class="pb-table-wrap">
+        <table class="pb-table">
+          <thead>
+            <tr><th>支払元</th><th class="num">月額</th><th>役割</th></tr>
+          </thead>
+          <tbody>
+            <tr class="row-self">
+              <th>本人負担</th>
+              <td class="num"><b>50,000</b><small>円</small></td>
+              <td>年金の中に「暮らしの余白」を残す</td>
+            </tr>
+            <tr>
+              <th>Care Support Pass 施設支援金</th>
+              <td class="num">20,000<small>円</small></td>
+              <td>会員会費の一部を NPO・公益財団経由で配分</td>
+            </tr>
+            <tr>
+              <th>サポート会社協賛</th>
+              <td class="num">10,000<small>円</small></td>
+              <td>地域企業・店舗からの賛同協賛</td>
+            </tr>
+            <tr>
+              <th>NPO・公益財団 居住支援助成</th>
+              <td class="num">15,000<small>円</small></td>
+              <td>寄附・基金からの居住支援助成</td>
+            </tr>
+            <tr>
+              <th>家賃低廉化・住替え支援</th>
+              <td class="num">25,000<small>円</small></td>
+              <td>住宅セーフティネット制度等の活用</td>
+            </tr>
+            <tr class="row-total">
+              <th>合計（実費）</th>
+              <td class="num"><b>120,000</b><small>円</small></td>
+              <td>本人負担は約42%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="pb-note">※ 金額は標準モデルのイメージです。実際の支援金額・配分・適用可能な制度は、施設規模・地域・物件状況・制度の利用可否によって異なります。住宅セーフティネット制度・家賃低廉化補助等の利用可否は、自治体への個別確認が必要です。</p>
+    </div>
+
+    <div class="pension-mix">
+      <div class="pm-head">
+        <span class="eyebrow">Resident Mix</span>
+        <h3>入居枠の構成。<br>事業として持続させるためのバランス。</h3>
+        <p>施設全体を「支援対象だけ」にすると収支が崩れます。Care Support Pass 導入施設では、年金生活者枠を主役にしつつ、生活保護相談枠・通常入居枠・緊急一時枠をバランス良く配置し、現場と事業の両方を持続させます。</p>
+      </div>
+      <div class="mix-grid">
+        <div class="mix-card primary">
+          <div class="mx-pct">60-70<span class="mx-u">%</span></div>
+          <h4>年金生活者枠</h4>
+          <p>事業の主役。年金収入があり、本人負担5万円以内で生活設計できる方。年金8万円前後を中心に、制度に頼る前の段階で支える対象。</p>
+        </div>
+        <div class="mix-card neutral">
+          <div class="mx-pct">10-20<span class="mx-u">%</span></div>
+          <h4>生活保護相談枠</h4>
+          <p>行政・福祉事務所・地域包括との連携枠。生活保護受給中の方も、必要な方には個別にご相談可能。ただし施設全体を生活保護前提にはしません。</p>
+        </div>
+        <div class="mix-card neutral">
+          <div class="mx-pct">15-25<span class="mx-u">%</span></div>
+          <h4>通常入居枠</h4>
+          <p>収支安定のための通常価格入居枠。全員を支援対象にすると事業が継続できません。通常価格でご入居いただける方も大切なお客様です。</p>
+        </div>
+        <div class="mix-card neutral">
+          <div class="mx-pct">5<span class="mx-u">%</span></div>
+          <h4>緊急一時枠</h4>
+          <p>病院退院後、地域包括対応、住み替え緊急対応のための一時受け入れ枠。地域の医療・福祉ネットワークとの接点として機能します。</p>
+        </div>
       </div>
     </div>
 
