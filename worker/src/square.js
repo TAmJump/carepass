@@ -105,6 +105,8 @@ export async function createCard(env, customerId, sourceId, verificationToken, b
 // --- Subscriptions ---
 
 export async function createSubscription(env, { customerId, planVariationId, cardId, facilityId }) {
+  // Square Subscription source オブジェクトには name のみ許可。url は INVALID_REQUEST。
+  // facility_id は source.name に埋め込んで Dashboard で見えるようにする。
   const body = {
     idempotency_key: uuid(),
     location_id: env.SQUARE_LOCATION_ID,
@@ -113,9 +115,7 @@ export async function createSubscription(env, { customerId, planVariationId, car
     card_id: cardId,
     timezone: 'Asia/Tokyo',
     source: {
-      name: 'Care Support Pass',
-      // facility_id を source.name に追記して Square ダッシュボードでも識別可能に
-      ...(facilityId ? { url: `https://carepass.tamjump.com/?facility=${facilityId}` } : {}),
+      name: facilityId ? `Care Support Pass / ${facilityId}` : 'Care Support Pass',
     },
   };
   const res = await sq(env, 'POST', '/v2/subscriptions', body);
