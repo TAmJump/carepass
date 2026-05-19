@@ -93,6 +93,14 @@
     const phone = form.elements['phone_number']?.value || '';
     const postalCode = form.elements['postal_code']?.value || '';
 
+    // ステップ1: カード情報をトークン化
+    const tokenResult = await card.tokenize();
+    if (tokenResult.status !== 'OK') {
+      const msg = tokenResult.errors?.map((e) => e.message).join('; ') || 'カード情報の確認でエラーが発生しました';
+      throw new Error(msg);
+    }
+
+    // ステップ2: SCA検証（STORE intent でカード保存）
     const verificationDetails = {
       intent: 'STORE',
       customerInitiated: true,
@@ -107,14 +115,14 @@
       },
     };
 
-    const result = await card.tokenize(verificationDetails);
-    if (result.status !== 'OK') {
-      const msg = result.errors?.map((e) => e.message).join('; ') || 'カード情報の確認でエラーが発生しました';
-      throw new Error(msg);
+    const verifyResult = await payments.verifyBuyer(tokenResult.token, verificationDetails);
+    if (!verifyResult || !verifyResult.token) {
+      throw new Error('カードの確認(SCA)に失敗しました');
     }
+
     return {
-      sourceId: result.token,
-      verificationToken: result.verificationDetailsToken,
+      sourceId: tokenResult.token,
+      verificationToken: verifyResult.token,
     };
   }
 
