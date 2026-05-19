@@ -1402,6 +1402,33 @@ section[id]{scroll-margin-top:80px}
 .aud-card:hover .aud-arrow{transform:translateX(4px)}
 @media(max-width:880px){.aud-grid{grid-template-columns:1fr}}
 
+/* === Square Web Payments SDK card container === */
+.card-row{margin-top:8px}
+.card-container{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:14px 16px;
+  min-height:64px;
+  transition:border-color .2s, box-shadow .2s;
+}
+.card-container:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(233,68,54,.08);
+}
+.card-note{
+  font-size:11.5px;color:var(--sub);line-height:1.6;
+  margin:8px 0 0;padding-left:2px;
+}
+.pay-status{
+  margin-top:14px;font-size:13px;line-height:1.7;
+  text-align:center;min-height:1.7em;
+}
+.pay-status.loading{color:var(--sub)}
+.pay-status.error{color:var(--accent);background:var(--accent-soft2);padding:10px 14px;border-radius:8px;border:1px solid var(--accent-soft)}
+.pay-status.success{color:#1a7a3e}
+button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
+
 </style>
 </head>
 <body>
@@ -1773,65 +1800,75 @@ section[id]{scroll-margin-top:80px}
     <div class="form-panel active" id="panel-individual">
       <div class="form-card">
         <h3>個人会員のお申し込み</h3>
-        <p class="form-desc">月100円から、提携店優待と高齢者住まい支援に参加できます。</p>
-        <div class="form-grid-2">
-          <div class="form-row"><label>氏名<span class="req">必須</span></label><input type="text" placeholder="山田 太郎"></div>
-          <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" placeholder="example@mail.com"></div>
-        </div>
-        <div class="form-grid-2">
-          <div class="form-row"><label>電話番号<span class="opt">任意</span></label><input type="tel" placeholder="090-0000-0000"></div>
-          <div class="form-row"><label>居住地域<span class="req">必須</span></label><input type="text" placeholder="例：東京都足立区"></div>
-        </div>
-        <div class="form-row">
-          <label>希望プラン<span class="req">必須</span></label>
-          <select>
-            <option>Care 100（月100円）</option>
-            <option>Care 300（月300円）</option>
-            <option>Care 500（月500円）</option>
-            <option>Care 1000（月1,000円）</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>支援したいテーマ<span class="opt">任意</span></label>
-          <select>
-            <option>地域指定なし</option>
-            <option>住まいに不安を抱える先輩世代</option>
-            <option>身寄りが少ない方への支え</option>
-            <option>家財整理に支援が必要な方</option>
-            <option>制度につながる前のつなぎ支援</option>
-            <option>介護職員の休憩環境</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>利用したい優待ジャンル<span class="opt">任意</span></label>
-          <select>
-            <option>飲食店</option>
-            <option>薬局・ドラッグストア</option>
-            <option>配食・買い物</option>
-            <option>生活サービス（タクシー / 理美容 等）</option>
-            <option>すべて</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>決済方法<span class="req">必須</span></label>
-          <select>
-            <option>クレジットカード</option>
-            <option>口座振替</option>
-            <option>各種スマホ決済</option>
-          </select>
-        </div>
-        <div class="consent-box">
-          <ul>
-            <li>Care Support Pass は寄附ではなく会員サービスです。</li>
-            <li>会費は寄附控除の対象ではありません。</li>
-            <li>クーポンは提携店舗が提供する優待です。</li>
-            <li>クーポン内容は店舗・時期により変動します。</li>
-            <li>処方薬・保険調剤の自己負担分には使えません。</li>
-            <li>売上の一部を高齢者住まい支援に充当します。</li>
-          </ul>
-          <label class="consent-check"><input type="checkbox"> 上記内容を理解した上で、お申し込みに同意します。</label>
-        </div>
-        <button type="button" class="btn primary large" style="width:100%" onclick="window.location.href='/thanks.html?type=individual'">月額会員サービスに申し込む</button>
+        <p class="form-desc">月100円から、提携店優待と高齢者住まい支援に参加できます。クレジットカードでお手続きください。</p>
+        <form id="csp-form" data-type="individual" novalidate>
+          <div class="form-grid-2">
+            <div class="form-row"><label>姓<span class="req">必須</span></label><input type="text" name="family_name" placeholder="山田" required></div>
+            <div class="form-row"><label>名<span class="req">必須</span></label><input type="text" name="given_name" placeholder="太郎" required></div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" name="email_address" placeholder="example@mail.com" required></div>
+            <div class="form-row"><label>電話番号<span class="opt">任意</span></label><input type="tel" name="phone_number" placeholder="090-0000-0000"></div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-row"><label>郵便番号<span class="req">必須</span></label><input type="text" name="postal_code" placeholder="123-4567" required></div>
+            <div class="form-row"><label>居住地域<span class="opt">任意</span></label><input type="text" name="area" placeholder="例：東京都足立区"></div>
+          </div>
+          <div class="form-row">
+            <label>希望プラン<span class="req">必須</span></label>
+            <select name="plan_key" required>
+              <option value="care100">Care 100（月100円）</option>
+              <option value="care300">Care 300（月300円）</option>
+              <option value="care500">Care 500（月500円）</option>
+              <option value="care1000">Care 1000（月1,000円）</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>支援したいテーマ<span class="opt">任意</span></label>
+            <select name="support_theme">
+              <option value="">地域指定なし</option>
+              <option value="housing">住まいに不安を抱える先輩世代</option>
+              <option value="solo">身寄りが少ない方への支え</option>
+              <option value="cleanup">家財整理に支援が必要な方</option>
+              <option value="bridge">制度につながる前のつなぎ支援</option>
+              <option value="staff">介護職員の休憩環境</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>利用したい優待ジャンル<span class="opt">任意</span></label>
+            <select name="coupon_genre">
+              <option value="">指定なし</option>
+              <option value="food">飲食店</option>
+              <option value="pharmacy">薬局・ドラッグストア</option>
+              <option value="delivery">配食・買い物</option>
+              <option value="lifestyle">生活サービス（タクシー / 理美容 等）</option>
+              <option value="all">すべて</option>
+            </select>
+          </div>
+
+          <!-- Square Web Payments SDK card container -->
+          <div class="form-row card-row">
+            <label>クレジットカード情報<span class="req">必須</span></label>
+            <div id="card-container" class="card-container"></div>
+            <p class="card-note">入力情報は Square 社のセキュア決済システムに直接送信され、本サイトには保存されません。</p>
+          </div>
+
+          <div class="consent-box">
+            <ul>
+              <li>Care Support Pass は寄附ではなく会員サービスです。</li>
+              <li>会費は寄附控除の対象ではありません。</li>
+              <li>クーポンは提携店舗が提供する優待です。</li>
+              <li>クーポン内容は店舗・時期により変動します。</li>
+              <li>処方薬・保険調剤の自己負担分には使えません。</li>
+              <li>売上の一部を高齢者住まい支援に充当します。</li>
+              <li>退会はいつでも可能です。次回課金日の前日までにご連絡ください。</li>
+            </ul>
+            <label class="consent-check"><input type="checkbox" name="consent" required> 上記内容を理解した上で、お申し込みに同意します。</label>
+          </div>
+
+          <button id="pay-submit" type="button" class="btn primary large" style="width:100%" disabled>月額会員サービスに申し込む</button>
+          <div id="pay-status" class="pay-status" role="status" aria-live="polite"></div>
+        </form>
       </div>
     </div>
 
@@ -1906,5 +1943,14 @@ function go(id){
   if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 </script>
+
+<!-- Square Web Payments SDK + Care Support Pass payment integration -->
+<script>
+  // Sandbox / Production の切替は wrangler 側で行う。
+  // フロントは API base のみ指定。/api/config で application_id を動的取得。
+  window.CSP_API_BASE = "https://api.carepass.tamjump.com";
+</script>
+<script src="https://web.squarecdn.com/v1/square.js"></script>
+<script src="/assets/payment.js" defer></script>
 </body>
 </html>

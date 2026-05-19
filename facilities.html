@@ -656,8 +656,86 @@
   <h2>あなたの施設で、<br>支援が届く現場を作りませんか。</h2>
   <p>Care Support Pass 加盟相談は無料です。運営状況の把握から月次報告体制の設計まで、運営事務局がサポートします。</p>
   <div class="cta-row">
-    <a class="btn btn-white large" href="https://tamjump.com/contact.html" target="_blank" rel="noopener">加盟相談する（無料）</a>
-    <a class="btn btn-outline-white large" href="/#how">仕組みを確認する</a>
+    <a class="btn btn-white large" href="https://tamjump.com/contact.html" target="_blank" rel="noopener">まずは加盟相談する（無料）</a>
+    <a class="btn btn-outline-white large" href="#fac-apply-form">加盟申し込みへ進む</a>
+  </div>
+</section>
+
+<!-- ============ APPLY FORM ============ -->
+<section id="fac-apply-form" style="background:var(--bg-soft);padding:80px 0">
+  <div class="wrap" style="max-width:880px;margin:0 auto;padding:0 20px">
+    <div class="section-head center" style="margin-bottom:32px">
+      <span class="eyebrow">Apply</span>
+      <h2 class="section-title">介護施設の加盟申し込み</h2>
+      <p class="section-lead">事前審査・契約締結後、月額会費の課金が開始されます。<br>運営方針と月次報告の体制を整えた上でお申し込みください。</p>
+    </div>
+    <div class="apply-form" style="background:#fff;border-radius:12px;padding:32px;box-shadow:0 4px 24px rgba(31,41,51,.06)">
+      <form id="csp-form" data-type="facility" novalidate>
+        <div class="form-grid-2">
+          <div class="form-row"><label>運営法人名<span class="req">必須</span></label><input type="text" name="company_name" required></div>
+          <div class="form-row"><label>施設名<span class="req">必須</span></label><input type="text" name="facility_name" required></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row"><label>郵便番号<span class="req">必須</span></label><input type="text" name="postal_code" placeholder="123-4567" required></div>
+          <div class="form-row"><label>所在地<span class="req">必須</span></label><input type="text" name="address_line_1" placeholder="例：東京都足立区..." required></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row"><label>担当者 姓<span class="req">必須</span></label><input type="text" name="family_name" required></div>
+          <div class="form-row"><label>担当者 名<span class="req">必須</span></label><input type="text" name="given_name" required></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row"><label>電話番号<span class="req">必須</span></label><input type="tel" name="phone_number" required></div>
+          <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" name="email_address" required></div>
+        </div>
+        <div class="form-row">
+          <label>規模・希望プラン<span class="req">必須</span></label>
+          <select name="plan_key" required>
+            <option value="">選択してください</option>
+            <option value="facility_s">Facility S — 9〜29室（月¥5,000・支援2室以上）</option>
+            <option value="facility_m">Facility M — 30〜44室（月¥10,000・支援3室以上）</option>
+            <option value="facility_l">Facility L — 45〜59室（月¥15,000・支援5室以上）</option>
+            <option value="facility_xl">Facility XL — 60〜79室（月¥20,000・支援7室以上）</option>
+            <option value="facility_xxl">Facility XXL — 80室以上（月¥30,000・支援10室以上）</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>土地建物の所有形態<span class="req">必須</span></label>
+          <select name="ownership" required>
+            <option value="">選択してください</option>
+            <option value="non_owned">非所有（賃借）</option>
+            <option value="owned">所有</option>
+          </select>
+          <p class="card-note" style="margin-top:6px;font-size:12px;color:var(--sub)">※ 土地建物を所有されている法人は加盟対象外です。詳しくは <a href="#fac-principle" style="color:var(--accent)">こちら</a> をご確認ください。</p>
+        </div>
+        <div class="form-row"><label>運営施設の総室数<span class="req">必須</span></label><input type="number" name="total_rooms" min="1" required></div>
+        <div class="form-row"><label>支援対象として確保可能な室数<span class="req">必須</span></label><input type="number" name="support_rooms" min="1" required></div>
+        <div class="form-row"><label>備考・運営状況<span class="opt">任意</span></label><textarea name="note" placeholder="現入居率、職員体制、月次報告の対応可否など"></textarea></div>
+
+        <!-- Square Web Payments SDK card container -->
+        <div class="form-row card-row">
+          <label>クレジットカード情報<span class="req">必須</span></label>
+          <div id="card-container" class="card-container"></div>
+          <p class="card-note">入力情報は Square 社のセキュア決済システムに直接送信され、本サイトには保存されません。事前審査完了後、課金が開始されます。</p>
+        </div>
+
+        <div class="consent-box">
+          <h5 style="font-size:13px;font-weight:700;color:var(--ink);margin:0 0 12px">同意事項</h5>
+          <ul>
+            <li>月次活動報告（提出5日／確認10日／公開15日）の運用に同意します。</li>
+            <li>未提出ペナルティ（7日遅延=注意 / 15日=停止 / 2ヶ月連続=加盟一時停止 / 虚偽=即時取消・返還請求）に同意します。</li>
+            <li>本人現金給付は行わず、施設への月額負担引き下げ助成として支援を受けます。</li>
+            <li>退会はいつでも可能です。次回課金日の前日までにご連絡ください。</li>
+          </ul>
+          <label class="consent-check">
+            <input type="checkbox" name="consent" required>
+            <span>上記運営方針と契約条項に同意します。</span>
+          </label>
+        </div>
+
+        <button id="pay-submit" type="button" class="btn primary large" style="width:100%;background:var(--accent);color:#fff" disabled>加盟申し込みを送信する</button>
+        <div id="pay-status" class="pay-status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -701,6 +779,11 @@
     </div>
   </div>
 </footer>
+
+<!-- Square Web Payments SDK + Care Support Pass payment integration -->
+<script>window.CSP_API_BASE = "https://api.carepass.tamjump.com";</script>
+<script src="https://web.squarecdn.com/v1/square.js"></script>
+<script src="/assets/payment.js" defer></script>
 
 </body>
 </html>

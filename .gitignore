@@ -27,3 +27,13 @@ build/
 
 # Cloudflare
 .wrangler/
+
+# Worker secrets (local dev only)
+worker/.dev.vars
+worker/.wrangler/
+
+# Scripts output (12 plan ID JSON; treat as secret-ish)
+scripts/plans.json
+
+# Local preview files
+_local_*.html

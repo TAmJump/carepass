@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="お申し込み・お問い合わせありがとうございました。">
+<meta name="description" content="お申し込み完了。Care Support Pass にようこそ。">
 <meta name="robots" content="noindex,nofollow">
-<title>ありがとうございます | Care Support Pass</title>
+<title>お申し込み完了 | Care Support Pass</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,13 +20,6 @@
 }
 .thanks-card{
   max-width:680px;text-align:center;
-}
-.thanks-icon{
-  width:80px;height:80px;border-radius:50%;
-  background:var(--accent-soft2);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 32px;color:var(--accent);
-  animation:popIn .6s cubic-bezier(.34,1.56,.64,1) both;
 }
 .thanks-mark{
   width:120px;height:120px;border-radius:24px;
@@ -49,8 +42,22 @@
   margin:0 0 36px;
 }
 .thanks .lead b{color:var(--ink);font-weight:600}
+.thanks .sub-info{
+  background:var(--bg-soft);
+  border:1px solid var(--accent-soft);
+  border-radius:14px;padding:20px 24px;
+  text-align:left;margin:0 0 32px;
+  font-size:13px;color:var(--sub);line-height:1.8;
+}
+.thanks .sub-info .sub-id{
+  display:block;
+  font-family:'SF Mono','Roboto Mono',monospace;
+  background:#fff;border:1px solid var(--accent-soft);
+  border-radius:8px;padding:10px 14px;margin-top:8px;
+  font-size:12px;color:var(--ink);word-break:break-all;
+}
 .thanks .next-steps{
-  background:var(--soft);border:1px solid var(--line);
+  background:#FFF8F2;border:1px solid var(--accent-soft);
   border-radius:18px;padding:28px 32px;
   text-align:left;margin:0 0 40px;
 }
@@ -68,14 +75,19 @@
   font-size:14px;line-height:1.9;color:var(--sub);
 }
 .thanks .next-steps li{margin-bottom:6px}
+.thanks .next-steps li b{color:var(--ink)}
 .thanks .cta-row{
   display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
 }
 .thanks .quote{
   margin-top:48px;font-style:italic;
-  font-size:14px;color:var(--muted);
+  font-size:14px;color:var(--sub);
   padding-top:32px;border-top:1px solid var(--line);
 }
+.thanks .cancel-link{
+  display:block;margin-top:24px;font-size:12px;color:var(--sub);
+}
+.thanks .cancel-link a{color:var(--sub);text-decoration:underline}
 </style>
 </head>
 <body>
@@ -95,18 +107,25 @@
     <div class="thanks-mark">
       <img src="/assets/images/logo-monogram.png" alt="Care Support Pass">
     </div>
-    <h1 id="title">お申し込みありがとうございます。</h1>
+    <h1 id="title">お申し込みが完了しました。</h1>
     <p class="lead" id="lead">
       Care Support Pass にご参加いただき、ありがとうございます。<br>
-      <b>ご登録のメールアドレスに、確認メールをお送りいたしました。</b>
+      <b>ご登録のメールアドレスに、Square 社より請求書とご利用案内をお送りします。</b>
     </p>
+
+    <!-- サブスクリプションID (返却された時のみ表示) -->
+    <div class="sub-info" id="sub-info" style="display:none">
+      <b style="color:var(--ink)">お申し込み番号（大切に保管してください）</b><br>
+      ご退会・お問い合わせ時に必要となります。
+      <code class="sub-id" id="sub-id"></code>
+    </div>
 
     <div class="next-steps" id="next-steps">
       <h3>このあとの流れ</h3>
       <ol>
-        <li>確認メールに記載のリンクから、本人確認をお願いします。</li>
-        <li>本人確認後、決済情報のご登録にお進みください。</li>
-        <li>登録完了後、すぐに提携店優待のご利用を開始いただけます。</li>
+        <li><b>カードに即時課金</b>されます。Square より請求書がメール送信されます。</li>
+        <li>翌月以降、毎月同日に自動課金されます。</li>
+        <li>提携店優待のご利用案内を、運営事務局より別途お送りします。</li>
         <li>毎月の活動レポートで、支援先の状況をお届けします。</li>
       </ol>
     </div>
@@ -115,6 +134,12 @@
       <a class="btn primary large" href="/">トップに戻る</a>
       <a class="btn large" href="/concept.html">コンセプトを読む</a>
     </div>
+
+    <p class="cancel-link">
+      退会をご希望の場合は、お申し込み番号と登録メールアドレスを記載の上、<br>
+      <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせフォーム</a> よりご連絡ください。
+      次回の課金日前日までにご連絡いただければ、それ以降の課金は発生しません。
+    </p>
 
     <p class="quote">
       "100円から、社会の支え方を変える。"<br>
@@ -132,16 +157,15 @@
       </div>
       <div class="footer-col">
         <h5>Service</h5>
-        <a href="/#concept">コンセプト</a>
-        <a href="/#mechanism">仕組み</a>
-        <a href="/#plans">プラン</a>
-        <a href="/#coupons">優待例</a>
-        <a href="/#targets">支援先</a>
+        <a href="/#statement">コンセプト</a>
+        <a href="/#how">仕組み</a>
+        <a href="/#pension">年金余白</a>
+        <a href="/concept.html">詳しい理念</a>
       </div>
       <div class="footer-col">
         <h5>For Partners</h5>
-        <a href="/#store">店舗の方</a>
-        <a href="/#corporate">法人の方</a>
+        <a href="/partners.html">協力会社の方へ</a>
+        <a href="/facilities.html">介護施設の方へ</a>
         <a href="https://tamjump.com/" target="_blank" rel="noopener">運営について</a>
       </div>
       <div class="footer-col">
@@ -165,21 +189,30 @@
 </footer>
 
 <script>
-// 申込種別ごとに文言を切り替え
-const params=new URLSearchParams(location.search);
-const type=params.get('type');
-const title=document.getElementById('title');
-const lead=document.getElementById('lead');
-const steps=document.getElementById('next-steps');
+// 申込種別とサブスクIDで文言・表示を切り替え
+const params = new URLSearchParams(location.search);
+const type = params.get('type');
+const sid  = params.get('sid');
 
-if(type==='store'){
-  title.textContent='提携店としてのお申し込み、ありがとうございます。';
-  lead.innerHTML='Care Support Pass のネットワークにご参加いただき、感謝いたします。<br>担当者より<b>3〜5営業日以内</b>に、提携手続きのご案内をいたします。';
-  steps.querySelector('ol').innerHTML='<li>担当者より、提携の詳細をメールでご案内します。</li><li>提供される優待内容のヒアリングを行います。</li><li>掲載準備が整い次第、店舗ページを公開します。</li><li>会員からの送客が開始されます。</li>';
-}else if(type==='corp'){
-  title.textContent='法人導入のご相談、ありがとうございます。';
-  lead.innerHTML='担当者より<b>2〜3営業日以内</b>に、導入のご提案資料をお送りします。<br>福利厚生・CSR・寄附等、貴社のニーズに合わせた形でご提案いたします。';
-  steps.querySelector('ol').innerHTML='<li>ご相談内容を担当者が確認します。</li><li>導入形態のご提案資料をお送りします。</li><li>必要に応じて、オンラインまたは対面でのご説明を行います。</li><li>契約内容のご相談後、導入手続きへ進みます。</li>';
+const title = document.getElementById('title');
+const lead  = document.getElementById('lead');
+const steps = document.getElementById('next-steps');
+const subInfo = document.getElementById('sub-info');
+const subIdEl = document.getElementById('sub-id');
+
+if (type === 'partner') {
+  title.textContent = '協力会社としてのお申し込みが完了しました。';
+  lead.innerHTML = 'Care Support Pass のネットワークにご参加いただき、感謝いたします。<br>担当者より<b>3〜5営業日以内</b>に、ご利用ガイドと掲載準備のご案内をお送りします。';
+  steps.querySelector('ol').innerHTML = '<li>カードに即時課金されます。請求書はメールで届きます。</li><li>担当者より、提供される優待内容のヒアリングを行います。</li><li>掲載準備が整い次第、店舗ページを公開します。</li><li>会員からの送客が開始されます。</li>';
+} else if (type === 'facility') {
+  title.textContent = '介護施設の加盟申し込みを受け付けました。';
+  lead.innerHTML = 'ご応募ありがとうございます。<br><b>事前審査</b>の結果は、5〜7営業日以内にメールでご連絡いたします。<br>審査完了後、月額会費の課金が開始されます。';
+  steps.querySelector('ol').innerHTML = '<li>運営事務局が事前審査を行います（土地建物の所有形態・運営状況等）。</li><li>審査完了後、契約書をお送りします。</li><li>契約締結後、月額課金が開始されます。</li><li>月次活動報告（提出5日／確認10日／公開15日）の運用を開始します。</li>';
+}
+
+if (sid) {
+  subInfo.style.display = 'block';
+  subIdEl.textContent = sid;
 }
 </script>
 

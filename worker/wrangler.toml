@@ -1,0 +1,21 @@
+name = "carepass-api"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# 本番デプロイ後、Cloudflareダッシュボードで以下のRouteを設定すること:
+#   api.carepass.tamjump.com/* → このWorker
+# その後、tamjump.com Zone の DNS で:
+#   api.carepass.tamjump.com  CNAME  carepass-api.<account>.workers.dev (Proxied)
+
+[vars]
+SQUARE_ENV = "sandbox"
+# 本番切替時は wrangler deploy --var SQUARE_ENV:production または vars を変更
+
+# secrets (wrangler secret put で設定):
+#   SQUARE_ACCESS_TOKEN
+#   SQUARE_LOCATION_ID
+#   SQUARE_WEBHOOK_SIGNATURE_KEY
+#   SQUARE_APPLICATION_ID            (フロント用、これだけは公開してOKだが Worker でも返す)
+#   PLAN_VARIATION_IDS_JSON          (create-plans.js の出力をそのまま貼る)
+#   ALLOWED_ORIGIN                   ("https://carepass.tamjump.com")

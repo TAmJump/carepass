@@ -663,11 +663,11 @@
     <div class="apply-form">
       <h3>協力会社申し込みフォーム</h3>
       <p>下記フォームにご記入ください。担当者より2〜3営業日以内にご連絡いたします。</p>
-      <form onsubmit="event.preventDefault();window.location.href='/thanks.html?type=store';">
+      <form id="csp-form" data-type="partner" novalidate>
         <div class="form-grid-2">
-          <div class="form-row"><label>会社・店舗名<span class="req">必須</span></label><input type="text" required></div>
+          <div class="form-row"><label>会社・店舗名<span class="req">必須</span></label><input type="text" name="company_name" required></div>
           <div class="form-row"><label>業種<span class="req">必須</span></label>
-            <select required>
+            <select name="industry" required>
               <option value="">選択してください</option>
               <option>飲食店</option><option>カフェ</option><option>弁当店</option>
               <option>スーパー</option><option>ドラッグストア</option><option>薬局</option>
@@ -677,27 +677,37 @@
             </select>
           </div>
         </div>
-        <div class="form-row"><label>所在地<span class="req">必須</span></label><input type="text" placeholder="例：東京都渋谷区..." required></div>
         <div class="form-grid-2">
-          <div class="form-row"><label>担当者名<span class="req">必須</span></label><input type="text" required></div>
-          <div class="form-row"><label>電話番号<span class="opt">任意</span></label><input type="tel"></div>
+          <div class="form-row"><label>郵便番号<span class="req">必須</span></label><input type="text" name="postal_code" placeholder="123-4567" required></div>
+          <div class="form-row"><label>所在地<span class="req">必須</span></label><input type="text" name="address_line_1" placeholder="例：東京都渋谷区..." required></div>
         </div>
         <div class="form-grid-2">
-          <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" required></div>
-          <div class="form-row"><label>Webサイト・SNS<span class="opt">任意</span></label><input type="url"></div>
+          <div class="form-row"><label>担当者 姓<span class="req">必須</span></label><input type="text" name="family_name" required></div>
+          <div class="form-row"><label>担当者 名<span class="req">必須</span></label><input type="text" name="given_name" required></div>
         </div>
+        <div class="form-grid-2">
+          <div class="form-row"><label>電話番号<span class="opt">任意</span></label><input type="tel" name="phone_number"></div>
+          <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" name="email_address" required></div>
+        </div>
+        <div class="form-row"><label>Webサイト・SNS<span class="opt">任意</span></label><input type="url" name="website"></div>
         <div class="form-row"><label>希望参加プラン<span class="req">必須</span></label>
-          <select required>
+          <select name="plan_key" required>
             <option value="">選択してください</option>
-            <option>Free Partner（無料）</option>
-            <option>Local Partner（月3,000円）</option>
-            <option>Care Partner（月10,000円）</option>
-            <option>Sponsor Partner（月30,000円〜）</option>
-            <option>まずは相談したい</option>
+            <option value="local_partner">Local Partner（月3,000円）</option>
+            <option value="care_partner">Care Partner（月10,000円）</option>
+            <option value="sponsor_partner">Sponsor Partner（月30,000円〜）</option>
           </select>
+          <p class="card-note" style="margin-top:6px;font-size:12px;color:var(--sub)">※ Free Partner・無料相談をご希望の方は <a href="https://tamjump.com/contact.html" style="color:var(--accent)">こちらのお問い合わせ</a> からご連絡ください。</p>
         </div>
-        <div class="form-row"><label>提供できるクーポン内容<span class="opt">任意</span></label><textarea placeholder="例：1,000円以上のお食事で200円OFF / 対象は通常メニュー、酒類のみ会計は除外 など"></textarea></div>
-        <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea></textarea></div>
+        <div class="form-row"><label>提供できるクーポン内容<span class="opt">任意</span></label><textarea name="coupon_offer" placeholder="例：1,000円以上のお食事で200円OFF / 対象は通常メニュー、酒類のみ会計は除外 など"></textarea></div>
+        <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea name="note"></textarea></div>
+
+        <!-- Square Web Payments SDK card container -->
+        <div class="form-row card-row">
+          <label>クレジットカード情報<span class="req">必須</span></label>
+          <div id="card-container" class="card-container"></div>
+          <p class="card-note">入力情報は Square 社のセキュア決済システムに直接送信され、本サイトには保存されません。</p>
+        </div>
 
         <div class="consent-box">
           <h5 style="font-size:13px;font-weight:700;color:var(--ink);margin:0 0 12px">同意事項</h5>
@@ -707,14 +717,16 @@
             <li>現金化・譲渡・払戻し不可の条件を設定します。</li>
             <li>処方薬・保険調剤の自己負担分は対象外とします。</li>
             <li>掲載内容の事前確認に同意します。</li>
+            <li>退会はいつでも可能です。次回課金日の前日までにご連絡ください。</li>
           </ul>
           <label class="consent-check">
-            <input type="checkbox" required>
+            <input type="checkbox" name="consent" required>
             <span>上記条件と Care Support Pass の運営方針に同意します。</span>
           </label>
         </div>
 
-        <button type="submit" class="btn primary large btn-warm" style="width:100%">協力会社として申し込む</button>
+        <button id="pay-submit" type="button" class="btn primary large btn-warm" style="width:100%" disabled>協力会社として申し込む</button>
+        <div id="pay-status" class="pay-status" role="status" aria-live="polite"></div>
       </form>
     </div>
 
@@ -792,6 +804,11 @@
     </div>
   </div>
 </footer>
+
+<!-- Square Web Payments SDK + Care Support Pass payment integration -->
+<script>window.CSP_API_BASE = "https://api.carepass.tamjump.com";</script>
+<script src="https://web.squarecdn.com/v1/square.js"></script>
+<script src="/assets/payment.js" defer></script>
 
 </body>
 </html>
