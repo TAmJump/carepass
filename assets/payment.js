@@ -41,6 +41,21 @@
     return r.json();
   }
 
+  function loadSquareSDK(env) {
+    // env が "sandbox" なら sandbox.web.squarecdn.com、それ以外は本番 CDN を読む。
+    return new Promise((resolve, reject) => {
+      if (window.Square) return resolve();
+      const src = env === 'sandbox'
+        ? 'https://sandbox.web.squarecdn.com/v1/square.js'
+        : 'https://web.squarecdn.com/v1/square.js';
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('square_sdk_load_failed'));
+      document.head.appendChild(s);
+    });
+  }
+
   async function populateFacilities(facilities) {
     if (!facilitySelect) return;
     // 既存のオプションを空にして、APIから取得した施設リストを埋める
@@ -55,8 +70,9 @@
   }
 
   async function initIndividual() {
-    if (!window.Square) throw new Error('Square SDK not loaded');
     const cfg = await fetchConfig();
+    await loadSquareSDK(cfg.env);
+    if (!window.Square) throw new Error('Square SDK not loaded');
     await populateFacilities(cfg.facilities || []);
     payments = window.Square.payments(cfg.application_id, cfg.location_id);
     card = await payments.card();

@@ -1967,10 +1967,10 @@ function go(id){
 <!-- Square Web Payments SDK + Care Support Pass payment integration -->
 <script>
   // Sandbox / Production の切替は wrangler 側で行う。
-  // フロントは API base のみ指定。/api/config で application_id を動的取得。
+  // フロントは API base のみ指定。/api/config で application_id と env を動的取得し、
+  // payment.js が env に応じて適切な Square SDK CDN を動的ロードする。
   window.CSP_API_BASE = "https://carepass-api.tamjump.com";
 </script>
-<script src="https://web.squarecdn.com/v1/square.js"></script>
 <script src="/assets/payment.js" defer></script>
 </body>
 </html>
