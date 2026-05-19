@@ -547,15 +547,15 @@
 <section id="plans-partner" class="partner-plans">
   <div class="wrap" style="max-width:1100px;margin:0 auto">
     <div class="section-head center">
-      <span class="eyebrow">Partner Plans</span>
-      <h2 class="section-title">まずは無料から、参加できます。</h2>
-      <p class="section-lead">店舗・企業の規模や目的に合わせて、4つの参加プランをご用意しています。</p>
+      <span class="eyebrow">Partner Tiers</span>
+      <h2 class="section-title">あなたの規模・目的に合わせて、<br>4つの参加形態。</h2>
+      <p class="section-lead">クーポン提供のしかた、掲載のされかた、地域での見え方を、店舗の規模に応じて選べます。詳細は申込後にご案内します。</p>
     </div>
     <div class="pp-grid">
       <div class="pp-card">
         <div class="pp-name">Free Partner</div>
         <h4>無料パートナー</h4>
-        <div class="pp-price">¥0<small>/月</small></div>
+        <div class="pp-price">気軽に<small>はじめる</small></div>
         <ul>
           <li>クーポン提供</li>
           <li>店舗名掲載</li>
@@ -567,7 +567,7 @@
       <div class="pp-card">
         <div class="pp-name">Local Partner</div>
         <h4>地域パートナー</h4>
-        <div class="pp-price">¥3,000<small>/月</small></div>
+        <div class="pp-price">地域に<small>根ざす</small></div>
         <ul>
           <li>店舗紹介ページ</li>
           <li>優先掲載</li>
@@ -580,7 +580,7 @@
       <div class="pp-card featured">
         <div class="pp-name">Care Partner</div>
         <h4>ケアパートナー</h4>
-        <div class="pp-price">¥10,000<small>/月</small></div>
+        <div class="pp-price">介護領域で<small>深く貢献</small></div>
         <ul>
           <li>重点掲載</li>
           <li>クーポン月10本まで</li>
@@ -593,7 +593,7 @@
       <div class="pp-card">
         <div class="pp-name">Sponsor Partner</div>
         <h4>スポンサー</h4>
-        <div class="pp-price">¥30,000<small>〜/月</small></div>
+        <div class="pp-price">事業として<small>支える</small></div>
         <ul>
           <li>特集掲載</li>
           <li>企業協賛枠</li>
@@ -604,6 +604,10 @@
         <div class="pp-target">地域企業・チェーン・法人向けサービス会社</div>
       </div>
     </div>
+    <p style="text-align:center;color:var(--sub);font-size:13px;margin-top:24px;line-height:1.8">
+      参加形態の詳細・条件はお申込み後、運営事務局よりご案内いたします。<br>
+      まずは <a href="#apply" style="color:var(--accent);text-decoration:underline">申込フォーム</a> から、お気軽にご連絡ください。
+    </p>
   </div>
 </section>
 
@@ -690,24 +694,11 @@
           <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" name="email_address" required></div>
         </div>
         <div class="form-row"><label>Webサイト・SNS<span class="opt">任意</span></label><input type="url" name="website"></div>
-        <div class="form-row"><label>希望参加プラン<span class="req">必須</span></label>
-          <select name="plan_key" required>
-            <option value="">選択してください</option>
-            <option value="local_partner">Local Partner（月3,000円）</option>
-            <option value="care_partner">Care Partner（月10,000円）</option>
-            <option value="sponsor_partner">Sponsor Partner（月30,000円〜）</option>
-          </select>
-          <p class="card-note" style="margin-top:6px;font-size:12px;color:var(--sub)">※ Free Partner・無料相談をご希望の方は <a href="https://tamjump.com/contact.html" style="color:var(--accent)">こちらのお問い合わせ</a> からご連絡ください。</p>
+        <div class="form-row"><label>クーポンで届けたい想い・期待する成果<span class="opt">任意</span></label>
+          <textarea name="goals" placeholder="例：新規顧客の獲得、地域貢献PR、認知拡大、既存顧客の購買頻度向上 など"></textarea>
         </div>
         <div class="form-row"><label>提供できるクーポン内容<span class="opt">任意</span></label><textarea name="coupon_offer" placeholder="例：1,000円以上のお食事で200円OFF / 対象は通常メニュー、酒類のみ会計は除外 など"></textarea></div>
         <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea name="note"></textarea></div>
-
-        <!-- Square Web Payments SDK card container -->
-        <div class="form-row card-row">
-          <label>クレジットカード情報<span class="req">必須</span></label>
-          <div id="card-container" class="card-container"></div>
-          <p class="card-note">入力情報は Square 社のセキュア決済システムに直接送信され、本サイトには保存されません。</p>
-        </div>
 
         <div class="consent-box">
           <h5 style="font-size:13px;font-weight:700;color:var(--ink);margin:0 0 12px">同意事項</h5>
@@ -717,7 +708,7 @@
             <li>現金化・譲渡・払戻し不可の条件を設定します。</li>
             <li>処方薬・保険調剤の自己負担分は対象外とします。</li>
             <li>掲載内容の事前確認に同意します。</li>
-            <li>退会はいつでも可能です。次回課金日の前日までにご連絡ください。</li>
+            <li>参加にあたり、運営事務局より詳細条件・参加形態のご案内をいたします。</li>
           </ul>
           <label class="consent-check">
             <input type="checkbox" name="consent" required>
@@ -806,8 +797,8 @@
 </footer>
 
 <!-- Square Web Payments SDK + Care Support Pass payment integration -->
+<!-- Care Support Pass — apply form submitter (no payment, just submission) -->
 <script>window.CSP_API_BASE = "https://api.carepass.tamjump.com";</script>
-<script src="https://web.squarecdn.com/v1/square.js"></script>
 <script src="/assets/payment.js" defer></script>
 
 </body>

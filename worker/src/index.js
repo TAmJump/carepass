@@ -1,22 +1,29 @@
 // Care Support Pass — Cloudflare Workers Backend
-// 役割: Square Subscriptions の作成・退会・Webhook受信
+// 役割: 個人会員の Square Subscription 作成・退会・Webhook 受信、
+//       加盟店/介護施設の申込受付（課金なし）
 //
 // エンドポイント:
-//   GET  /api/config            フロントエンド用の application_id, location_id を返す
-//   POST /api/subscribe         申込フォーム送信を受けてサブスク作成
-//   POST /api/cancel            退会
-//   POST /api/webhook           Square Webhook (署名検証)
-//   GET  /api/health            稼働確認
+//   GET  /api/health      死活
+//   GET  /api/config      フロント用 Application ID / Location ID / 施設一覧
+//   POST /api/subscribe   個人会員: フォーム送信→Square Subscription 作成
+//   POST /api/cancel      退会
+//   POST /api/apply       加盟店/施設の申込受付（決済なし・通知のみ）
+//   POST /api/webhook     Square Webhook (HMAC-SHA256 署名検証)
 
-import { handleOptions, jsonResponse, corsHeaders } from './cors.js';
+import { handleOptions, jsonResponse } from './cors.js';
 import {
   getOrCreateCustomer,
   createCard,
   createSubscription,
   retrieveSubscription,
+  retrieveCustomer,
   cancelSubscription,
 } from './square.js';
-import { resolveVariationId, validatePlanKey } from './plans.js';
+import {
+  getMembershipVariationId,
+  getFacilities,
+  isValidFacilityId,
+} from './plans.js';
 import { verifySquareSignature, handleEvent } from './webhook.js';
 
 export default {
@@ -37,11 +44,16 @@ export default {
           application_id: env.SQUARE_APPLICATION_ID,
           location_id: env.SQUARE_LOCATION_ID,
           env: env.SQUARE_ENV,
+          facilities: getFacilities(env),
         }, 200, env, origin);
       }
 
       if (path === '/api/subscribe' && request.method === 'POST') {
         return await handleSubscribe(request, env, origin);
+      }
+
+      if (path === '/api/apply' && request.method === 'POST') {
+        return await handleApply(request, env, origin);
       }
 
       if (path === '/api/cancel' && request.method === 'POST') {
@@ -60,30 +72,37 @@ export default {
   },
 };
 
-// === /api/subscribe ===
+// === /api/subscribe — 個人会員 ===
 
 async function handleSubscribe(request, env, origin) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
 
-  const { type, plan_key, source_id, verification_token, buyer } = body;
+  const { source_id, verification_token, buyer, facility_id } = body;
 
   // 入力検証
-  if (!type || !plan_key || !source_id || !buyer || !buyer.email_address) {
+  if (!source_id || !buyer || !buyer.email_address) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
-  if (!validatePlanKey(type, plan_key)) {
-    return jsonResponse({ error: 'invalid_plan_key' }, 400, env, origin);
+  if (!isValidFacilityId(env, facility_id)) {
+    return jsonResponse({ error: 'invalid_facility' }, 400, env, origin);
   }
-  const variationId = resolveVariationId(env, plan_key);
+  const variationId = getMembershipVariationId(env);
   if (!variationId) {
     return jsonResponse({ error: 'plan_not_configured' }, 500, env, origin);
   }
 
-  // 1. Customer 取得 or 作成
-  const customer = await getOrCreateCustomer(env, buyer);
+  // 1. Customer 取得 or 作成（施設指名情報をメタデータに保存）
+  const buyerWithMeta = {
+    ...buyer,
+    metadata: {
+      ...(buyer.metadata || {}),
+      facility_id, // どの施設に対する100円か
+    },
+  };
+  const customer = await getOrCreateCustomer(env, buyerWithMeta);
 
-  // 2. Card 永続化（payment token を card-on-file に変換）
+  // 2. Card 永続化
   const card = await createCard(
     env,
     customer.id,
@@ -92,11 +111,12 @@ async function handleSubscribe(request, env, origin) {
     buyer.address
   );
 
-  // 3. Subscription 作成
+  // 3. Subscription 作成（施設IDを reference に埋め込む）
   const subscription = await createSubscription(env, {
     customerId: customer.id,
     planVariationId: variationId,
     cardId: card.id,
+    facilityId: facility_id,
   });
 
   return jsonResponse({
@@ -104,10 +124,47 @@ async function handleSubscribe(request, env, origin) {
     subscription_id: subscription.id,
     customer_id: customer.id,
     status: subscription.status,
+    facility_id,
   }, 200, env, origin);
 }
 
-// === /api/cancel ===
+// === /api/apply — 加盟店/施設の申込受付（決済なし） ===
+
+async function handleApply(request, env, origin) {
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
+
+  const { type, applicant } = body;
+  if (!type || !['partner', 'facility'].includes(type)) {
+    return jsonResponse({ error: 'invalid_type' }, 400, env, origin);
+  }
+  if (!applicant || !applicant.email_address) {
+    return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  }
+
+  // Square の Customer Directory に登録するだけ（タグで識別）
+  // 後で運営側がダッシュボードから確認・連絡できるようにする
+  const buyerLike = {
+    ...applicant,
+    note: JSON.stringify({
+      kind: type, // "partner" or "facility"
+      submitted_at: new Date().toISOString(),
+      details: applicant.details || {},
+    }),
+  };
+  const customer = await getOrCreateCustomer(env, buyerLike);
+
+  // TODO: 運営者へのメール通知（Cloudflare Email Workers / 外部 SMTP）
+  console.log(`[apply] ${type} application received:`, customer.id);
+
+  return jsonResponse({
+    ok: true,
+    customer_id: customer.id,
+    type,
+  }, 200, env, origin);
+}
+
+// === /api/cancel — 退会 ===
 
 async function handleCancel(request, env, origin) {
   const body = await request.json().catch(() => null);
@@ -118,26 +175,12 @@ async function handleCancel(request, env, origin) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
 
-  // サブスクを取得して本人確認
   const sub = await retrieveSubscription(env, subscription_id);
   if (!sub) return jsonResponse({ error: 'not_found' }, 404, env, origin);
 
-  // customer の email と照合 (簡易本人確認)
-  // 厳密にはメール認証リンクを送るべき。最初はこれで運用 → 後で強化
-  const customer = await fetch(
-    (env.SQUARE_ENV === 'production'
-      ? 'https://connect.squareup.com'
-      : 'https://connect.squareupsandbox.com')
-      + `/v2/customers/${sub.customer_id}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${env.SQUARE_ACCESS_TOKEN}`,
-        'Square-Version': '2026-01-22',
-      },
-    }
-  ).then((r) => r.json());
-
-  const actualEmail = customer?.customer?.email_address;
+  // customer email 照合（簡易本人確認）
+  const customer = await retrieveCustomer(env, sub.customer_id);
+  const actualEmail = customer?.email_address;
   if (!actualEmail || actualEmail.toLowerCase() !== customer_email.toLowerCase()) {
     return jsonResponse({ error: 'email_mismatch' }, 403, env, origin);
   }
@@ -150,15 +193,11 @@ async function handleCancel(request, env, origin) {
   }, 200, env, origin);
 }
 
-// === /api/webhook ===
+// === /api/webhook === （変更なし）
 
 async function handleWebhook(request, env) {
   const rawBody = await request.text();
   const signatureHeader = request.headers.get('x-square-hmacsha256-signature');
-
-  // 通知URL — Square ダッシュボードに登録したURLと同じ文字列を使う必要がある
-  // 通常 request.url で取れるが proxy 経由だと正規化されている可能性があるため、
-  // 環境変数で固定推奨
   const notificationUrl = env.WEBHOOK_NOTIFICATION_URL || request.url;
 
   const valid = await verifySquareSignature({
@@ -178,9 +217,6 @@ async function handleWebhook(request, env) {
     return new Response('bad_json', { status: 400 });
   }
 
-  // 200 を即返したいので、handleEventはctx.waitUntilで非同期可
-  // (ここでは同期処理が軽いのでawaitで十分)
   await handleEvent(env, event);
-
   return new Response('ok', { status: 200 });
 }

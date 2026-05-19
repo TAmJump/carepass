@@ -1429,6 +1429,22 @@ section[id]{scroll-margin-top:80px}
 .pay-status.success{color:#1a7a3e}
 button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
 
+/* 月額固定¥100表示 */
+.csp-amount-display{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,var(--accent-soft2) 0%,var(--soft) 100%);
+  border:1px solid var(--accent-soft);
+  border-radius:12px;padding:18px 24px;margin:8px 0 20px;
+}
+.csp-amount-label{
+  font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.02em;
+}
+.csp-amount-value{
+  font-size:28px;font-weight:700;color:var(--accent);
+  font-family:'Inter','Noto Sans JP',sans-serif;letter-spacing:-.01em;
+}
+.csp-amount-value small{font-size:13px;font-weight:500;color:var(--sub);margin-left:4px}
+
 </style>
 </head>
 <body>
@@ -1588,17 +1604,17 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
     <div class="how-split">
       <div class="hs-plans">
         <div class="hs-head">
-          <span class="hs-tag">PRICING</span>
-          <h3>住まいの規模で、<br>支える口数を選ぶ。</h3>
+          <span class="hs-tag">SCALE GOAL</span>
+          <h3>会費は一律、月100円。<br>規模で変わるのは「目標支援者数」。</h3>
         </div>
         <div class="hs-plan-list">
-          <div class="hs-plan"><span class="hp-size">9–29室</span><span class="hp-price">月100<small>円</small></span></div>
-          <div class="hs-plan"><span class="hp-size">30–44室</span><span class="hp-price">月150<small>円</small></span></div>
-          <div class="hs-plan featured"><span class="hp-size">45–59室</span><span class="hp-price">月200<small>円</small></span><span class="hp-badge">標準</span></div>
-          <div class="hs-plan"><span class="hp-size">60–79室</span><span class="hp-price">月250<small>円</small></span></div>
-          <div class="hs-plan"><span class="hp-size">80室以上</span><span class="hp-price">月300<small>円</small></span></div>
+          <div class="hs-plan"><span class="hp-size">9–29室</span><span class="hp-price">目標 <b>8</b><small>万人</small></span></div>
+          <div class="hs-plan"><span class="hp-size">30–44室</span><span class="hp-price">目標 <b>14</b><small>万人</small></span></div>
+          <div class="hs-plan featured"><span class="hp-size">45–59室</span><span class="hp-price">目標 <b>20</b><small>万人</small></span><span class="hp-badge">標準</span></div>
+          <div class="hs-plan"><span class="hp-size">60–79室</span><span class="hp-price">目標 <b>25</b><small>万人</small></span></div>
+          <div class="hs-plan"><span class="hp-size">80室以上</span><span class="hp-price">目標 <b>30</b><small>万人</small></span></div>
         </div>
-        <p class="hs-note">小さな住まいには小さな支援を、大きな住まいにはより大きな地域支援を。会費の2倍を目安にクーポンが配信されます。</p>
+        <p class="hs-note">支援者は施設を選んで月100円を支援。集まった支援額で施設の固定費を埋め、入居者負担を月5万円以内に抑える設計。<br><a href="/concept.html#scale" style="color:var(--accent);text-decoration:underline">→ 目標支援者数の計算根拠を見る</a></p>
       </div>
 
       <div class="hs-coupons">
@@ -1815,18 +1831,16 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
             <div class="form-row"><label>居住地域<span class="opt">任意</span></label><input type="text" name="area" placeholder="例：東京都足立区"></div>
           </div>
           <div class="form-row">
-            <label>希望プラン<span class="req">必須</span></label>
-            <select name="plan_key" required>
-              <option value="care100">Care 100（月100円）</option>
-              <option value="care300">Care 300（月300円）</option>
-              <option value="care500">Care 500（月500円）</option>
-              <option value="care1000">Care 1000（月1,000円）</option>
+            <label>支援したい施設<span class="req">必須</span></label>
+            <select id="facility-select" name="facility_id" required>
+              <option value="">読み込み中…</option>
             </select>
+            <p class="card-note" style="margin-top:6px">あなたの月100円は、選んだ施設の運営支援に充てられます。</p>
           </div>
           <div class="form-row">
             <label>支援したいテーマ<span class="opt">任意</span></label>
             <select name="support_theme">
-              <option value="">地域指定なし</option>
+              <option value="">指定なし</option>
               <option value="housing">住まいに不安を抱える先輩世代</option>
               <option value="solo">身寄りが少ない方への支え</option>
               <option value="cleanup">家財整理に支援が必要な方</option>
@@ -1844,6 +1858,12 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
               <option value="lifestyle">生活サービス（タクシー / 理美容 等）</option>
               <option value="all">すべて</option>
             </select>
+          </div>
+
+          <!-- 月額固定 ¥100 の表示 -->
+          <div class="csp-amount-display">
+            <span class="csp-amount-label">月額会費</span>
+            <span class="csp-amount-value">¥100<small>/月</small></span>
           </div>
 
           <!-- Square Web Payments SDK card container -->

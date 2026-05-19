@@ -113,6 +113,12 @@
       <b>ご登録のメールアドレスに、Square 社より請求書とご利用案内をお送りします。</b>
     </p>
 
+    <!-- 支援先施設の表示 -->
+    <div class="sub-info" id="facility-info" style="display:none;background:#FFF8F2;border-color:var(--accent-soft)">
+      <b style="color:var(--ink)">支援先：</b><span id="facility-name" style="color:var(--accent);font-weight:600"></span><br>
+      あなたの月100円は、この施設の運営支援に充てられます。
+    </div>
+
     <!-- サブスクリプションID (返却された時のみ表示) -->
     <div class="sub-info" id="sub-info" style="display:none">
       <b style="color:var(--ink)">お申し込み番号（大切に保管してください）</b><br>
@@ -193,26 +199,43 @@
 const params = new URLSearchParams(location.search);
 const type = params.get('type');
 const sid  = params.get('sid');
+const facilityId = params.get('facility');
 
 const title = document.getElementById('title');
 const lead  = document.getElementById('lead');
 const steps = document.getElementById('next-steps');
 const subInfo = document.getElementById('sub-info');
 const subIdEl = document.getElementById('sub-id');
+const facilityInfo = document.getElementById('facility-info');
+const facilityNameEl = document.getElementById('facility-name');
 
 if (type === 'partner') {
   title.textContent = '協力会社としてのお申し込みが完了しました。';
-  lead.innerHTML = 'Care Support Pass のネットワークにご参加いただき、感謝いたします。<br>担当者より<b>3〜5営業日以内</b>に、ご利用ガイドと掲載準備のご案内をお送りします。';
-  steps.querySelector('ol').innerHTML = '<li>カードに即時課金されます。請求書はメールで届きます。</li><li>担当者より、提供される優待内容のヒアリングを行います。</li><li>掲載準備が整い次第、店舗ページを公開します。</li><li>会員からの送客が開始されます。</li>';
+  lead.innerHTML = 'Care Support Pass のネットワークにご参加いただき、感謝いたします。<br>担当者より<b>3〜5営業日以内</b>に、参加形態のご案内をお送りします。';
+  steps.querySelector('ol').innerHTML = '<li>運営事務局よりメールでご連絡いたします。</li><li>提供される優待内容のヒアリングを行います。</li><li>参加形態の詳細条件を確認・ご契約いただきます。</li><li>掲載準備が整い次第、店舗ページを公開します。</li>';
 } else if (type === 'facility') {
   title.textContent = '介護施設の加盟申し込みを受け付けました。';
-  lead.innerHTML = 'ご応募ありがとうございます。<br><b>事前審査</b>の結果は、5〜7営業日以内にメールでご連絡いたします。<br>審査完了後、月額会費の課金が開始されます。';
-  steps.querySelector('ol').innerHTML = '<li>運営事務局が事前審査を行います（土地建物の所有形態・運営状況等）。</li><li>審査完了後、契約書をお送りします。</li><li>契約締結後、月額課金が開始されます。</li><li>月次活動報告（提出5日／確認10日／公開15日）の運用を開始します。</li>';
+  lead.innerHTML = 'ご応募ありがとうございます。<br><b>事前審査</b>の結果は、5〜7営業日以内にメールでご連絡いたします。';
+  steps.querySelector('ol').innerHTML = '<li>運営事務局が事前審査を行います（土地建物の所有形態・運営状況・付帯アプリ導入意向等）。</li><li>審査完了後、契約書をお送りします。</li><li>契約締結後、月次活動報告（提出5日／確認10日／公開15日）の運用を開始します。</li><li>付帯アプリ（tやるゼ・mやるゼ）の導入もあわせてご案内します。</li>';
 }
 
 if (sid) {
   subInfo.style.display = 'block';
   subIdEl.textContent = sid;
+}
+
+// 施設指名情報を /api/config から取得して表示
+if (facilityId && type === 'individual') {
+  fetch((window.CSP_API_BASE || 'https://api.carepass.tamjump.com') + '/api/config')
+    .then((r) => r.json())
+    .then((cfg) => {
+      const f = (cfg.facilities || []).find((x) => x.id === facilityId);
+      if (f) {
+        facilityInfo.style.display = 'block';
+        facilityNameEl.textContent = f.name + (f.location ? `（${f.location}）` : '');
+      }
+    })
+    .catch(() => {});
 }
 </script>
 

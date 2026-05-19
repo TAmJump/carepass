@@ -92,7 +92,7 @@ export async function createCard(env, customerId, sourceId, verificationToken, b
 
 // --- Subscriptions ---
 
-export async function createSubscription(env, { customerId, planVariationId, cardId }) {
+export async function createSubscription(env, { customerId, planVariationId, cardId, facilityId }) {
   const body = {
     idempotency_key: uuid(),
     location_id: env.SQUARE_LOCATION_ID,
@@ -100,7 +100,11 @@ export async function createSubscription(env, { customerId, planVariationId, car
     customer_id: customerId,
     card_id: cardId,
     timezone: 'Asia/Tokyo',
-    source: { name: 'Care Support Pass' },
+    source: {
+      name: 'Care Support Pass',
+      // facility_id を source.name に追記して Square ダッシュボードでも識別可能に
+      ...(facilityId ? { url: `https://carepass.tamjump.com/?facility=${facilityId}` } : {}),
+    },
   };
   const res = await sq(env, 'POST', '/v2/subscriptions', body);
   return res.subscription;
@@ -109,6 +113,11 @@ export async function createSubscription(env, { customerId, planVariationId, car
 export async function retrieveSubscription(env, subscriptionId) {
   const res = await sq(env, 'GET', `/v2/subscriptions/${subscriptionId}`);
   return res.subscription;
+}
+
+export async function retrieveCustomer(env, customerId) {
+  const res = await sq(env, 'GET', `/v2/customers/${customerId}`);
+  return res.customer;
 }
 
 export async function cancelSubscription(env, subscriptionId) {

@@ -473,42 +473,46 @@
   <div class="fe-wrap">
     <div class="fe-head">
       <span class="eyebrow">MEMBERSHIP CRITERIA</span>
-      <h2>規模別の加盟条件と<br>支援対象室数の目安。</h2>
-      <p class="lead">運営規模に応じて、Care Support Pass の支援対象となる入居者の室数と月額会費の目安を定めています。</p>
+      <h2>規模別の加盟条件と<br>目標支援者数の目安。</h2>
+      <p class="lead">運営規模に応じて、月100円の支援者を集める目標数を定めています。月額会費は施設側には発生しません。集まる仕組みを提供するのが Care Support Pass の役割で、集めるのは施設側の努力です。</p>
     </div>
 
     <div class="fe-table">
       <div class="fe-row head">
         <div class="fe-cell">運営規模</div>
         <div class="fe-cell">支援対象室数（目安）</div>
-        <div class="fe-cell">月額会費（目安）</div>
+        <div class="fe-cell">目標支援者数</div>
       </div>
       <div class="fe-row">
         <div class="fe-cell size">9–29室<span class="sub">小規模ホーム</span></div>
         <div class="fe-cell"><b>2室以上</b>を支援対象として運営</div>
-        <div class="fe-cell">月 5,000円〜</div>
+        <div class="fe-cell"><b>8</b>万人</div>
       </div>
       <div class="fe-row">
         <div class="fe-cell size">30–44室<span class="sub">中小規模</span></div>
         <div class="fe-cell"><b>3室以上</b>を支援対象として運営</div>
-        <div class="fe-cell">月 10,000円〜</div>
+        <div class="fe-cell"><b>14</b>万人</div>
       </div>
       <div class="fe-row">
         <div class="fe-cell size">45–59室<span class="sub">中規模ホーム</span></div>
         <div class="fe-cell"><b>5室以上</b>を支援対象として運営</div>
-        <div class="fe-cell">月 15,000円〜</div>
+        <div class="fe-cell"><b>20</b>万人</div>
       </div>
       <div class="fe-row">
         <div class="fe-cell size">60–79室<span class="sub">大型ホーム</span></div>
         <div class="fe-cell"><b>7室以上</b>を支援対象として運営</div>
-        <div class="fe-cell">月 20,000円〜</div>
+        <div class="fe-cell"><b>25</b>万人</div>
       </div>
       <div class="fe-row">
         <div class="fe-cell size">80室以上<span class="sub">大型拠点</span></div>
         <div class="fe-cell"><b>10室以上</b>を支援対象として運営</div>
-        <div class="fe-cell">月 30,000円〜</div>
+        <div class="fe-cell"><b>30</b>万人</div>
       </div>
     </div>
+    <p style="font-size:12px;color:var(--sub);margin-top:12px;text-align:center;line-height:1.7">
+      ※ 規模ごとの参考目標支援者数です。実際の必要人数は物件・立地により変動します。<br>
+      <a href="/concept.html#scale" style="color:var(--accent);text-decoration:underline">計算根拠を見る</a>
+    </p>
 
     <div class="fe-tiers">
       <div class="tier certified">
@@ -688,15 +692,16 @@
           <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" name="email_address" required></div>
         </div>
         <div class="form-row">
-          <label>規模・希望プラン<span class="req">必須</span></label>
-          <select name="plan_key" required>
+          <label>運営施設の規模<span class="req">必須</span></label>
+          <select name="facility_scale" required>
             <option value="">選択してください</option>
-            <option value="facility_s">Facility S — 9〜29室（月¥5,000・支援2室以上）</option>
-            <option value="facility_m">Facility M — 30〜44室（月¥10,000・支援3室以上）</option>
-            <option value="facility_l">Facility L — 45〜59室（月¥15,000・支援5室以上）</option>
-            <option value="facility_xl">Facility XL — 60〜79室（月¥20,000・支援7室以上）</option>
-            <option value="facility_xxl">Facility XXL — 80室以上（月¥30,000・支援10室以上）</option>
+            <option value="9-29">小規模（9〜29室）</option>
+            <option value="30-44">中規模A（30〜44室）</option>
+            <option value="45-59">中規模B（45〜59室）</option>
+            <option value="60-79">大規模A（60〜79室）</option>
+            <option value="80+">大規模B（80室以上）</option>
           </select>
+          <p class="card-note" style="margin-top:6px;font-size:12px;color:var(--sub)">※ 規模に応じた目標支援者数の達成サポートを運営事務局より行います。</p>
         </div>
         <div class="form-row">
           <label>土地建物の所有形態<span class="req">必須</span></label>
@@ -708,23 +713,26 @@
           <p class="card-note" style="margin-top:6px;font-size:12px;color:var(--sub)">※ 土地建物を所有されている法人は加盟対象外です。詳しくは <a href="#fac-principle" style="color:var(--accent)">こちら</a> をご確認ください。</p>
         </div>
         <div class="form-row"><label>運営施設の総室数<span class="req">必須</span></label><input type="number" name="total_rooms" min="1" required></div>
-        <div class="form-row"><label>支援対象として確保可能な室数<span class="req">必須</span></label><input type="number" name="support_rooms" min="1" required></div>
-        <div class="form-row"><label>備考・運営状況<span class="opt">任意</span></label><textarea name="note" placeholder="現入居率、職員体制、月次報告の対応可否など"></textarea></div>
-
-        <!-- Square Web Payments SDK card container -->
-        <div class="form-row card-row">
-          <label>クレジットカード情報<span class="req">必須</span></label>
-          <div id="card-container" class="card-container"></div>
-          <p class="card-note">入力情報は Square 社のセキュア決済システムに直接送信され、本サイトには保存されません。事前審査完了後、課金が開始されます。</p>
+        <div class="form-row">
+          <label>付帯アプリの導入意向<span class="req">必須</span></label>
+          <select name="apps_intent" required>
+            <option value="">選択してください</option>
+            <option value="both_ready">tやるゼ・mやるゼの両方を導入可能</option>
+            <option value="one_ready">どちらか一方の導入を検討したい</option>
+            <option value="discuss">説明を聞いてから判断したい</option>
+          </select>
+          <p class="card-note" style="margin-top:6px;font-size:12px;color:var(--sub)">※ 加盟施設には、集客（脱・紹介会社）とスタッフ業務削減のための付帯アプリ「<a href="https://tyaruze.tamjump.com/" target="_blank" rel="noopener" style="color:var(--accent)">tやるゼ</a>」「<a href="https://myaruze.tamjump.com/" target="_blank" rel="noopener" style="color:var(--accent)">mやるゼ</a>」の導入をご案内します。</p>
         </div>
+        <div class="form-row"><label>備考・運営状況<span class="opt">任意</span></label><textarea name="note" placeholder="現入居率、職員体制、月次報告の対応可否、紹介会社依存状況など"></textarea></div>
 
         <div class="consent-box">
           <h5 style="font-size:13px;font-weight:700;color:var(--ink);margin:0 0 12px">同意事項</h5>
           <ul>
             <li>月次活動報告（提出5日／確認10日／公開15日）の運用に同意します。</li>
             <li>未提出ペナルティ（7日遅延=注意 / 15日=停止 / 2ヶ月連続=加盟一時停止 / 虚偽=即時取消・返還請求）に同意します。</li>
-            <li>本人現金給付は行わず、施設への月額負担引き下げ助成として支援を受けます。</li>
-            <li>退会はいつでも可能です。次回課金日の前日までにご連絡ください。</li>
+            <li>本人現金給付は行わず、施設の月額固定費の補填として支援を受けます。</li>
+            <li>支援者は施設の自助努力で集めます。Care Support Pass は集まる仕組みを提供する立場で、自動的に集めるものではありません。</li>
+            <li>付帯アプリ（tやるゼ・mやるゼ）の導入をご案内します。</li>
           </ul>
           <label class="consent-check">
             <input type="checkbox" name="consent" required>
@@ -781,8 +789,8 @@
 </footer>
 
 <!-- Square Web Payments SDK + Care Support Pass payment integration -->
+<!-- Care Support Pass — apply form submitter (no payment, just submission) -->
 <script>window.CSP_API_BASE = "https://api.carepass.tamjump.com";</script>
-<script src="https://web.squarecdn.com/v1/square.js"></script>
 <script src="/assets/payment.js" defer></script>
 
 </body>

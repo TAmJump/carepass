@@ -1,7 +1,8 @@
-# Square 決済統合 — 設計書
+# Square 決済統合 — 設計書 v2
 
 > Care Support Pass (carepass.tamjump.com) の月額課金実装。
-> Cloudflare Workers をバックエンドにし、Square Web Payments SDK + Subscriptions API を統合。
+> **個人会員の月100円・1プランのみ**。加盟店・介護施設は申込受付（課金なし）。
+> 支援者は施設指名制で、どの施設を支援するかを選択する。
 
 ---
 
@@ -11,26 +12,30 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │  carepass.tamjump.com  (GitHub Pages・静的)                     │
 │                                                                  │
-│  index.html / partners.html / facilities.html                   │
-│   └ <div id="card-container"> ← Web Payments SDK が描画         │
-│        ↓ card.tokenize() で payment token 取得                  │
-│        ↓ fetch POST                                             │
+│  index.html  個人会員フォーム                                    │
+│   └ 施設選択(select) + Square card-container                    │
+│        ↓ /api/config で施設リスト取得                            │
+│        ↓ card.tokenize() で payment token                       │
+│        ↓ /api/subscribe POST                                    │
+│                                                                  │
+│  partners.html / facilities.html  申込受付フォーム               │
+│   └ Square SDK 不要                                              │
+│        ↓ /api/apply POST                                        │
 └─────────────────────────────────────────────────────────────────┘
                               ↓ HTTPS
 ┌─────────────────────────────────────────────────────────────────┐
 │  api.carepass.tamjump.com  (Cloudflare Workers)                 │
 │                                                                  │
-│  POST /api/subscribe       ← フォーム送信受信                    │
-│   1. CreateCustomer  (Customers API)                             │
+│  GET  /api/config        application_id + location_id + 施設一覧 │
+│  POST /api/subscribe     個人会員(Square Subscription作成)        │
+│  POST /api/apply         加盟店・施設申込(Customer登録のみ)        │
+│  POST /api/cancel        退会                                    │
+│  POST /api/webhook       Square Webhook (HMAC-SHA256)            │
+│                                                                  │
+│  処理フロー (subscribe):                                         │
+│   1. CreateCustomer  (Customers API・施設IDをメタデータに保存)   │
 │   2. CreateCard      (Cards API・トークンを永続カード化)         │
-│   3. CreateSubscription (Subscriptions API・該当プラン)          │
-│   → 顧客に応じてplan_variation_id選択                            │
-│                                                                  │
-│  POST /api/webhook         ← Square→Worker (HMAC検証)            │
-│   - invoice.payment_made / subscription.updated 等               │
-│                                                                  │
-│  POST /api/cancel          ← 退会                                │
-│   - CancelSubscription                                           │
+│   3. CreateSubscription (Subscriptions API・¥100/月プラン)       │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
@@ -42,89 +47,106 @@
 
 ---
 
-## 📦 サブスクリプション計画（12プラン）
+## 📦 サブスクリプション計画（1つだけ）
 
-Subscription Plan は3つ作成し、それぞれに Plan Variation を作る：
+### Plan: Care Support Pass — Monthly Membership
 
-### Plan: Individual Membership (個人会員)
-| Variation | 月額 | ordinal | cadence |
-|---|---|---|---|
-| Care 100 | ¥100 | 0 | MONTHLY |
-| Care 300 | ¥300 | 0 | MONTHLY |
-| Care 500 | ¥500 | 0 | MONTHLY |
-| Care 1000 | ¥1,000 | 0 | MONTHLY |
-
-### Plan: Partner Membership (加盟店)
-| Variation | 月額 | 備考 |
+| Variation key | 月額 | 用途 |
 |---|---|---|
-| Local Partner | ¥3,000 | |
-| Care Partner | ¥10,000 | |
-| Sponsor Partner | ¥30,000 | |
-※ Free Partner はSquare計画作成不要（決済なし、フォーム送信のみ）
+| `care100` | ¥100 | 個人会員（唯一の課金プラン） |
 
-### Plan: Facility Membership (介護施設)
-| Variation | 月額 | 規模 |
-|---|---|---|
-| Facility S | ¥5,000 | 9–29室 |
-| Facility M | ¥10,000 | 30–44室 |
-| Facility L | ¥15,000 | 45–59室 |
-| Facility XL | ¥20,000 | 60–79室 |
-| Facility XXL | ¥30,000 | 80室以上 |
+**加盟店プランも介護施設プランも Square には作りません**。
+- 加盟店：参加形態は4種類（Free / Local / Care / Sponsor）あるが、課金は別途運営側で個別調整
+- 介護施設：会費ゼロ。Care Support Pass は集まる仕組みを提供する立場で、支援者は施設が自分で集める
 
-合計 = 個人4 + 加盟店3 + 施設5 = **12 plan variations**
+---
 
-すべて `scripts/create-plans.js` で一括作成（後述）。
+## 🏢 施設リスト管理
+
+Cloudflare Workers の **環境変数 `FACILITIES_JSON`** で管理。
+
+例：
+```json
+[
+  {
+    "id": "facility_a",
+    "name": "施設A",
+    "location": "東京都足立区",
+    "scale": "30-44",
+    "accepting": true
+  },
+  {
+    "id": "facility_b",
+    "name": "施設B",
+    "location": "神奈川県横浜市",
+    "scale": "45-59",
+    "accepting": true
+  }
+]
+```
+
+施設追加・変更 = `wrangler secret put FACILITIES_JSON` を再実行するだけ。
+GitHub Pagesのデプロイ不要。
 
 ---
 
 ## 🔐 環境変数 (wrangler secret put で設定)
 
 ```
-SQUARE_ACCESS_TOKEN          # API access token (本番/Sandbox切替)
+SQUARE_ACCESS_TOKEN          # API access token (本番/Sandbox)
 SQUARE_LOCATION_ID           # 加盟店ID
+SQUARE_APPLICATION_ID        # アプリID (フロントから/api/config経由で取得)
 SQUARE_WEBHOOK_SIGNATURE_KEY # Webhook署名検証用
-SQUARE_ENV                   # "sandbox" | "production"
-PLAN_VARIATION_IDS_JSON      # プラン作成後にIDをJSONで保存
-                             # {"care100":"XXX","care300":"YYY",...}
-ALLOWED_ORIGIN               # CORS用 → https://carepass.tamjump.com
+WEBHOOK_NOTIFICATION_URL     # Square Dashboardに登録したURLと同じ文字列
+PLAN_VARIATION_IDS_JSON      # {"care100":"XXX"}
+FACILITIES_JSON              # 施設リスト（上記参照）
+ALLOWED_ORIGIN               # "https://carepass.tamjump.com"
 ```
+
+`wrangler.toml` の `vars`:
+- `SQUARE_ENV = "sandbox"` (本番切替時 "production")
 
 ---
 
 ## 🛣️ Worker エンドポイント仕様
 
-### `POST /api/subscribe`
+### `GET /api/config`
+
+**用途**: フロントから Square Application ID と施設リストを取得
+
+**レスポンス**:
+```json
+{
+  "application_id": "sandbox-sq0idb-...",
+  "location_id": "L...",
+  "env": "sandbox",
+  "facilities": [{"id":"facility_a","name":"施設A","location":"東京都","accepting":true}]
+}
+```
+
+### `POST /api/subscribe`  ← 個人会員専用
 
 **リクエスト Body**:
 ```json
 {
-  "type": "individual" | "partner" | "facility",
-  "plan_key": "care100" | "care300" | ... | "facility_s" | ...,
-  "source_id": "cnon:...",            // Web Payments SDK の payment token
-  "verification_token": "...",         // SCA verification (optional)
+  "source_id": "cnon:...",
+  "verification_token": "...",
+  "facility_id": "facility_a",
   "buyer": {
-    "given_name": "...",
-    "family_name": "...",
-    "email_address": "...",            // 必須・Squareが請求書をここに送る
+    "given_name": "...", "family_name": "...",
+    "email_address": "...",
     "phone_number": "...",
-    "address": { ... },                // 郵便番号は SDKフォームと一致必須
-    "company_name": "...",             // partner/facility のみ
-    "metadata": { ... }                // 申込フォームの追加情報
+    "address": { "postal_code": "...", "country": "JP" },
+    "metadata": { "support_theme": "...", "coupon_genre": "..." }
   }
 }
 ```
 
-**処理フロー**:
-```
-1. CORS / Origin check
-2. body 検証
-3. Square Customer 検索 or 新規作成 (SearchCustomers / CreateCustomer)
-4. CreateCard で source_id を永続カードに変換 → card_id
-5. CreateSubscription
-   - customer_id, location_id, plan_variation_id, card_id
-   - start_date は未指定 = 即時開始
-6. 200 OK with { subscription_id, status, customer_id }
-```
+**処理**:
+1. `facility_id` 検証（FACILITIES_JSON 内の有効なIDか）
+2. CreateCustomer or 既存検索（emailで）
+3. CreateCard で payment token → 永続 card_id
+4. CreateSubscription（plan_variation_id=care100, card_id, facility_idはsubscriptionのsource.urlに記録）
 
 **レスポンス**:
 ```json
@@ -132,190 +154,149 @@ ALLOWED_ORIGIN               # CORS用 → https://carepass.tamjump.com
   "ok": true,
   "subscription_id": "...",
   "customer_id": "...",
-  "status": "PENDING"  // 課金後 ACTIVE に変わる
+  "status": "PENDING",
+  "facility_id": "facility_a"
 }
 ```
 
-### `POST /api/webhook`
-
-Square から呼ばれる。署名検証必須。
-
-**処理対象イベント**:
-- `subscription.created` — 加入完了通知
-- `subscription.updated` — ステータス変更
-- `invoice.payment_made` — 課金成功
-- `invoice.scheduled_charge_failed` — 課金失敗
-- `subscription.canceled` — 退会
-- `card.automatically_updated` — カード自動更新（情報のみ）
-
-**処理**:
-- HMAC-SHA256 で `x-square-hmacsha256-signature` を検証
-- 失敗 → 403
-- 成功 → 200 OK を5秒以内に返す（処理は内部キューでも可）
-- 当面は console.log のみ（後で D1 や R2 に保存）
-
-### `POST /api/cancel`
+### `POST /api/apply`  ← 加盟店・介護施設の申込受付
 
 **リクエスト Body**:
 ```json
 {
-  "subscription_id": "...",
-  "customer_email": "..."   // 本人確認用
+  "type": "partner" | "facility",
+  "applicant": {
+    "given_name": "...", "family_name": "...",
+    "email_address": "...",
+    "company_name": "...",
+    "details": { "industry": "...", "facility_scale": "30-44", "ownership": "non_owned", "apps_intent": "both_ready", ... }
+  }
 }
 ```
 
 **処理**:
-1. Square から Subscription を Retrieve
-2. customer_id から Customer を取得し、email 照合
-3. 一致したら CancelSubscription を呼ぶ（次の課金日まで継続）
-4. 200 OK
+- Square の Customer Directory に登録（Square Dashboard から運営が後で確認可能）
+- type で分類できるよう `note` フィールドに `{"kind":"partner|facility","details":{...}}` を保存
+- TODO: 運営者メール通知（Cloudflare Email Workers / 外部 SMTP）
+
+### `POST /api/cancel`
+
+```json
+{ "subscription_id": "...", "customer_email": "..." }
+```
+- email 照合 → CancelSubscription（次の課金日で停止）
+
+### `POST /api/webhook`
+
+Square Webhook の HMAC-SHA-256 検証 → イベントログ。
+処理対象: `subscription.*`, `invoice.*`, `card.automatically_updated`
 
 ---
 
-## 🎨 フロントエンド統合（フォーム1画面完結）
+## 🎨 フロントエンド統合
 
-### 各HTMLの申込フォームに以下を埋め込む：
+### 共通: `assets/payment.js`
 
-```html
-<!-- Square SDK 読み込み（head か body末尾） -->
-<script src="https://web.squarecdn.com/v1/square.js"></script>
+`<form id="csp-form" data-type="...">` の `data-type` で動作切り替え：
 
-<!-- フォーム内 (既存の <form> セクション) -->
-<div id="card-container"></div>
-<button id="submit-pay" type="button" disabled>申し込む</button>
-<div id="payment-status"></div>
+| data-type | Square SDK | 送信先 | フィールド |
+|---|---|---|---|
+| `individual` | 必要 | `/api/subscribe` | facility_id, source_id, buyer |
+| `partner` | 不要 | `/api/apply` | applicant.* + details |
+| `facility` | 不要 | `/api/apply` | applicant.* + details |
 
-<script src="/assets/payment.js" defer></script>
-```
+### 個人会員フォーム (index.html)
+- 施設選択(select) `name="facility_id"` を必須
+- ¥100/月の固定表示（変更不可）
+- Square card-container
+- `<script src="https://web.squarecdn.com/v1/square.js">` を読み込み
 
-### `/assets/payment.js` の役割：
-1. `Square.payments(applicationId, locationId)` で初期化
-2. `payments.card()` でカードフォーム生成 → `#card-container` にアタッチ
-3. 送信ボタンクリック → `card.tokenize({ intent: 'STORE', ... })` で payment token 生成
-4. `/api/subscribe` に POST
-5. 成功 → `/thanks.html?type={type}&sid={subscription_id}`
-6. 失敗 → エラー表示
+### 加盟店フォーム (partners.html)
+- Square SDK 読み込み**しない**
+- 業種・参加形態の希望・クーポン内容など
+- 送信 → /api/apply で運営側に通知
 
-### 重要：3Dセキュア (SCA) 対応
-`tokenize()` の verificationDetails で `intent: "STORE"` を指定すると SCAフロー自動。
-
----
-
-## 🔁 退会フロー (FAQで「いつでも退会できる」と謳ってる)
-
-### 退会ページ案：`/cancel.html`
-```
-入力:
-  - 登録メールアドレス
-  - サブスクリプションID（thanks.htmlで案内されたもの）or
-    メアドからの本人確認リンク
-
-→ /api/cancel に POST
-→ 次の課金日まで継続、その後停止
-```
-
-**ファーストパス**: thanks.html に「退会はメール案内のリンクから」と書き、運営側手動対応も可（最初はそれで十分）。
+### 施設フォーム (facilities.html)
+- Square SDK 読み込み**しない**
+- 規模・所有形態・**tやるゼ/mやるゼ導入意向**を必須
+- 送信 → /api/apply で運営側に通知
 
 ---
 
-## 📋 実装ファイル一覧（最終）
+## 🚧 デプロイ手順
 
-```
-/home/claude/care-support-pass/
-├ worker/
-│  ├ src/
-│  │  ├ index.js              ← メインWorker (ルーティング)
-│  │  ├ square.js             ← Square API ラッパー
-│  │  ├ webhook.js            ← Webhook検証ハンドラ
-│  │  ├ plans.js              ← plan_key → variation_id マップ
-│  │  └ cors.js               ← CORS共通
-│  ├ wrangler.toml            ← Worker設定
-│  ├ package.json
-│  └ README.md
-│
-├ scripts/
-│  └ create-plans.js          ← 初期セットアップ：12プランを一括作成
-│
-├ assets/
-│  └ payment.js               ← フロントエンドWeb Payments SDK統合
-│
-├ index.html                  ← フォームを Square SDK 対応に書き換え
-├ partners.html               ← 同上
-├ facilities.html             ← 同上
-├ thanks.html                 ← 決済完了表示・サブスクID表示
-└ cancel.html                 ← (新規) 退会ページ
-```
-
----
-
-## 🚧 デプロイ手順（順番厳守）
-
-### Phase 1: Square準備
-1. Square Developer Dashboard で **TAMJ.Corp** アプリ作成
-2. **Sandbox**環境の access token 取得
-3. **Sandbox**の Location ID 取得
-4. Application ID（フロント用）取得
+### Phase 1: Square Developer Dashboard
+- ✅ アプリ「Care Support Pass」作成済
+- ✅ Sandbox Application ID: `sandbox-sq0idb-EnZefMydm3SEPqs5cKNIog`
+- ✅ Sandbox Location ID: `LYFS542ADA78W`
+- Sandbox Access Token: ユーザーが保管中
+- Production: 本番切替時に取得
 
 ### Phase 2: プラン作成 (Sandboxでまず)
 ```bash
 cd scripts
-SQUARE_ENV=sandbox SQUARE_ACCESS_TOKEN=xxx node create-plans.js
-# → 12個の plan_variation_id がJSON出力される
-# → これを PLAN_VARIATION_IDS_JSON にコピー
+set SQUARE_ENV=sandbox
+set SQUARE_ACCESS_TOKEN=xxx
+node create-plans.js > plans.json
+# → plans.json に {"care100":"XXX"} が出力される
 ```
 
 ### Phase 3: Worker デプロイ
 ```bash
 cd worker
 npm install
-wrangler login
-wrangler secret put SQUARE_ACCESS_TOKEN
-wrangler secret put SQUARE_LOCATION_ID
-wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY
-wrangler secret put PLAN_VARIATION_IDS_JSON
-wrangler secret put ALLOWED_ORIGIN
-wrangler deploy
-# → https://carepass-api.<account>.workers.dev で稼働
+npx wrangler login
+
+# secrets投入
+npx wrangler secret put SQUARE_ACCESS_TOKEN
+npx wrangler secret put SQUARE_LOCATION_ID
+npx wrangler secret put SQUARE_APPLICATION_ID
+npx wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY   # Webhook登録後
+npx wrangler secret put WEBHOOK_NOTIFICATION_URL
+npx wrangler secret put PLAN_VARIATION_IDS_JSON       # plans.jsonの中身
+npx wrangler secret put FACILITIES_JSON               # 施設リスト
+npx wrangler secret put ALLOWED_ORIGIN                # "https://carepass.tamjump.com"
+
+npx wrangler deploy
 ```
 
 ### Phase 4: カスタムドメイン
-- Cloudflareダッシュボード で `api.carepass.tamjump.com` を Workers にバインド
+- Cloudflare Dashboard → Workers → Settings → Triggers
+- Route: `api.carepass.tamjump.com/*` (Zone: tamjump.com)
 
-### Phase 5: Webhook 登録
-- Square Developer Dashboard → Webhooks
+### Phase 5: Webhook 登録 (Square Dashboard)
 - URL: `https://api.carepass.tamjump.com/api/webhook`
-- イベント: subscription.* / invoice.* / card.*
-- 取得した Signature Key を Worker secret に登録
+- イベント: `subscription.*`, `invoice.*`, `card.automatically_updated`
+- 発行された Signature Key を `SQUARE_WEBHOOK_SIGNATURE_KEY` に登録
 
-### Phase 6: フロントエンド更新
-- payment.js を assets/ に追加
-- index.html / partners.html / facilities.html に SDK と payment.js を組み込む
-- 申込フォームの送信ボタンを実装
+### Phase 6: Sandboxテスト
+- テストカード: `4111 1111 1111 1111` / 任意未来日 / CVV `111` / 郵便番号 `10003`
+- 個人会員フォーム送信 → Subscription PENDING → 課金で ACTIVE
+- `npx wrangler tail` で Webhook 受信確認
 
-### Phase 7: Sandboxテスト
-- Square提供のテストカード (4111 1111 1111 1111) で動作確認
-- Webhookが正しく届くか確認 (webhook.site で中継できる)
-
-### Phase 8: 本番切替
-- access_token を本番のものに変更
-- create-plans.js を本番環境で再実行
-- 本番カードで小額テスト
-- 本番公開
+### Phase 7: 本番切替
+- `wrangler.toml` の `SQUARE_ENV = "production"`
+- 本番 access_token / location_id / application_id を secret 更新
+- 本番プラン作成 (`SQUARE_ENV=production node create-plans.js`)
+- 本番 webhook 登録 → signature key 更新
+- `npx wrangler deploy`
 
 ---
 
 ## ⚠️ 注意事項
 
 ### Square 仕様
-- `Square-Version: 2026-01-22` を全リクエストヘッダーに付ける
+- `Square-Version: 2026-01-22`
 - Subscription は最初 PENDING → 課金成功で ACTIVE
-- 個人会員 ¥100/月は手数料との兼ね合いで赤字になる可能性 → 確認必須
-- ACH（口座振替）はSubscriptions APIでは未対応 → カードのみ
-- Cash App PayとAfterpay はサブスク非対応
+- 月100円は手数料との兼ね合いで運営側ほぼ赤字 → 加盟店スポンサー収入が主収益源
+- ACH（口座振替）は Subscriptions API 未対応 → カードのみ
+- Cash App Pay / Afterpay はサブスク非対応
 
-### NG ワード厳守 (HANDOVER.md A-4 参照)
-- 寄附ではない「月額会員サービス」と表記
-- 「決済」「課金」は内部用語、ユーザー向けは「会費」「お支払い」
+### 設計思想（厳守）
+- 月100円は**一律・一律・一律**。プラン分岐なし
+- 加盟店・施設に Square 課金はない
+- 支援者は施設を選んで支援する（自動配分ではない）
+- 施設は自分で支援者を集める（Care Support Pass は集まる仕組みを提供する立場）
 
 ### セキュリティ
 - access_token は絶対にフロントエンドに出さない（Worker側のみ）
@@ -324,4 +305,4 @@ wrangler deploy
 
 ---
 
-**END OF DESIGN DOC**
+**END OF DESIGN DOC v2**
