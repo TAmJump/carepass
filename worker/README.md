@@ -44,11 +44,11 @@ npx wrangler deploy
 
 ### 6. カスタムドメイン (Cloudflare Dashboard)
 - Workers & Pages → carepass-api → Settings → Triggers
-- Routes: `api.carepass.tamjump.com/*` (Zone: tamjump.com)
-- DNS で `api.carepass.tamjump.com` を Workers に自動マッピング
+- Routes: `carepass-api.tamjump.com/*` (Zone: tamjump.com)
+- DNS で `carepass-api.tamjump.com` を Workers に自動マッピング
 
 ### 7. Webhook 登録 (Square Dashboard)
-- URL: `https://api.carepass.tamjump.com/api/webhook`
+- URL: `https://carepass-api.tamjump.com/api/webhook`
 - イベント: `subscription.*`, `invoice.*`, `card.automatically_updated`
 - 発行された Signature Key を `SQUARE_WEBHOOK_SIGNATURE_KEY` に登録
 

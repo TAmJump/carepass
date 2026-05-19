@@ -24,7 +24,7 @@
 └─────────────────────────────────────────────────────────────────┘
                               ↓ HTTPS
 ┌─────────────────────────────────────────────────────────────────┐
-│  api.carepass.tamjump.com  (Cloudflare Workers)                 │
+│  carepass-api.tamjump.com  (Cloudflare Workers)                 │
 │                                                                  │
 │  GET  /api/config        application_id + location_id + 施設一覧 │
 │  POST /api/subscribe     個人会員(Square Subscription作成)        │
@@ -262,10 +262,10 @@ npx wrangler deploy
 
 ### Phase 4: カスタムドメイン
 - Cloudflare Dashboard → Workers → Settings → Triggers
-- Route: `api.carepass.tamjump.com/*` (Zone: tamjump.com)
+- Route: `carepass-api.tamjump.com/*` (Zone: tamjump.com)
 
 ### Phase 5: Webhook 登録 (Square Dashboard)
-- URL: `https://api.carepass.tamjump.com/api/webhook`
+- URL: `https://carepass-api.tamjump.com/api/webhook`
 - イベント: `subscription.*`, `invoice.*`, `card.automatically_updated`
 - 発行された Signature Key を `SQUARE_WEBHOOK_SIGNATURE_KEY` に登録
 

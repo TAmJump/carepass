@@ -226,7 +226,7 @@ if (sid) {
 
 // 施設指名情報を /api/config から取得して表示
 if (facilityId && type === 'individual') {
-  fetch((window.CSP_API_BASE || 'https://api.carepass.tamjump.com') + '/api/config')
+  fetch((window.CSP_API_BASE || 'https://carepass-api.tamjump.com') + '/api/config')
     .then((r) => r.json())
     .then((cfg) => {
       const f = (cfg.facilities || []).find((x) => x.id === facilityId);
