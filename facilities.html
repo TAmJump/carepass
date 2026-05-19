@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Care Support Pass 加盟介護施設の方へ。土地建物を所有しない介護運営会社向け、月次活動報告を義務化した透明性のある支援制度。">
+<title>介護施設の方へ | Care Support Pass</title>
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:title" content="加盟介護施設の方へ | Care Support Pass">
+<meta property="og:description" content="支援金は、不動産ではなく入居者の暮らしへ。月次活動報告を義務化した透明性のある制度。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://carepass.tamjump.com/facilities.html">
+<meta property="og:image" content="https://carepass.tamjump.com/og.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+:root{ --warm:#E94436; --warm-soft:#FFE5DF; --warm-dark:#C9311F; --warm-soft2:#FFF2EF; }
+
+/* ============ HERO ============ */
+.facility-hero{
+  padding:120px 24px 80px;
+  background:
+    radial-gradient(900px 500px at 80% 10%,rgba(244,162,97,.10),transparent 60%),
+    radial-gradient(700px 400px at 20% 80%,rgba(233,68,54,.06),transparent 60%),
+    #fff;
+}
+.fh-wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 0.85fr;gap:64px;align-items:center}
+.fh-text .eyebrow{color:var(--warm);font-weight:700;letter-spacing:.22em;font-size:11.5px}
+.fh-text h1{
+  font-size:clamp(34px,4.6vw,52px);line-height:1.22;
+  font-weight:800;letter-spacing:-.015em;margin:18px 0 24px;color:var(--ink);
+}
+.fh-text h1 .em{
+  background:linear-gradient(transparent 60%,var(--warm-soft) 60%);padding:0 6px;
+}
+.fh-text .lead{
+  font-size:16px;line-height:2;color:var(--sub);margin:0 0 28px;font-weight:400;
+}
+.fh-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn-warm{background:var(--warm);color:#fff;border-color:var(--warm)}
+.btn-warm:hover{background:var(--warm-dark);border-color:var(--warm-dark);color:#fff}
+.fh-photo{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/5;background:#222;box-shadow:0 24px 56px rgba(0,0,0,.15)}
+.fh-photo img{width:100%;height:100%;object-fit:cover}
+.fh-photo-tag{
+  position:absolute;bottom:20px;left:20px;right:20px;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(14px);
+  padding:12px 16px;border-radius:8px;
+  display:flex;align-items:center;gap:10px;
+}
+.fh-photo-tag .ln{width:16px;height:1.5px;background:var(--warm);flex-shrink:0}
+.fh-photo-tag .tx{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;color:var(--warm);font-weight:700;text-transform:uppercase}
+@media(max-width:980px){
+  .fh-wrap{grid-template-columns:1fr;gap:40px}
+  .fh-photo{max-width:520px;margin:0 auto;aspect-ratio:4/3}
+}
+
+/* ============ PRINCIPLE ============ */
+.fac-principle{padding:88px 24px;background:linear-gradient(180deg,#fff 0%,var(--soft) 100%)}
+.fp-wrap{max-width:1080px;margin:0 auto;text-align:center}
+.fp-wrap .eyebrow{color:var(--warm)}
+.fp-wrap h2{font-size:clamp(28px,3.4vw,38px);line-height:1.4;font-weight:700;color:var(--ink);margin:14px 0 24px;letter-spacing:-.01em}
+.fp-wrap h2 .em{color:var(--warm)}
+.fp-wrap .lead{font-size:16px;line-height:2;color:var(--sub);max-width:760px;margin:0 auto 56px}
+.fp-pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.fp-pillar{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:32px 28px;text-align:left;position:relative;
+}
+.fp-pillar .num{
+  font-family:'Inter',sans-serif;font-size:32px;font-weight:900;color:var(--warm);
+  letter-spacing:-.01em;line-height:1;margin-bottom:20px;
+}
+.fp-pillar h4{font-size:17px;font-weight:700;color:var(--ink);margin:0 0 10px;letter-spacing:-.005em}
+.fp-pillar p{font-size:13.5px;line-height:1.85;color:var(--sub);margin:0;font-weight:400}
+@media(max-width:880px){.fp-pillars{grid-template-columns:1fr}}
+
+/* ============ SUSTAINABILITY MODEL ============ */
+.fac-model{padding:96px 24px;background:linear-gradient(180deg,var(--soft) 0%,#fff 100%)}
+.fm-wrap{max-width:1180px;margin:0 auto}
+.fm-head{text-align:center;margin-bottom:64px}
+.fm-head .eyebrow{color:var(--warm)}
+.fm-head h2{font-size:clamp(30px,3.8vw,44px);line-height:1.3;font-weight:800;color:var(--ink);margin:14px 0 18px;letter-spacing:-.015em}
+.fm-head h2 .em{color:var(--accent)}
+.fm-head .lead{font-size:15px;line-height:1.95;color:var(--sub);max-width:760px;margin:0 auto;font-weight:400}
+
+/* Cost Breakdown */
+.fm-breakdown{background:#fff;border:1px solid var(--line);border-radius:24px;padding:56px 48px;margin-bottom:64px;box-shadow:0 4px 24px rgba(0,0,0,.04)}
+.fm-bd-head{text-align:center;margin-bottom:40px}
+.fm-bd-head .tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.22em;color:var(--accent);font-weight:700;text-transform:uppercase;background:var(--accent-soft2);padding:6px 14px;border-radius:0;margin-bottom:14px}
+.fm-bd-head h3{font-size:clamp(22px,2.6vw,28px);line-height:1.45;font-weight:700;margin:0 0 14px;color:var(--ink);letter-spacing:-.005em}
+.fm-bd-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:680px;margin:0 auto}
+.fm-table-wrap{overflow-x:auto;border-radius:0;border:1px solid var(--line-soft)}
+.fm-table{width:100%;border-collapse:collapse;font-size:14px;background:#fff}
+.fm-table thead th{background:var(--soft);color:var(--sub);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:16px 20px;text-align:left;border-bottom:2px solid var(--line)}
+.fm-table thead th.num{text-align:right}
+.fm-table tbody th{font-size:14px;font-weight:500;color:var(--ink);padding:18px 20px;text-align:left;border-bottom:1px solid var(--line-soft);width:38%;vertical-align:middle}
+.fm-table tbody td{padding:18px 20px;border-bottom:1px solid var(--line-soft);color:var(--sub);font-size:13.5px;line-height:1.7;vertical-align:middle}
+.fm-table tbody td.num{text-align:right;color:var(--ink);font-family:'Inter',sans-serif;font-weight:500;font-size:15px;letter-spacing:-.005em;white-space:nowrap}
+.fm-table tbody td.num small{font-size:11px;color:var(--sub);font-weight:400;margin-left:2px}
+.fm-table tbody td.num b{font-weight:700;font-size:18px;color:var(--ink)}
+.fm-table tbody tr.row-self{background:var(--accent-soft2)}
+.fm-table tbody tr.row-self th{color:var(--accent-dark);font-weight:700}
+.fm-table tbody tr.row-self td.num b{color:var(--accent-dark)}
+.fm-table tbody tr.row-total{background:var(--ink);color:#fff}
+.fm-table tbody tr.row-total th{color:#fff;font-weight:700;border-bottom:0}
+.fm-table tbody tr.row-total td{color:#A8B2BA;border-bottom:0}
+.fm-table tbody tr.row-total td.num{color:#fff}
+.fm-table tbody tr.row-total td.num b{color:#fff}
+.fm-note{font-size:12px;line-height:1.85;color:var(--sub);margin:20px 0 0;padding-top:16px;border-top:1px dashed var(--line-soft)}
+
+/* Resident Mix */
+.fm-mix{background:var(--ink);color:#fff;border-radius:24px;padding:56px 48px;margin-bottom:48px}
+.fm-mix-head{text-align:center;margin-bottom:40px}
+.fm-mix-head .tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.22em;color:var(--accent-soft);font-weight:700;text-transform:uppercase;background:rgba(233,68,54,.15);padding:6px 14px;border-radius:0;margin-bottom:14px}
+.fm-mix-head h3{font-size:clamp(22px,2.6vw,28px);line-height:1.45;font-weight:700;margin:0 0 14px;color:#fff;letter-spacing:-.005em}
+.fm-mix-head p{font-size:14px;line-height:1.95;color:#A8B2BA;max-width:720px;margin:0 auto}
+.fm-mix-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fm-mix-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:28px 22px;border-radius:0}
+.fm-mix-card.primary{background:linear-gradient(180deg,rgba(233,68,54,.18),rgba(233,68,54,.06));border-color:rgba(233,68,54,.4)}
+.fm-pct{font-family:'Inter',sans-serif;font-size:36px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:14px;line-height:1}
+.fm-pct .fm-u{font-size:18px;font-weight:600;color:#A8B2BA;margin-left:2px}
+.fm-mix-card.primary .fm-pct{color:var(--accent-soft)}
+.fm-mix-card h4{font-size:14px;font-weight:700;color:#fff;margin:0 0 10px;letter-spacing:.005em}
+.fm-mix-card p{font-size:12.5px;line-height:1.75;color:#A8B2BA;margin:0;font-weight:400}
+@media(max-width:980px){.fm-mix-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:540px){.fm-mix-grid{grid-template-columns:1fr}}
+
+/* Closing quote */
+.fm-quote{max-width:780px;margin:0 auto;text-align:center;padding:40px 32px;background:#fff;border:1px solid var(--line);border-radius:24px}
+.fm-quote h3{font-size:clamp(20px,2.4vw,26px);line-height:1.55;font-weight:700;color:var(--ink);margin:0 0 14px;letter-spacing:-.005em}
+.fm-quote h3 .em{color:var(--accent);background:linear-gradient(transparent 65%,var(--accent-soft) 65%);padding:0 4px}
+.fm-quote p{font-size:14px;line-height:1.95;color:var(--sub);margin:0;max-width:560px;margin-left:auto;margin-right:auto}
+
+@media(max-width:760px){
+  .fm-breakdown{padding:32px 24px}
+  .fm-mix{padding:40px 24px}
+}
+
+/* ============ ELIGIBILITY ============ */
+.fac-eligibility{padding:96px 24px;background:#fff}
+.fe-wrap{max-width:1180px;margin:0 auto}
+.fe-head{text-align:center;margin-bottom:48px}
+.fe-head .eyebrow{color:var(--warm)}
+.fe-head h2{font-size:clamp(30px,3.6vw,42px);line-height:1.35;font-weight:700;color:var(--ink);margin:14px 0 18px;letter-spacing:-.01em}
+.fe-head .lead{font-size:15px;line-height:1.9;color:var(--sub);max-width:720px;margin:0 auto}
+
+.fe-table{
+  background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,.04);
+}
+.fe-row{
+  display:grid;grid-template-columns:170px 1fr 1fr;gap:0;
+  border-bottom:1px solid var(--line-soft);
+}
+.fe-row:last-child{border-bottom:0}
+.fe-row.head{
+  background:var(--soft);font-weight:700;
+}
+.fe-cell{padding:18px 22px;font-size:14px;line-height:1.7;color:var(--ink);display:flex;flex-direction:column;justify-content:center}
+.fe-cell.size{font-weight:700;color:var(--warm);background:var(--soft);font-family:'Inter',sans-serif;letter-spacing:.02em}
+.fe-cell .sub{font-size:12px;color:var(--sub);font-weight:400;margin-top:3px}
+.fe-cell b{color:var(--ink);font-weight:700}
+.fe-row.head .fe-cell{background:#FEEFEC;color:var(--warm-dark);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+@media(max-width:780px){
+  .fe-row{grid-template-columns:1fr}
+  .fe-row.head{display:none}
+  .fe-cell{padding:12px 18px;border-bottom:1px solid var(--line-soft)}
+  .fe-cell.size{padding-top:18px}
+  .fe-cell:last-child{padding-bottom:18px}
+}
+
+.fe-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+.tier{
+  border:1px solid var(--line);border-radius:14px;padding:22px 22px;
+  background:#fff;display:flex;flex-direction:column;gap:6px;
+}
+.tier.certified{border-color:var(--warm);background:var(--warm-soft2)}
+.tier.certified .tier-name{color:var(--warm-dark)}
+.tier-badge{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.18em;color:var(--sub);font-weight:700;text-transform:uppercase}
+.tier-name{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.005em}
+.tier-desc{font-size:12.5px;line-height:1.75;color:var(--sub);margin-top:8px;font-weight:400}
+@media(max-width:780px){.fe-tiers{grid-template-columns:1fr}}
+
+/* ============ REPORTING ============ */
+.fac-reporting{padding:96px 24px;background:linear-gradient(180deg,var(--soft) 0%,#fff 100%)}
+.fr-wrap{max-width:1180px;margin:0 auto}
+.fr-head{text-align:center;margin-bottom:48px}
+.fr-head .eyebrow{color:var(--warm)}
+.fr-head h2{font-size:clamp(30px,3.6vw,42px);line-height:1.35;font-weight:700;color:var(--ink);margin:14px 0 18px;letter-spacing:-.01em}
+.fr-head h2 .em{color:var(--warm)}
+.fr-head .lead{font-size:15px;line-height:1.9;color:var(--sub);max-width:760px;margin:0 auto}
+
+.fr-flow{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
+  margin:48px auto 56px;max-width:1080px;
+}
+.fr-step{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:20px 18px;position:relative;display:flex;flex-direction:column;
+}
+.fr-day{
+  font-family:'Inter',sans-serif;font-size:24px;font-weight:900;
+  color:var(--warm);letter-spacing:-.01em;line-height:1;
+}
+.fr-day .small{font-size:11px;font-weight:600;color:var(--sub);margin-left:4px;letter-spacing:0}
+.fr-tag{
+  display:inline-block;font-family:'Inter',sans-serif;font-size:9.5px;letter-spacing:.16em;
+  color:var(--sub);font-weight:700;text-transform:uppercase;margin:14px 0 8px;
+}
+.fr-step h4{font-size:14px;font-weight:700;color:var(--ink);margin:0 0 6px;letter-spacing:-.005em}
+.fr-step p{font-size:12px;line-height:1.7;color:var(--sub);margin:0;font-weight:400}
+@media(max-width:980px){
+  .fr-flow{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){.fr-flow{grid-template-columns:1fr}}
+
+/* Penalty table */
+.fr-penalty{
+  background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;
+  margin-bottom:36px;
+}
+.fr-penalty .ph{
+  background:var(--warm-soft2);padding:18px 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--line-soft);
+}
+.fr-penalty .ph h4{font-size:14px;font-weight:700;color:var(--warm-dark);margin:0;letter-spacing:.02em}
+.fr-penalty .ph .ph-tag{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--warm);font-weight:700;text-transform:uppercase}
+.fr-penalty .pr{
+  display:grid;grid-template-columns:180px 1fr;gap:0;
+  border-bottom:1px solid var(--line-soft);
+}
+.fr-penalty .pr:last-child{border-bottom:0}
+.fr-penalty .pr .lbl{
+  padding:14px 22px;font-size:13px;font-weight:700;color:var(--warm-dark);
+  background:var(--warm-soft2);display:flex;align-items:center;letter-spacing:.02em;
+}
+.fr-penalty .pr .desc{
+  padding:14px 22px;font-size:13px;line-height:1.7;color:var(--ink);font-weight:400;
+}
+.fr-penalty .pr .desc b{color:var(--warm-dark);font-weight:700}
+@media(max-width:680px){.fr-penalty .pr{grid-template-columns:1fr}.fr-penalty .pr .lbl{padding-bottom:6px}.fr-penalty .pr .desc{padding-top:6px}}
+
+/* Contract clauses */
+.fr-contract{
+  background:var(--ink);color:#fff;border-radius:18px;padding:36px 36px;
+}
+.fr-contract h3{font-size:18px;font-weight:700;letter-spacing:.02em;margin:0 0 18px;color:#fff}
+.fr-contract .clauses{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fr-contract .clause{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;padding:14px 18px;
+  font-size:13px;line-height:1.7;color:rgba(255,255,255,.92);
+}
+.fr-contract .clause .num{
+  font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.2em;
+  color:#FFB4A8;font-weight:700;margin-bottom:6px;text-transform:uppercase;
+}
+.fr-contract .clause b{color:#fff;font-weight:700}
+@media(max-width:680px){.fr-contract .clauses{grid-template-columns:1fr}}
+
+/* ============ TRANSPARENCY PROMISE ============ */
+.fac-promise{padding:96px 24px;background:#fff}
+.fpr-wrap{max-width:980px;margin:0 auto;text-align:center}
+.fpr-wrap .eyebrow{color:var(--warm)}
+.fpr-wrap h2{
+  font-size:clamp(28px,3.4vw,38px);line-height:1.4;font-weight:700;
+  color:var(--ink);margin:14px 0 24px;letter-spacing:-.01em;
+}
+.fpr-wrap h2 .em{
+  background:linear-gradient(transparent 58%,var(--warm-soft) 58%);padding:0 6px;color:var(--warm-dark);
+}
+.fpr-wrap p{font-size:15px;line-height:2;color:var(--sub);margin:0 auto;max-width:720px}
+.fpr-wrap p b{color:var(--ink);font-weight:700}
+
+/* ============ APPLY CTA ============ */
+.fac-cta{
+  padding:88px 24px;
+  background:linear-gradient(135deg,var(--warm) 0%,var(--warm-dark) 100%);
+  color:#fff;text-align:center;
+}
+.fac-cta h2{
+  font-size:clamp(28px,3.6vw,40px);line-height:1.3;font-weight:800;
+  color:#fff;margin:0 0 18px;letter-spacing:-.01em;
+}
+.fac-cta p{font-size:15px;line-height:1.9;color:rgba(255,255,255,.92);margin:0 auto 32px;max-width:640px}
+.fac-cta .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-white{background:#fff;color:var(--warm-dark);border-color:#fff;font-weight:700}
+.btn-white:hover{background:#FFF2EF;border-color:#FFF2EF;color:var(--warm-dark)}
+.btn-outline-white{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.btn-outline-white:hover{background:rgba(255,255,255,.1);border-color:#fff}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
+    <div class="nav-menu">
+      <a class="nav-link" href="/#statement">コンセプト</a>
+      <a class="nav-link" href="/#how">仕組み</a>
+      <a class="nav-link" href="/#pension">年金余白</a>
+      <a class="nav-link" href="/partners.html">協力会社の方へ</a>
+      <a class="nav-link" href="/facilities.html" style="color:var(--accent);font-weight:700">介護施設の方へ</a>
+      <a class="nav-link" href="/#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn primary" href="#apply-fac">加盟相談する</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="facility-hero">
+  <div class="fh-wrap">
+    <div class="fh-text">
+      <span class="eyebrow">FOR CARE FACILITIES</span>
+      <h1>支援金は、不動産ではなく<br><span class="em">入居者の暮らし</span>へ。</h1>
+      <p class="lead">
+        Care Support Pass は、土地・建物を所有しない介護運営会社のみが加盟できる制度です。<br>
+        会員の100円は地代家賃に消えず、入居者の暮らし・職員の現場・地域支援へ循環します。
+      </p>
+      <div class="fh-cta">
+        <a class="btn-warm btn primary large" href="#apply-fac">加盟相談する</a>
+        <a class="btn btn-ghost large" href="#reporting">月次報告ルールを見る</a>
+      </div>
+    </div>
+    <figure class="fh-photo">
+      <img src="/assets/images/housing-interior.jpg" alt="入居者の暮らし">
+      <div class="fh-photo-tag">
+        <span class="ln"></span>
+        <span class="tx">For the residents</span>
+      </div>
+    </figure>
+  </div>
+</header>
+
+<!-- ============ PRINCIPLE ============ -->
+<section class="fac-principle">
+  <div class="fp-wrap">
+    <span class="eyebrow">OUR PRINCIPLE</span>
+    <h2>なぜ、加盟条件が<br><span class="em">「土地建物を持たない介護運営会社」</span>なのか。</h2>
+    <p class="lead">
+      支援金が地代家賃や建物の維持費に吸い込まれてしまえば、入居者の暮らしには届きません。<br>
+      Care Support Pass は、支援が確実に「人」に届く構造を制度として担保します。
+    </p>
+    <div class="fp-pillars">
+      <div class="fp-pillar">
+        <div class="num">01</div>
+        <h4>入居者の暮らしへ</h4>
+        <p>支援金は、入居初期費用、家財整理、緊急住み替え、生活用品等、入居者の生活に直結する用途に限定されます。</p>
+      </div>
+      <div class="fp-pillar">
+        <div class="num">02</div>
+        <h4>職員の現場環境へ</h4>
+        <p>食事・休憩・研修など、現場で働く介護職員の労働環境改善にも支援金を充てることができます。</p>
+      </div>
+      <div class="fp-pillar">
+        <div class="num">03</div>
+        <h4>地域支援の連携へ</h4>
+        <p>提携医療機関、地域の見守り体制、緊急時対応のネットワーク構築など、地域全体の支援基盤へ。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUSTAINABILITY MODEL ============ -->
+<section class="fac-model" id="model">
+  <div class="fm-wrap">
+    <div class="fm-head">
+      <span class="eyebrow">SUSTAINABILITY MODEL</span>
+      <h2>月12万円の住まいを、<br><span class="em">本人負担5万円で住める設計に。</span></h2>
+      <p class="lead">
+        年金生活者を主役にしながら、事業として持続できる入居設計。<br>
+        コスト分担と入居枠の構成で、現場と事業の両方を守ります。
+      </p>
+    </div>
+
+    <!-- Cost Breakdown -->
+    <div class="fm-breakdown">
+      <div class="fm-bd-head">
+        <span class="tag">COST BREAKDOWN</span>
+        <h3>本人負担は全体の約42%。</h3>
+        <p>実際にかかる月額費用を、本人と複数の支払元で分担します。残りは、Care Support Pass 会員、サポート会社、NPO・公益財団、住宅セーフティネット制度等から積み上げます。</p>
+      </div>
+      <div class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr><th>支払元</th><th class="num">月額</th><th>役割</th></tr>
+          </thead>
+          <tbody>
+            <tr class="row-self">
+              <th>本人負担</th>
+              <td class="num"><b>50,000</b><small>円</small></td>
+              <td>年金の中に「暮らしの余白」を残す</td>
+            </tr>
+            <tr>
+              <th>Care Support Pass 施設支援金</th>
+              <td class="num">20,000<small>円</small></td>
+              <td>会員会費の一部を NPO・公益財団経由で配分</td>
+            </tr>
+            <tr>
+              <th>サポート会社協賛</th>
+              <td class="num">10,000<small>円</small></td>
+              <td>地域企業・店舗からの賛同協賛</td>
+            </tr>
+            <tr>
+              <th>NPO・公益財団 居住支援助成</th>
+              <td class="num">15,000<small>円</small></td>
+              <td>寄附・基金からの居住支援助成</td>
+            </tr>
+            <tr>
+              <th>家賃低廉化・住替え支援</th>
+              <td class="num">25,000<small>円</small></td>
+              <td>住宅セーフティネット制度等の活用</td>
+            </tr>
+            <tr class="row-total">
+              <th>合計（実費）</th>
+              <td class="num"><b>120,000</b><small>円</small></td>
+              <td>本人負担は約42%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fm-note">※ 金額は標準モデルのイメージです。実際の支援金額・配分・適用可能な制度は、施設規模・地域・物件状況・制度の利用可否によって異なります。住宅セーフティネット制度・家賃低廉化補助等の利用可否は、自治体への個別確認が必要です。</p>
+    </div>
+
+    <!-- Resident Mix -->
+    <div class="fm-mix">
+      <div class="fm-mix-head">
+        <span class="tag">RESIDENT MIX</span>
+        <h3>入居枠の構成。<br>事業として持続させるためのバランス。</h3>
+        <p>施設全体を「支援対象だけ」にすると収支が崩れます。Care Support Pass 導入施設では、年金生活者枠を主役にしつつ、生活保護相談枠・通常入居枠・緊急一時枠をバランス良く配置し、現場と事業の両方を持続させます。</p>
+      </div>
+      <div class="fm-mix-grid">
+        <div class="fm-mix-card primary">
+          <div class="fm-pct">60-70<span class="fm-u">%</span></div>
+          <h4>年金生活者枠</h4>
+          <p>事業の主役。年金収入があり、本人負担5万円以内で生活設計できる方。年金8万円前後を中心に、制度に頼る前の段階で支える対象。</p>
+        </div>
+        <div class="fm-mix-card neutral">
+          <div class="fm-pct">10-20<span class="fm-u">%</span></div>
+          <h4>生活保護相談枠</h4>
+          <p>行政・福祉事務所・地域包括との連携枠。生活保護受給中の方も、必要な方には個別にご相談可能。ただし施設全体を生活保護前提にはしません。</p>
+        </div>
+        <div class="fm-mix-card neutral">
+          <div class="fm-pct">15-25<span class="fm-u">%</span></div>
+          <h4>通常入居枠</h4>
+          <p>収支安定のための通常価格入居枠。全員を支援対象にすると事業が継続できません。通常価格でご入居いただける方も大切なお客様です。</p>
+        </div>
+        <div class="fm-mix-card neutral">
+          <div class="fm-pct">5<span class="fm-u">%</span></div>
+          <h4>緊急一時枠</h4>
+          <p>病院退院後、地域包括対応、住み替え緊急対応のための一時受け入れ枠。地域の医療・福祉ネットワークとの接点として機能します。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closing quote -->
+    <div class="fm-quote">
+      <h3>"払える人だけが入れる施設"ではなく、<br><span class="em">年金の中に人生の余白を残せる施設</span>を増やす。</h3>
+      <p>これは、Care Support Pass 導入施設が目指す入居設計です。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ELIGIBILITY ============ -->
+<section class="fac-eligibility" id="eligibility">
+  <div class="fe-wrap">
+    <div class="fe-head">
+      <span class="eyebrow">MEMBERSHIP CRITERIA</span>
+      <h2>規模別の加盟条件と<br>支援対象室数の目安。</h2>
+      <p class="lead">運営規模に応じて、Care Support Pass の支援対象となる入居者の室数と月額会費の目安を定めています。</p>
+    </div>
+
+    <div class="fe-table">
+      <div class="fe-row head">
+        <div class="fe-cell">運営規模</div>
+        <div class="fe-cell">支援対象室数（目安）</div>
+        <div class="fe-cell">月額会費（目安）</div>
+      </div>
+      <div class="fe-row">
+        <div class="fe-cell size">9–29室<span class="sub">小規模ホーム</span></div>
+        <div class="fe-cell"><b>2室以上</b>を支援対象として運営</div>
+        <div class="fe-cell">月 5,000円〜</div>
+      </div>
+      <div class="fe-row">
+        <div class="fe-cell size">30–44室<span class="sub">中小規模</span></div>
+        <div class="fe-cell"><b>3室以上</b>を支援対象として運営</div>
+        <div class="fe-cell">月 10,000円〜</div>
+      </div>
+      <div class="fe-row">
+        <div class="fe-cell size">45–59室<span class="sub">中規模ホーム</span></div>
+        <div class="fe-cell"><b>5室以上</b>を支援対象として運営</div>
+        <div class="fe-cell">月 15,000円〜</div>
+      </div>
+      <div class="fe-row">
+        <div class="fe-cell size">60–79室<span class="sub">大型ホーム</span></div>
+        <div class="fe-cell"><b>7室以上</b>を支援対象として運営</div>
+        <div class="fe-cell">月 20,000円〜</div>
+      </div>
+      <div class="fe-row">
+        <div class="fe-cell size">80室以上<span class="sub">大型拠点</span></div>
+        <div class="fe-cell"><b>10室以上</b>を支援対象として運営</div>
+        <div class="fe-cell">月 30,000円〜</div>
+      </div>
+    </div>
+
+    <div class="fe-tiers">
+      <div class="tier certified">
+        <span class="tier-badge">RANK 01</span>
+        <span class="tier-name">Certified</span>
+        <span class="tier-desc">12ヶ月連続で月次報告を継続し、第三者監査を受けた施設。最上位の透明性ランク。</span>
+      </div>
+      <div class="tier">
+        <span class="tier-badge">RANK 02</span>
+        <span class="tier-name">Partner</span>
+        <span class="tier-desc">6ヶ月以上の月次報告継続を達成した施設。標準的な信頼ランク。</span>
+      </div>
+      <div class="tier">
+        <span class="tier-badge">RANK 03</span>
+        <span class="tier-name">Trial</span>
+        <span class="tier-desc">加盟直後の試験運用期間。月次報告の体制構築中。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REPORTING ============ -->
+<section class="fac-reporting" id="reporting">
+  <div class="fr-wrap">
+    <div class="fr-head">
+      <span class="eyebrow">MONTHLY REPORTING</span>
+      <h2>支援金は、<span class="em">透明性のある施設にだけ届く。</span></h2>
+      <p class="lead">加盟介護施設は、毎月の活動報告を Care Support Pass サイト上で公開することが義務です。<br>支援者は、自分の100円がどこで、誰のために、どう使われたかを、いつでも確認できます。</p>
+    </div>
+
+    <!-- Monthly Flow -->
+    <div class="fr-flow">
+      <div class="fr-step">
+        <div class="fr-day">5<span class="small">日</span></div>
+        <span class="fr-tag">SUBMIT</span>
+        <h4>月次報告の提出</h4>
+        <p>前月分の活動と支援金使途を施設が提出。</p>
+      </div>
+      <div class="fr-step">
+        <div class="fr-day">10<span class="small">日</span></div>
+        <span class="fr-tag">REVIEW</span>
+        <h4>運営事務局の確認</h4>
+        <p>記載内容・領収書・写真の整合性を確認。</p>
+      </div>
+      <div class="fr-step">
+        <div class="fr-day">15<span class="small">日</span></div>
+        <span class="fr-tag">PUBLISH</span>
+        <h4>サイト上で公開</h4>
+        <p>会員ページ・公開ページで誰でも閲覧可能に。</p>
+      </div>
+      <div class="fr-step">
+        <div class="fr-day">末<span class="small">日</span></div>
+        <span class="fr-tag">DECIDE</span>
+        <h4>翌月支援金の交付判断</h4>
+        <p>報告完了が翌月の支援金交付の条件。</p>
+      </div>
+      <div class="fr-step">
+        <div class="fr-day">翌1<span class="small">日</span></div>
+        <span class="fr-tag">TRANSFER</span>
+        <h4>支援金交付</h4>
+        <p>条件を満たした施設に支援金が交付される。</p>
+      </div>
+    </div>
+
+    <!-- Penalty -->
+    <div class="fr-penalty">
+      <div class="ph">
+        <h4>未提出・虚偽報告の対応</h4>
+        <span class="ph-tag">PENALTY</span>
+      </div>
+      <div class="pr">
+        <div class="lbl">期限内提出</div>
+        <div class="desc">通常通り翌月支援金交付。</div>
+      </div>
+      <div class="pr">
+        <div class="lbl">7日遅延</div>
+        <div class="desc"><b>注意通告。</b>翌月の支援金交付は条件付き。</div>
+      </div>
+      <div class="pr">
+        <div class="lbl">15日遅延</div>
+        <div class="desc"><b>支援金交付停止。</b>当月分の交付は見送り。</div>
+      </div>
+      <div class="pr">
+        <div class="lbl">2ヶ月連続未提出</div>
+        <div class="desc"><b>加盟一時停止。</b>新規支援金の積み立ても停止。</div>
+      </div>
+      <div class="pr">
+        <div class="lbl">虚偽報告</div>
+        <div class="desc"><b>加盟即時取消・支援金返還請求。</b>第三者監査を実施。</div>
+      </div>
+      <div class="pr">
+        <div class="lbl">使途不明金発覚</div>
+        <div class="desc"><b>第三者監査の対象。</b>不適切支出は返還対象となる。</div>
+      </div>
+    </div>
+
+    <!-- Contract clauses -->
+    <div class="fr-contract">
+      <h3>加盟時にご同意いただく契約条項（抜粋）</h3>
+      <div class="clauses">
+        <div class="clause">
+          <div class="num">CLAUSE 01</div>
+          <b>月次活動報告の義務。</b>毎月5日までに前月分の活動内容・支援金使途を所定フォーマットで提出する。
+        </div>
+        <div class="clause">
+          <div class="num">CLAUSE 02</div>
+          <b>公開への同意。</b>提出された報告内容を Care Support Pass のウェブサイト上で公開することに同意する。
+        </div>
+        <div class="clause">
+          <div class="num">CLAUSE 03</div>
+          <b>支援金交付の条件。</b>月次報告の期日内提出・公開を、翌月支援金交付の前提条件とする。
+        </div>
+        <div class="clause">
+          <div class="num">CLAUSE 04</div>
+          <b>虚偽報告時の対応。</b>虚偽報告が判明した場合、加盟即時取消および過去支援金の返還を求めることができる。
+        </div>
+        <div class="clause">
+          <div class="num">CLAUSE 05</div>
+          <b>監査受入義務。</b>運営事務局および第三者機関による帳簿・現場の監査受入に応じる。
+        </div>
+        <div class="clause">
+          <div class="num">CLAUSE 06</div>
+          <b>用途の制限。</b>支援金は入居者の暮らし、職員の労働環境、地域支援連携に用途を限定する。地代家賃・施設建設費には充当しない。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROMISE ============ -->
+<section class="fac-promise">
+  <div class="fpr-wrap">
+    <span class="eyebrow">OUR PROMISE</span>
+    <h2>"払える人だけが入れる施設" ではなく、<br><span class="em">年金の中に余白が残る施設</span> を増やす。</h2>
+    <p>
+      支援金は、<b>不動産ではなく、入居者の暮らし</b>に届きます。<br>
+      月次活動報告の公開を制度化することで、「誰の100円が、どこに、どう使われたか」が見える社会基盤を作ります。<br>
+      これは、Care Support Pass 加盟介護施設の方々と共に目指す、未来の介護インフラのかたちです。
+    </p>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="fac-cta" id="apply-fac">
+  <h2>あなたの施設で、<br>支援が届く現場を作りませんか。</h2>
+  <p>Care Support Pass 加盟相談は無料です。運営状況の把握から月次報告体制の設計まで、運営事務局がサポートします。</p>
+  <div class="cta-row">
+    <a class="btn btn-white large" href="https://tamjump.com/contact.html" target="_blank" rel="noopener">加盟相談する（無料）</a>
+    <a class="btn btn-outline-white large" href="/#how">仕組みを確認する</a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-top">
+      <div class="footer-col footer-brand-col">
+        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"><img src="/assets/images/logo-symbol.png" alt="" class="footer-symbol" aria-hidden="true"></div>
+        <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
+      </div>
+      <div class="footer-col">
+        <h5>Service</h5>
+        <a href="/#statement">コンセプト</a>
+        <a href="/#how">仕組み</a>
+        <a href="/#pension">年金余白</a>
+        <a href="/concept.html">詳しい理念</a>
+      </div>
+      <div class="footer-col">
+        <h5>For Partners</h5>
+        <a href="/partners.html">協力会社の方へ</a>
+        <a href="/facilities.html">介護施設の方へ</a>
+        <a href="https://tamjump.com/" target="_blank" rel="noopener">運営会社について</a>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <a href="/#faq">FAQ</a>
+        <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a>
+        <a href="/#apply">お申し込み</a>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <p><b style="color:#fff">Care Support Pass は、月額会員サービスです。</b></p>
+      <p>提携店優待は各店舗が提供する割引・特典であり、Care Support Pass が金銭的価値を発行・販売するものではありません。</p>
+      <p>会費は寄附金ではありません。寄附控除を希望される方には、NPO・公益財団等を通じた寄附窓口をご案内します。</p>
+      <p>処方薬・保険調剤の自己負担分への割引提供は行いません。対象は日用品・介護用品・店舗独自サービス等に限定します。</p>
+    </div>
+    <div class="footer-bot">
+      <div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div>
+      <div><a href="https://tamjump.com/terms.html" target="_blank" rel="noopener">利用規約</a> ・ <a href="https://tamjump.com/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> ・ <a href="https://tamjump.com/tokuteishou.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a></div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

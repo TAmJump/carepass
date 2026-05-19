@@ -882,25 +882,6 @@ section[id]{scroll-margin-top:80px}
 .pension-head h2 .em{color:var(--accent)}
 .pension-head .lead{font-size:16px;line-height:2;color:var(--sub);max-width:680px;margin:0 auto}
 
-.pension-example{max-width:880px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:22px;padding:40px;display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center}
-.pension-example .tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;font-weight:600;color:var(--accent-dark);background:var(--accent-soft);padding:5px 11px;border-radius:6px;margin-bottom:14px;text-transform:uppercase}
-.pension-example h3{font-size:20px;font-weight:700;margin:0 0 14px;color:var(--ink);line-height:1.5}
-.pension-example .desc{font-size:13.5px;line-height:1.9;color:var(--sub);margin:0}
-.pension-bars{display:flex;flex-direction:column;gap:10px}
-.pen-bar{display:grid;grid-template-columns:140px 1fr 80px;gap:14px;align-items:center;font-size:13px}
-.pen-bar .pb-label{color:var(--sub)}
-.pen-bar .pb-track{height:28px;background:var(--soft);border-radius:6px;overflow:hidden;position:relative}
-.pen-bar .pb-fill{height:100%;border-radius:6px;background:var(--line)}
-.pen-bar .pb-fill.f1{background:#C7CCD1;width:62.5%}
-.pen-bar .pb-fill.f2{background:#A8B2BA;width:25%}
-.pen-bar .pb-fill.f3{background:var(--accent);width:12.5%}
-.pen-bar .pb-fill.f4{background:var(--accent-dark);width:12.5%}
-.pen-bar .pb-amt{text-align:right;font-family:'Inter',sans-serif;font-weight:600;color:var(--ink)}
-@media(max-width:760px){
-  .pension-example{grid-template-columns:1fr;padding:32px 24px;gap:32px}
-  .pen-bar{grid-template-columns:110px 1fr 70px;font-size:12.5px}
-}
-
 .pension-pillars{max-width:1080px;margin:64px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .pp-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px 24px}
 .pp-num{font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.14em;font-weight:600;color:var(--accent);margin-bottom:10px}
@@ -909,58 +890,37 @@ section[id]{scroll-margin-top:80px}
 @media(max-width:900px){.pension-pillars{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:540px){.pension-pillars{grid-template-columns:1fr}}
 
-.pension-quote{
-  max-width:780px;margin:64px auto 0;text-align:center;
-  padding:48px 32px;background:#1F2933;border-radius:24px;color:#fff;
+/* ===== Pension Link Card (For Facilities 誘導) ===== */
+.pension-link-card{
+  max-width:920px;margin:56px auto 0;
+  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;
+  padding:32px 40px;background:#1F2933;color:#fff;
+  border-radius:0;text-decoration:none;
+  border-left:4px solid var(--accent);
+  transition:transform .25s ease,box-shadow .25s ease;
 }
-.pension-quote h3{font-size:clamp(22px,2.8vw,28px);line-height:1.55;font-weight:700;color:#fff;margin:0 0 14px;letter-spacing:-.005em}
-.pension-quote h3 .em{color:var(--accent-soft);background:linear-gradient(transparent 60%,rgba(233,68,54,.5) 60%);padding:0 4px}
-.pension-quote p{font-size:14px;line-height:2;color:#A8B2BA;margin:0;max-width:560px;margin-left:auto;margin-right:auto}
-
-/* ===== Pension Breakdown (内訳テーブル) ===== */
-.pension-breakdown{max-width:920px;margin:64px auto 0;background:#fff;border:1px solid var(--line);border-radius:22px;padding:48px 40px}
-.pension-breakdown .pb-head{text-align:center;margin-bottom:36px}
-.pension-breakdown .pb-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.45;font-weight:700;margin:14px 0 14px;color:var(--ink);letter-spacing:-.005em}
-.pension-breakdown .pb-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:640px;margin:0 auto}
-.pb-table-wrap{overflow-x:auto}
-.pb-table{width:100%;border-collapse:collapse;font-size:14px}
-.pb-table thead th{background:var(--soft);color:var(--sub);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:14px 18px;text-align:left;border-bottom:2px solid var(--line)}
-.pb-table thead th.num{text-align:right}
-.pb-table tbody th{font-size:14px;font-weight:500;color:var(--ink);padding:18px;text-align:left;border-bottom:1px solid var(--line-soft);width:38%;vertical-align:middle}
-.pb-table tbody td{padding:18px;border-bottom:1px solid var(--line-soft);color:var(--sub);font-size:13.5px;line-height:1.7;vertical-align:middle}
-.pb-table tbody td.num{text-align:right;color:var(--ink);font-family:'Inter',sans-serif;font-weight:500;font-size:18px;white-space:nowrap;width:130px}
-.pb-table tbody td.num b{font-size:24px;font-weight:700}
-.pb-table tbody td.num small{font-size:11px;color:var(--sub);margin-left:2px;font-weight:400}
-.pb-table tr.row-self th,.pb-table tr.row-self td{background:var(--accent-soft2);font-weight:600;color:var(--accent-dark)}
-.pb-table tr.row-self td.num{color:var(--accent-dark)}
-.pb-table tr.row-total th,.pb-table tr.row-total td{background:#1F2933;color:#fff;font-weight:700;border-bottom:0}
-.pb-table tr.row-total td{color:#A8B2BA}
-.pb-table tr.row-total td.num{color:#fff}
-.pension-breakdown .pb-note{font-size:11.5px;color:var(--muted);line-height:1.85;margin:20px 0 0;text-align:left}
-@media(max-width:640px){
-  .pension-breakdown{padding:32px 20px}
-  .pb-table tbody th,.pb-table tbody td{padding:14px 12px;font-size:12.5px}
-  .pb-table tbody td.num{font-size:15px;width:auto;padding-right:14px}
-  .pb-table tbody td.num b{font-size:18px}
+.pension-link-card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.18)}
+.pension-link-card .plc-eyebrow{
+  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.22em;
+  color:var(--accent-soft);font-weight:700;text-transform:uppercase;
+  display:inline-block;margin-bottom:10px;
 }
-
-/* ===== Pension Mix (入居枠の構成) ===== */
-.pension-mix{max-width:1080px;margin:64px auto 0}
-.pension-mix .pm-head{text-align:center;margin-bottom:36px}
-.pension-mix .pm-head h3{font-size:clamp(20px,2.4vw,26px);line-height:1.5;font-weight:700;margin:14px 0;color:var(--ink);letter-spacing:-.005em}
-.pension-mix .pm-head p{font-size:14px;line-height:1.95;color:var(--sub);max-width:680px;margin:0 auto}
-.mix-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.mix-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 24px;position:relative;transition:transform .2s ease}
-.mix-card:hover{transform:translateY(-2px)}
-.mix-card.primary{background:linear-gradient(180deg,var(--accent-soft2),#fff 70%);border-color:var(--accent-soft)}
-.mix-card .mx-pct{font-family:'Inter',sans-serif;font-size:36px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:14px}
-.mix-card.primary .mx-pct{color:var(--accent)}
-.mix-card .mx-pct .mx-u{font-size:18px;color:var(--sub);font-weight:500;margin-left:2px}
-.mix-card.primary .mx-pct .mx-u{color:var(--accent-dark)}
-.mix-card h4{font-size:15px;font-weight:700;margin:0 0 10px;color:var(--ink)}
-.mix-card p{font-size:13px;line-height:1.85;color:var(--sub);margin:0}
-@media(max-width:900px){.mix-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.mix-grid{grid-template-columns:1fr}}
+.pension-link-card h3{
+  font-size:clamp(18px,2.2vw,22px);line-height:1.45;font-weight:700;
+  margin:0 0 10px;color:#fff;letter-spacing:-.005em;
+}
+.pension-link-card p{
+  font-size:13.5px;line-height:1.8;color:#A8B2BA;margin:0;
+}
+.pension-link-card .plc-arrow{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:700;
+  color:#fff;letter-spacing:.04em;white-space:nowrap;
+  padding:14px 24px;background:var(--accent);border-radius:0;
+}
+@media(max-width:760px){
+  .pension-link-card{grid-template-columns:1fr;padding:24px 24px;gap:20px}
+  .pension-link-card .plc-arrow{text-align:center;justify-self:start}
+}
 
 /* ===== Facility Eligibility ===== */
 .eligibility{padding:96px 24px;background:#fff;border-top:1px solid var(--line-soft)}
@@ -1172,6 +1132,276 @@ section[id]{scroll-margin-top:80px}
 /* ===== Footer symbol ===== */
 .footer-brand{gap:10px}
 .footer-symbol{height:28px;width:auto;margin-left:8px;opacity:.85}
+/* ============ APPLY OTHER ROUTES (店舗・施設誘導カード) ============ */
+.apply-other-routes{
+  max-width:880px;margin:56px auto 0;
+  padding:32px 0 0;border-top:1px solid var(--line-soft);
+}
+.aor-head{text-align:center;margin-bottom:24px}
+.aor-eyebrow{
+  display:inline-block;font-family:'Inter',sans-serif;font-size:10.5px;
+  letter-spacing:.22em;color:var(--accent);font-weight:700;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.aor-head h3{
+  font-size:clamp(20px,2.2vw,24px);line-height:1.5;font-weight:700;
+  color:var(--ink);margin:0;letter-spacing:-.005em;
+}
+.aor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.aor-card{
+  display:flex;flex-direction:column;
+  background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:24px 26px;
+  text-decoration:none;color:inherit;
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+}
+.aor-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 32px rgba(233,68,54,.08),0 2px 6px rgba(0,0,0,.04);
+  border-color:var(--accent);
+}
+.aor-num{
+  font-family:'Inter',sans-serif;font-size:24px;font-weight:800;
+  color:var(--accent);margin-bottom:10px;line-height:1;
+}
+.aor-card h4{font-size:16px;font-weight:700;color:var(--ink);margin:0 0 8px;letter-spacing:-.005em}
+.aor-card p{font-size:13px;line-height:1.7;color:var(--sub);margin:0;font-weight:400}
+@media(max-width:680px){.aor-grid{grid-template-columns:1fr}}
+
+/* ============ STATEMENT - 赤背景女性ポートレートを主役にしたシネマティックsection
+   ============================================================ */
+.statement{padding:120px 0;background:var(--bg-soft);position:relative;overflow:hidden}
+.statement::before{
+  content:"";position:absolute;top:0;left:0;width:50%;height:100%;
+  background:linear-gradient(180deg,rgba(233,68,54,.04),transparent);
+  pointer-events:none;
+}
+.stmt-grid{
+  max-width:1280px;margin:0 auto;padding:0 32px;
+  display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center;
+  position:relative;z-index:1;
+}
+.stmt-portrait{
+  margin:0;position:relative;border-radius:0;overflow:visible;
+  aspect-ratio:4/5;
+}
+.stmt-portrait::before{
+  content:"";position:absolute;top:24px;left:24px;width:100%;height:100%;
+  background:var(--accent);border-radius:0;z-index:0;
+  transition:transform .4s ease;
+}
+.stmt-portrait::after{
+  content:"";position:absolute;top:-12px;left:-12px;width:60px;height:60px;
+  border-top:2px solid var(--accent);border-left:2px solid var(--accent);
+  z-index:2;
+}
+.stmt-portrait img{
+  position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block;
+  border-radius:0;
+  box-shadow:0 32px 80px rgba(0,0,0,.18),0 8px 24px rgba(201,49,31,.12);
+}
+.stmt-portrait-tag{
+  position:absolute;bottom:32px;left:32px;right:32px;
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(14px);
+  padding:14px 20px;border-radius:0;z-index:3;
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+.stmt-portrait-tag .spt-line{flex-shrink:0;width:20px;height:1.5px;background:var(--accent)}
+.stmt-portrait-tag .spt-text{
+  font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.22em;
+  color:var(--accent);font-weight:700;text-transform:uppercase;
+}
+.stmt-body{padding-right:8px}
+.stmt-body .eyebrow{margin-bottom:18px}
+.stmt-h{
+  font-size:clamp(36px,5.2vw,60px);
+  line-height:1.16;font-weight:800;letter-spacing:-.025em;
+  margin:0 0 28px;color:var(--ink);
+}
+.stmt-h .em{color:var(--accent)}
+.stmt-lead{
+  font-size:clamp(15px,1.4vw,17px);line-height:1.9;
+  color:var(--sub);margin:0 0 36px;font-weight:400;
+}
+.stmt-pillars{display:flex;flex-direction:column;gap:18px;margin-bottom:36px}
+.stmt-pillar{
+  display:grid;grid-template-columns:40px 1fr;gap:16px;align-items:start;
+  padding:18px 0;border-bottom:1px solid var(--line-soft);
+}
+.stmt-pillar:last-child{border-bottom:0}
+.sp-num{
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:800;
+  color:var(--accent);letter-spacing:.04em;
+}
+.sp-text{font-size:14px;line-height:1.85;color:var(--ink);font-weight:400}
+.sp-text b{font-weight:700;color:var(--ink)}
+.stmt-tag{
+  padding:20px 24px;background:#fff;
+  border-left:3px solid var(--accent);border-radius:0;
+  font-size:14px;line-height:1.85;color:var(--ink);
+  box-shadow:0 4px 16px rgba(0,0,0,.04);
+}
+.stmt-tag b{color:var(--accent-dark);font-weight:700}
+@media(max-width:980px){
+  .statement{padding:80px 0}
+  .stmt-grid{grid-template-columns:1fr;gap:48px}
+  .stmt-portrait{max-width:520px;margin:0 auto;aspect-ratio:4/5}
+  .stmt-portrait::before{top:16px;left:16px}
+}
+
+/* ============================================================
+   HOW IT WORKS - 統合セクション
+   ============================================================ */
+.how-section{padding:96px 24px;background:linear-gradient(180deg,var(--soft) 0%,#fff 100%)}
+.how-flow{
+  max-width:1180px;margin:0 auto 72px;
+  display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+  gap:14px;align-items:stretch;
+}
+.hf-step{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:24px 22px;position:relative;display:flex;flex-direction:column;
+}
+.hf-num{
+  font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.16em;
+  color:var(--accent);font-weight:800;margin-bottom:14px;
+}
+.hf-tag{
+  display:inline-block;font-family:'Inter',sans-serif;font-size:10px;
+  letter-spacing:.18em;color:var(--sub);font-weight:700;text-transform:uppercase;
+  background:var(--soft);padding:3px 8px;border-radius:3px;margin-bottom:14px;
+  width:fit-content;
+}
+.hf-step h4{font-size:16px;font-weight:700;color:var(--ink);margin:0 0 8px;letter-spacing:-.005em}
+.hf-step p{font-size:12.5px;line-height:1.7;color:var(--sub);margin:0;font-weight:400}
+.hf-arrow{
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--accent);font-weight:600;
+}
+@media(max-width:980px){
+  .how-flow{grid-template-columns:1fr 1fr;gap:12px}
+  .hf-arrow{display:none}
+}
+@media(max-width:520px){.how-flow{grid-template-columns:1fr}}
+
+/* Plans + Coupons split */
+.how-split{
+  max-width:1180px;margin:0 auto 72px;
+  display:grid;grid-template-columns:1fr 1fr;gap:32px;
+}
+.hs-head{margin-bottom:24px}
+.hs-tag{
+  display:inline-block;font-family:'Inter',sans-serif;font-size:10.5px;
+  letter-spacing:.22em;color:var(--accent);font-weight:700;
+  text-transform:uppercase;margin-bottom:12px;
+  padding:3px 10px;background:var(--accent-soft2);
+  border:1px solid var(--accent-soft);border-radius:4px;
+}
+.hs-head h3{font-size:clamp(22px,2.4vw,26px);line-height:1.4;font-weight:700;color:var(--ink);margin:0;letter-spacing:-.005em}
+.hs-plans{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px 28px}
+.hs-plan-list{display:flex;flex-direction:column;margin-bottom:16px}
+.hs-plan{
+  display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;
+  padding:14px 0;border-bottom:1px solid var(--line-soft);
+}
+.hs-plan:last-child{border-bottom:0}
+.hs-plan.featured{background:var(--accent-soft2);margin:0 -16px;padding-left:16px;padding-right:16px;border-radius:8px;border-bottom-color:transparent}
+.hp-size{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.hp-price{font-family:'Inter',sans-serif;font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-.01em}
+.hp-price small{font-size:11px;font-weight:600;margin-left:2px;color:var(--sub)}
+.hp-badge{font-family:'Inter',sans-serif;font-size:9.5px;letter-spacing:.16em;color:#fff;background:var(--accent);padding:3px 8px;border-radius:3px;font-weight:700;text-transform:uppercase}
+.hs-note{font-size:12px;line-height:1.7;color:var(--sub);margin:0;padding-top:12px;border-top:1px solid var(--line-soft)}
+
+.hs-coupons{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px 28px;display:flex;flex-direction:column}
+.hs-phone{margin:0 -8px 16px;border-radius:12px;overflow:hidden;background:var(--soft)}
+.hs-phone img{width:100%;height:auto;display:block;max-height:240px;object-fit:cover}
+.hs-rules{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.hs-rules li{font-size:13px;line-height:1.6;color:var(--ink);padding-left:18px;position:relative;font-weight:400}
+.hs-rules li::before{content:"✓";position:absolute;left:0;top:0;color:var(--accent);font-weight:800}
+.hs-rules li b{font-weight:700}
+@media(max-width:880px){.how-split{grid-template-columns:1fr;gap:18px}}
+
+/* Targets */
+.how-targets{max-width:1080px;margin:0 auto 56px}
+.ht-head{text-align:center;margin-bottom:28px}
+.ht-head h3{font-size:clamp(22px,2.4vw,28px);line-height:1.4;font-weight:700;color:var(--ink);margin:12px 0 10px;letter-spacing:-.005em}
+.ht-head p{font-size:14px;color:var(--sub);line-height:1.85}
+.ht-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ht-item{
+  background:#fff;border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;font-size:13.5px;color:var(--ink);font-weight:600;
+  display:flex;align-items:center;gap:10px;line-height:1.5;
+}
+.ht-item::before{
+  content:"";flex-shrink:0;width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+}
+@media(max-width:680px){.ht-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.ht-grid{grid-template-columns:1fr}}
+
+.how-notice{
+  max-width:1080px;margin:0 auto;padding:16px 22px;
+  background:var(--warn-soft);border-left:3px solid var(--warn);
+  border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.75;color:#5C3815;
+}
+.how-notice b{color:var(--warn);font-weight:700}
+
+/* ============================================================
+   AUDIENCES - 3つの導線カード
+   ============================================================ */
+.audiences-section{padding:96px 24px;background:#fff}
+.aud-grid{
+  max-width:1180px;margin:48px auto 0;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+}
+.aud-card{
+  display:flex;flex-direction:column;
+  background:#fff;border:1px solid var(--line);
+  border-radius:20px;padding:36px 32px;
+  text-decoration:none;color:inherit;
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+  cursor:pointer;
+}
+.aud-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 24px 48px rgba(233,68,54,.08),0 4px 12px rgba(0,0,0,.04);
+  border-color:var(--accent);
+}
+.aud-card.individual{background:linear-gradient(160deg,var(--accent) 0%,var(--accent-dark) 100%);border-color:var(--accent-dark);color:#fff}
+.aud-card.individual:hover{box-shadow:0 24px 48px rgba(233,68,54,.3)}
+.aud-num{
+  font-family:'Inter',sans-serif;font-size:34px;font-weight:900;
+  letter-spacing:-.01em;line-height:1;margin-bottom:24px;
+  color:var(--accent);
+}
+.aud-card.individual .aud-num{color:rgba(255,255,255,.5)}
+.aud-label{
+  font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.24em;
+  color:var(--sub);font-weight:700;margin-bottom:14px;text-transform:uppercase;
+}
+.aud-card.individual .aud-label{color:rgba(255,255,255,.75)}
+.aud-card h3{
+  font-size:22px;line-height:1.35;font-weight:700;
+  color:var(--ink);margin:0 0 14px;letter-spacing:-.005em;
+}
+.aud-card.individual h3{color:#fff}
+.aud-card p{
+  font-size:14px;line-height:1.85;color:var(--sub);
+  margin:0 0 24px;flex-grow:1;
+}
+.aud-card.individual p{color:rgba(255,255,255,.88)}
+.aud-cta{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:700;
+  color:var(--accent);letter-spacing:.04em;
+  padding-top:14px;border-top:1px solid var(--line-soft);
+}
+.aud-card.individual .aud-cta{color:#fff;border-top-color:rgba(255,255,255,.25)}
+.aud-arrow{transition:transform .25s ease;display:inline-block}
+.aud-card:hover .aud-arrow{transform:translateX(4px)}
+@media(max-width:880px){.aud-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1181,16 +1411,11 @@ section[id]{scroll-margin-top:80px}
   <div class="nav-in">
     <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
     <div class="nav-menu">
-      <button class="nav-link" onclick="go('concept')">コンセプト</button>
-      <button class="nav-link" onclick="go('mechanism')">仕組み</button>
-      <button class="nav-link" onclick="go('plans')">プラン</button>
-      <button class="nav-link" onclick="go('coupons')">優待例</button>
-      <button class="nav-link" onclick="go('targets')">支援先</button>
-      <button class="nav-link" onclick="go('pension')">年金余白型</button>
-      <button class="nav-link" onclick="go('eligibility')">加盟施設</button>
-      <button class="nav-link" onclick="go('reporting')">月次報告</button>
-      <button class="nav-link" onclick="go('store')">店舗の方</button>
-      <button class="nav-link" onclick="go('corporate')">法人の方</button>
+      <button class="nav-link" onclick="go('statement')">コンセプト</button>
+      <button class="nav-link" onclick="go('how')">仕組み</button>
+      <button class="nav-link" onclick="go('pension')">年金余白</button>
+      <a class="nav-link" href="/partners.html">協力会社の方へ</a>
+      <a class="nav-link" href="/facilities.html">介護施設の方へ</a>
       <button class="nav-link" onclick="go('faq')">FAQ</button>
     </div>
     <div class="nav-cta">
@@ -1208,7 +1433,7 @@ section[id]{scroll-margin-top:80px}
       <p class="hero-sub">Care Support Pass は、飲食店・薬局・ドラッグストアなどの提携店優待を使える月額会員サービスです。売上の一部は、高齢者の住まい支援に活用されます。</p>
       <div class="hero-cta">
         <button class="btn primary large" onclick="go('apply')">月100円で参加する</button>
-        <button class="btn large" onclick="goTab('store')">店舗・企業として参加する</button>
+        <button class="btn large" onclick="go('how')">仕組みを見る</button>
       </div>
       <div class="hero-points">
         <div class="hero-point">
@@ -1251,349 +1476,140 @@ section[id]{scroll-margin-top:80px}
   </div>
 </div>
 
-<!-- ============ CONCEPT ============ -->
-<section id="concept" class="concept-section">
-  <div class="wrap-narrow">
-    <div class="section-head center">
-      <span class="eyebrow">Concept</span>
-      <h2 class="section-title">100円で、<br>社会の支え方を変える。</h2>
-    </div>
-    <figure class="concept-figure">
-      <img src="/assets/images/person-three-generations.jpg" alt="若い世代・親世代・先輩世代が肩を並べる" loading="lazy">
-      <figcaption>世代を超えて、社会を支える側に立つ。</figcaption>
+<!-- ============ STATEMENT ============ -->
+<section id="statement" class="statement">
+  <div class="stmt-grid">
+    <figure class="stmt-portrait">
+      <img src="/assets/images/hero-decisive.jpg" alt="Care Support Pass に参加する人の決意">
+      <div class="stmt-portrait-tag">
+        <span class="spt-line"></span>
+        <span class="spt-text">A movement, not charity.</span>
+      </div>
     </figure>
-    <div class="concept-body">
-      <p>社会をつくり、家族を守り、地域を支えてきた人たちが、<br><b>年齢を重ねたその先で、安心して暮らせる場所を失ってしまう。</b></p>
-      <p>そんな社会のままでいいのだろうか。</p>
-      <p>Care Support Pass は、税金だけに頼らず、<b>個人・店舗・企業・NPO・公益財団がつながり、</b>先輩世代の住まいと暮らしを支えるための新しい会員サービスです。</p>
-    </div>
-    <div class="concept-pillars">
-      <div class="pillar">
-        <div class="pillar-num">01</div>
-        <h4>税金だけに任せない</h4>
-        <p>税金として集められたお金が、どこで、誰に、どう使われているのかは見えにくい。それなら、月100円でもいい。<b>使い道が見える100円</b>をつくる。</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num">02</div>
-        <h4>支援する人にも価値がある</h4>
-        <p>支援は、我慢や自己犠牲だけでは続かない。だから「支援してください」ではなく、<b>参加する人の生活にもメリットがある仕組み</b>にする。</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num">03</div>
-        <h4>守る対象ではなく、受け継ぐ存在</h4>
-        <p>家族を守り、会社を支え、地域を守り、日本をつくってきた先輩世代が、<b>年齢を重ねた後も、安心して暮らせる場所を失わない社会</b>をつくる。</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num">04</div>
-        <h4>仕組みになれば、社会を動かせる</h4>
-        <p>1人の100円は小さい。でも10万人なら毎月1,000万円。<b>100万人なら毎月1億円。</b>地域全体で先輩世代の暮らしを守る、民間インフラへ。</p>
-      </div>
-    </div>
-    <div class="concept-tag">
-      <span class="ct-line"></span>
-      <span class="ct-text">Care Support Pass は、高齢者支援ではなく、<br><b>社会の恩返しを仕組みにする事業</b>です。</span>
-      <span class="ct-line"></span>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 3 VALUES ============ -->
-<section id="values">
-  <div class="wrap">
-    <div class="section-head center">
-      <img src="/assets/images/deco-icons.png" alt="" class="deco-icons-decor" aria-hidden="true">
-      <span class="eyebrow">Three Values</span>
-      <h2 class="section-title">100円が、3つの価値に変わる。</h2>
-      <p class="section-lead">毎月の100円は、あなたの生活、地域のお店、そして高齢者の住まい――この3つを同時に支える原資になります。</p>
-    </div>
-    <div class="values-grid">
-      <div class="value-card">
-        <div class="value-img">
-          <img src="/assets/images/person-young-supporter.jpg" alt="若い世代の参加者" loading="lazy">
+    <div class="stmt-body">
+      <span class="eyebrow">Our Statement</span>
+      <h2 class="stmt-h">支援する人に<br>なる、<span class="em">という選択。</span></h2>
+      <p class="stmt-lead">税金だけに頼らない。誰かのために我慢する仕組みでもない。<br>毎月100円で、自分の生活も、地域のお店も、先輩世代の住まいも――同時に支える人になる。</p>
+      <div class="stmt-pillars">
+        <div class="stmt-pillar">
+          <div class="sp-num">01</div>
+          <div class="sp-text"><b>使い道が見える100円。</b>税金とちがって、自分の100円がどこに届いたか、毎月確認できる。</div>
         </div>
-        <div class="value-emoji">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>
+        <div class="stmt-pillar">
+          <div class="sp-num">02</div>
+          <div class="sp-text"><b>支援する人にも価値がある。</b>提携店優待で、生活の出費が少し軽くなる。我慢の支援ではなく、循環。</div>
         </div>
-        <div class="value-num">VALUE 01 / あなたに</div>
-        <h3>毎月使える、生活応援クーポン。</h3>
-        <p>飲食店、薬局、ドラッグストア、配食、タクシー、理美容など、日常で使える優待を用意します。月の出費がちょっと軽くなる、それが入口です。</p>
+        <div class="stmt-pillar">
+          <div class="sp-num">03</div>
+          <div class="sp-text"><b>先輩世代を、守る対象ではなく、受け継ぐ存在として。</b>社会をつくってきた人たちの暮らしを、次の世代が支える。</div>
+        </div>
+        <div class="stmt-pillar">
+          <div class="sp-num">04</div>
+          <div class="sp-text"><b>100万人の100円なら、月1億円。</b>地域全体で先輩世代の住まいを守る、新しい民間インフラへ。</div>
+        </div>
       </div>
-      <div class="value-card">
-        <div class="value-img">
-          <img src="/assets/images/store-shop-dusk.jpg" alt="地域のお店" loading="lazy">
-        </div>
-        <div class="value-emoji">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <div class="value-num">VALUE 02 / 地域のお店に</div>
-        <h3>地域のお店に、新しい来店理由を。</h3>
-        <p>店舗はクーポン提供を通じて、地域貢献と集客を同時に実現できます。介護家族・若年層・現場職員など、新しい客層が訪れます。</p>
-      </div>
-      <div class="value-card">
-        <div class="value-img">
-          <img src="/assets/images/person-elder-character.jpg" alt="先輩世代" loading="lazy">
-        </div>
-        <div class="value-emoji">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </div>
-        <div class="value-num">VALUE 03 / 先輩世代に</div>
-        <h3>高齢者の住まいを守る原資に。</h3>
-        <p>売上の一部は、NPO・公益財団等を通じて、住まいに困る高齢者の支援に活用されます。働けなくなった途端に住まいを失う社会にしない。</p>
+      <div class="stmt-tag">
+        Care Support Pass は、高齢者支援ではなく、<br>
+        <b>社会の恩返しを仕組みにする事業</b>です。
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ MECHANISM ============ -->
-<section id="mechanism" class="mechanism-section">
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" class="how-section">
   <div class="wrap">
     <div class="section-head center">
       <span class="eyebrow">How It Works</span>
-      <h2 class="section-title">返礼ではなく、<br>会員サービスとして支える。</h2>
-      <p class="section-lead">Care Support Pass は、支援金の返礼としてクーポンを配る仕組みではありません。会員サービスとして提携店優待を提供し、その売上の一部を高齢者住まい支援に回す仕組みです。</p>
-    </div>
-    <figure class="mechanism-figure">
-      <img src="/assets/images/ui-elder-phone.jpg" alt="先輩世代もスマートフォンで会員サービスを利用" loading="lazy">
-      <figcaption>"使われる側" ではなく、"使う側" として。会員はすべての世代。</figcaption>
-    </figure>
-    <div class="flow">
-      <div class="flow-step">
-        <div class="tag">Member</div>
-        <h4>会員</h4>
-        <p>月100円〜で参加。<br>支援先を選べる。</p>
-      </div>
-      <div class="flow-arrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-      <div class="flow-step">
-        <div class="tag">Operator</div>
-        <h4>Care Support Pass</h4>
-        <p>会員管理・<br>優待配信・店舗連携。</p>
-      </div>
-      <div class="flow-arrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-      <div class="flow-step">
-        <div class="tag">Stores</div>
-        <h4>提携店舗</h4>
-        <p>飲食 / 薬局 / 配食 /<br>タクシー / 生活サービス</p>
-      </div>
-      <div class="flow-arrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-      <div class="flow-step">
-        <div class="tag">NPO / Foundation</div>
-        <h4>NPO・公益財団</h4>
-        <p>売上の一部・寄附・助成で<br>住まい支援を行う。</p>
-      </div>
-      <div class="flow-arrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-      <div class="flow-step">
-        <div class="tag">Support</div>
-        <h4>高齢者支援</h4>
-        <p>入居初期費用 / 家財整理 /<br>緊急住み替え / 生活用品</p>
-      </div>
-    </div>
-    <div class="mech-note">
-      <b>会員が払う100円は、提携店優待を受けるための会費です。</b> その売上から、店舗・運営の必要経費を引いた残りの一部が、NPO・公益財団等を通じて高齢者の住まい支援に充当されます。Care Support Pass が金券・ポイント・現金等を発行することはありません。
-    </div>
-  </div>
-</section>
-
-<!-- ============ PLANS ============ -->
-<section id="plans">
-  <div class="wrap">
-    <div class="section-head center">
-      <span class="eyebrow">Pricing by Property Size</span>
-      <h2 class="section-title">住まいの規模に応じて、<br>支える口数を変える。</h2>
-      <p class="section-lead">Care Support Pass は、支援対象となる住まいの規模に応じて、1口あたりの会費を設定します。<br>小さな住まいには小さな支援を、大きな住まいにはより大きな地域支援を。</p>
+      <h2 class="section-title">月100円で<br>始められる、<br>透明な支援の循環。</h2>
+      <p class="section-lead">寄附でも、返礼品でもありません。<b>会員サービスとして提携店優待を受け、その売上の一部が高齢者の住まい支援に回る</b>仕組みです。</p>
     </div>
 
-    <div class="plans-table-wrap">
-      <table class="plans-table">
-        <thead>
-          <tr>
-            <th>住まいの規模</th>
-            <th>Care Support Pass 1口</th>
-            <th>提携サポート会社の<br>生活応援クーポン目安</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="pt-label">9〜29室</span><span class="pt-sub">小規模ホーム</span></td>
-            <td><span class="pt-price">月100<small>円</small></span></td>
-            <td><span class="pt-coupon">最大200円相当</span></td>
-            <td><button type="button" class="btn primary" onclick="go('apply')">この口数で参加</button></td>
-          </tr>
-          <tr>
-            <td><span class="pt-label">30〜44室</span><span class="pt-sub">中小規模ホーム</span></td>
-            <td><span class="pt-price">月150<small>円</small></span></td>
-            <td><span class="pt-coupon">最大300円相当</span></td>
-            <td><button type="button" class="btn primary" onclick="go('apply')">この口数で参加</button></td>
-          </tr>
-          <tr class="featured-row">
-            <td><span class="pt-label">45〜59室</span><span class="pt-sub">中規模ホーム</span></td>
-            <td><span class="pt-price">月200<small>円</small></span></td>
-            <td><span class="pt-coupon">最大400円相当</span></td>
-            <td><button type="button" class="btn primary" onclick="go('apply')">この口数で参加</button></td>
-          </tr>
-          <tr>
-            <td><span class="pt-label">60〜79室</span><span class="pt-sub">大型ホーム</span></td>
-            <td><span class="pt-price">月250<small>円</small></span></td>
-            <td><span class="pt-coupon">最大500円相当</span></td>
-            <td><button type="button" class="btn primary" onclick="go('apply')">この口数で参加</button></td>
-          </tr>
-          <tr>
-            <td><span class="pt-label">80室以上</span><span class="pt-sub">大型拠点</span></td>
-            <td><span class="pt-price">月300<small>円</small></span></td>
-            <td><span class="pt-coupon">最大600円相当</span></td>
-            <td><button type="button" class="btn primary" onclick="go('apply')">この口数で参加</button></td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- 4ステップフロー (compact) -->
+    <div class="how-flow">
+      <div class="hf-step">
+        <div class="hf-num">01</div>
+        <div class="hf-tag">YOU</div>
+        <h4>会員登録</h4>
+        <p>月100円〜で参加。支援したい対象を選択。</p>
+      </div>
+      <div class="hf-arrow">→</div>
+      <div class="hf-step">
+        <div class="hf-num">02</div>
+        <div class="hf-tag">STORES</div>
+        <h4>提携店優待</h4>
+        <p>飲食・薬局・配食・タクシー等で使える生活応援クーポン。</p>
+      </div>
+      <div class="hf-arrow">→</div>
+      <div class="hf-step">
+        <div class="hf-num">03</div>
+        <div class="hf-tag">CIRCULATION</div>
+        <h4>売上の一部が原資に</h4>
+        <p>NPO・公益財団を通じて支援金として活用。</p>
+      </div>
+      <div class="hf-arrow">→</div>
+      <div class="hf-step">
+        <div class="hf-num">04</div>
+        <div class="hf-tag">REPORTED</div>
+        <h4>使途を毎月確認</h4>
+        <p>加盟施設の月次活動報告で、いつでも使い道を確認できる。</p>
+      </div>
     </div>
 
-    <div class="plans-note-box">
-      <p><b>クーポンは、寄附への返礼ではありません。</b></p>
-      <p>提携サポート会社（飲食店・コンビニ・ドラッグストア・薬局・配食・タクシー・理美容・クリーニング・介護用品店・家財整理・引越・不動産・地域スーパー等）が、自社の販促として Care Support Pass 会員に提供する生活応援クーポンです。</p>
-      <p>Care Support Pass は金銭的価値を発行・販売しません。クーポンの内容・対象商品・利用条件・提供期間・提供有無は、提携会社ごとに異なります。<b>処方薬・保険調剤の自己負担分は対象外</b>です。</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ COUPONS ============ -->
-<section id="coupons" class="coupon-section">
-  <div class="wrap">
-    <div class="section-head center">
-      <span class="eyebrow">Coupon Examples</span>
-      <h2 class="section-title">支援した日から30日間使える、<br>会員限定クーポン。</h2>
-      <p class="section-lead">クーポンは、支援参加済みの会員だけに配信されます。<br>有効期限は原則として支援日から30日間。提携サポート会社が自社販促として発行する、期間限定の優待です。</p>
-    </div>
-
-    <figure class="coupon-figure">
-      <img src="/assets/images/ui-coupon-phone.jpg" alt="スマートフォン画面のクーポン表示" loading="lazy">
-    </figure>
-
-    <div class="coupon-rules">
-      <div class="cr-item">
-        <div class="cr-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <!-- プラン + クーポン例 (2-col split) -->
+    <div class="how-split">
+      <div class="hs-plans">
+        <div class="hs-head">
+          <span class="hs-tag">PRICING</span>
+          <h3>住まいの規模で、<br>支える口数を選ぶ。</h3>
         </div>
-        <h4>支援日から30日間</h4>
-        <p>会費決済日を起点に発行。30日経過後は自動失効します。</p>
-      </div>
-      <div class="cr-item">
-        <div class="cr-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <div class="hs-plan-list">
+          <div class="hs-plan"><span class="hp-size">9–29室</span><span class="hp-price">月100<small>円</small></span></div>
+          <div class="hs-plan"><span class="hp-size">30–44室</span><span class="hp-price">月150<small>円</small></span></div>
+          <div class="hs-plan featured"><span class="hp-size">45–59室</span><span class="hp-price">月200<small>円</small></span><span class="hp-badge">標準</span></div>
+          <div class="hs-plan"><span class="hp-size">60–79室</span><span class="hp-price">月250<small>円</small></span></div>
+          <div class="hs-plan"><span class="hp-size">80室以上</span><span class="hp-price">月300<small>円</small></span></div>
         </div>
-        <h4>最低利用金額あり</h4>
-        <p>例：1,000円以上で200円OFF、3,000円以上で600円OFF。</p>
+        <p class="hs-note">小さな住まいには小さな支援を、大きな住まいにはより大きな地域支援を。会費の2倍を目安にクーポンが配信されます。</p>
       </div>
-      <div class="cr-item">
-        <div class="cr-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-        </div>
-        <h4>現金化・譲渡不可</h4>
-        <p>会員本人のみ利用可能。譲渡・売買・換金はできません。</p>
-      </div>
-      <div class="cr-item">
-        <div class="cr-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <h4>店舗が販促として発行</h4>
-        <p>Care Support Pass は金銭的価値を発行・精算しません。</p>
-      </div>
-    </div>
 
-    <div class="coupon-grid">
-      <div class="coupon-group">
-        <h4><span class="ico">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v6a3 3 0 0 0 3 3v11"/><path d="M9 11a3 3 0 0 0 3-3V2"/><path d="M3 2v6"/><path d="M15 2c-1.7 0-3 1.3-3 3v6c0 1.7 1.3 3 3 3h2v8"/></svg>
-        </span>飲食店</h4>
-        <ul>
-          <li>1,000円以上のお食事で<span class="v">−200円</span></li>
-          <li>平日ランチ<span class="v">−100円</span></li>
-          <li>テイクアウト弁当<span class="v">−50円</span></li>
-          <li>家族来店時のドリンクサービス<span class="v">無料</span></li>
-        </ul>
-      </div>
-      <div class="coupon-group">
-        <h4><span class="ico">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        </span>薬局・ドラッグ</h4>
-        <ul>
-          <li>日用品2,000円以上で<span class="v">−300円</span></li>
-          <li>介護用品3,000円以上で<span class="v">−600円</span></li>
-          <li>口腔ケア用品<span class="v">−5%</span></li>
-          <li>配送手数料<span class="v">割引</span></li>
-        </ul>
-      </div>
-      <div class="coupon-group">
-        <h4><span class="ico">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14l-1 7H6z"/><path d="M5 12V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5"/></svg>
-        </span>配食・買い物</h4>
-        <ul>
-          <li>初回注文<span class="v">−500円</span></li>
-          <li>1週間お試しセット<span class="v">割引</span></li>
-          <li>高齢者向け弁当<span class="v">−100円</span></li>
-          <li>定期配送切替<span class="v">手数料無料</span></li>
-        </ul>
-      </div>
-      <div class="coupon-group">
-        <h4><span class="ico">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l3-9h12l3 9"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
-        </span>生活サービス</h4>
-        <ul>
-          <li>タクシー予約手数料<span class="v">−300円</span></li>
-          <li>理美容メニュー<span class="v">−500円</span></li>
-          <li>クリーニング<span class="v">−10%</span></li>
-          <li>家財整理見積<span class="v">無料</span></li>
+      <div class="hs-coupons">
+        <div class="hs-head">
+          <span class="hs-tag">COUPON EXAMPLE</span>
+          <h3>毎月使える、<br>会員限定の優待。</h3>
+        </div>
+        <figure class="hs-phone">
+          <img src="/assets/images/ui-coupon-phone.jpg" alt="スマホ画面のクーポン表示">
+        </figure>
+        <ul class="hs-rules">
+          <li><b>支援日から30日間</b>有効</li>
+          <li>会員本人のみ利用可・<b>譲渡/換金不可</b></li>
+          <li>処方薬・保険調剤の自己負担分は<b>対象外</b></li>
         </ul>
       </div>
     </div>
-    <div class="warn-callout">
-      <b>重要：</b>処方薬・保険調剤の自己負担分は、クーポン対象外です。対象は日用品・介護用品・店舗独自サービス等に限定します。クーポン額・対象商品・利用条件・有効期限・除外商品は各提携サポート会社が独自に設定し、各社が自社販促として発行する会員限定優待です。Care Support Pass および TAMJ は金銭的価値の発行・販売・精算を行いません。
-    </div>
-  </div>
-</section>
 
-<!-- ============ SUPPORT TARGETS ============ -->
-<section id="targets">
-  <div class="wrap">
-    <div class="section-head center">
-      <span class="eyebrow">Choose Your Cause</span>
-      <h2 class="section-title">あなたの100円の行き先を、選べる。</h2>
-      <p class="section-lead">税金のように見えない支出ではなく、どこに使われるかを確認できる仕組みを目指します。気になる支援先を選んで、毎月の活動レポートで使途を確認できます。</p>
-    </div>
-    <div class="targets-grid">
-      <div class="target-card"><div class="check"></div>
-        <h4>住まいに不安を抱える先輩世代</h4>
-        <p>入居初期費用や緊急住み替えの支援へ。</p>
+    <!-- 支援先を選べる -->
+    <div class="how-targets">
+      <div class="ht-head">
+        <span class="hs-tag">CHOOSE YOUR CAUSE</span>
+        <h3>あなたの100円の行き先を、選べる。</h3>
+        <p>気になる支援先を選び、毎月のレポートで使い道を確認できます。</p>
       </div>
-      <div class="target-card"><div class="check"></div>
-        <h4>身寄りが少ない方への支え</h4>
-        <p>生活用品、手続き、見守り支援へ。</p>
-      </div>
-      <div class="target-card"><div class="check"></div>
-        <h4>家財整理に支援が必要な方</h4>
-        <p>入居前の片付け・不用品整理の支援へ。</p>
-      </div>
-      <div class="target-card"><div class="check"></div>
-        <h4>制度につながる前のつなぎ支援</h4>
-        <p>公的支援につながるまでの一時的な生活支援へ。</p>
-      </div>
-      <div class="target-card"><div class="check"></div>
-        <h4>介護職員の休憩環境</h4>
-        <p>現場で働く介護職員の食事・休憩環境支援へ。</p>
-      </div>
-      <div class="target-card"><div class="check"></div>
-        <h4>地域指定なし</h4>
-        <p>もっとも必要とされる支援先に活用。</p>
+      <div class="ht-grid">
+        <div class="ht-item">住まいに不安を抱える先輩世代</div>
+        <div class="ht-item">身寄りが少ない方への支え</div>
+        <div class="ht-item">家財整理が必要な方</div>
+        <div class="ht-item">制度につながる前のつなぎ支援</div>
+        <div class="ht-item">介護職員の休憩環境</div>
+        <div class="ht-item">地域指定なし</div>
       </div>
     </div>
-    <p class="targets-note">支援先を選ぶことで、使途が見える支援になります。活動レポートでは、選んだ支援先がどのように使われたかをご報告します。</p>
+
+    <div class="how-notice">
+      <b>※ Care Support Pass は金銭的価値（金券・ポイント・現金）を発行・販売・精算しません。</b>クーポンは各提携店が自社販促として発行する優待であり、対象商品・条件は各社が独自に設定します。
+    </div>
   </div>
 </section>
 
@@ -1628,36 +1644,6 @@ section[id]{scroll-margin-top:80px}
       </figure>
     </div>
 
-    <div class="pension-example">
-      <div>
-        <span class="tag">Example</span>
-        <h3>年金月8万円の方の<br>生活設計（イメージ）</h3>
-        <p class="desc">Care Support Pass 導入施設では、本人の月額負担を5万円以内に抑えることを目指します。年金8万円のうち、3万円を「暮らしの余白」として残せる設計です。</p>
-      </div>
-      <div class="pension-bars">
-        <div class="pen-bar">
-          <span class="pb-label">本人負担（住まい）</span>
-          <div class="pb-track"><div class="pb-fill f1"></div></div>
-          <span class="pb-amt">50,000</span>
-        </div>
-        <div class="pen-bar">
-          <span class="pb-label">食費・日用品</span>
-          <div class="pb-track"><div class="pb-fill f2"></div></div>
-          <span class="pb-amt">20,000</span>
-        </div>
-        <div class="pen-bar">
-          <span class="pb-label">自由費・趣味</span>
-          <div class="pb-track"><div class="pb-fill f3"></div></div>
-          <span class="pb-amt">10,000</span>
-        </div>
-        <div class="pen-bar">
-          <span class="pb-label">貯金・孫・将来</span>
-          <div class="pb-track"><div class="pb-fill f4"></div></div>
-          <span class="pb-amt">10,000</span>
-        </div>
-      </div>
-    </div>
-
     <div class="pension-pillars">
       <div class="pp-card">
         <div class="pp-num">PILLAR 01</div>
@@ -1681,529 +1667,50 @@ section[id]{scroll-margin-top:80px}
       </div>
     </div>
 
-    <div class="pension-breakdown">
-      <div class="pb-head">
-        <span class="eyebrow">Cost Breakdown</span>
-        <h3>月12万円の住まいを、本人負担5万円で住める設計に。</h3>
-        <p>実際にかかる月額費用を、本人と複数の支払元で分担します。本人負担は全体の約42%。残りは、Care Support Pass 会員、サポート会社、NPO・公益財団、住宅セーフティネット制度等から積み上げます。</p>
+    <a href="/facilities.html#model" class="pension-link-card">
+      <div class="plc-left">
+        <span class="plc-eyebrow">For Facilities</span>
+        <h3>持続モデルの詳細・コスト内訳・入居枠の構成</h3>
+        <p>月12万円の住まいを本人負担5万円で住める設計、年金生活者枠 60-70% を中心とした入居設計など、運営事業者の方向けの詳細を別ページでご案内しています。</p>
       </div>
-      <div class="pb-table-wrap">
-        <table class="pb-table">
-          <thead>
-            <tr><th>支払元</th><th class="num">月額</th><th>役割</th></tr>
-          </thead>
-          <tbody>
-            <tr class="row-self">
-              <th>本人負担</th>
-              <td class="num"><b>50,000</b><small>円</small></td>
-              <td>年金の中に「暮らしの余白」を残す</td>
-            </tr>
-            <tr>
-              <th>Care Support Pass 施設支援金</th>
-              <td class="num">20,000<small>円</small></td>
-              <td>会員会費の一部を NPO・公益財団経由で配分</td>
-            </tr>
-            <tr>
-              <th>サポート会社協賛</th>
-              <td class="num">10,000<small>円</small></td>
-              <td>地域企業・店舗からの賛同協賛</td>
-            </tr>
-            <tr>
-              <th>NPO・公益財団 居住支援助成</th>
-              <td class="num">15,000<small>円</small></td>
-              <td>寄附・基金からの居住支援助成</td>
-            </tr>
-            <tr>
-              <th>家賃低廉化・住替え支援</th>
-              <td class="num">25,000<small>円</small></td>
-              <td>住宅セーフティネット制度等の活用</td>
-            </tr>
-            <tr class="row-total">
-              <th>合計（実費）</th>
-              <td class="num"><b>120,000</b><small>円</small></td>
-              <td>本人負担は約42%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="pb-note">※ 金額は標準モデルのイメージです。実際の支援金額・配分・適用可能な制度は、施設規模・地域・物件状況・制度の利用可否によって異なります。住宅セーフティネット制度・家賃低廉化補助等の利用可否は、自治体への個別確認が必要です。</p>
-    </div>
-
-    <div class="pension-mix">
-      <div class="pm-head">
-        <span class="eyebrow">Resident Mix</span>
-        <h3>入居枠の構成。<br>事業として持続させるためのバランス。</h3>
-        <p>施設全体を「支援対象だけ」にすると収支が崩れます。Care Support Pass 導入施設では、年金生活者枠を主役にしつつ、生活保護相談枠・通常入居枠・緊急一時枠をバランス良く配置し、現場と事業の両方を持続させます。</p>
-      </div>
-      <div class="mix-grid">
-        <div class="mix-card primary">
-          <div class="mx-pct">60-70<span class="mx-u">%</span></div>
-          <h4>年金生活者枠</h4>
-          <p>事業の主役。年金収入があり、本人負担5万円以内で生活設計できる方。年金8万円前後を中心に、制度に頼る前の段階で支える対象。</p>
-        </div>
-        <div class="mix-card neutral">
-          <div class="mx-pct">10-20<span class="mx-u">%</span></div>
-          <h4>生活保護相談枠</h4>
-          <p>行政・福祉事務所・地域包括との連携枠。生活保護受給中の方も、必要な方には個別にご相談可能。ただし施設全体を生活保護前提にはしません。</p>
-        </div>
-        <div class="mix-card neutral">
-          <div class="mx-pct">15-25<span class="mx-u">%</span></div>
-          <h4>通常入居枠</h4>
-          <p>収支安定のための通常価格入居枠。全員を支援対象にすると事業が継続できません。通常価格でご入居いただける方も大切なお客様です。</p>
-        </div>
-        <div class="mix-card neutral">
-          <div class="mx-pct">5<span class="mx-u">%</span></div>
-          <h4>緊急一時枠</h4>
-          <p>病院退院後、地域包括対応、住み替え緊急対応のための一時受け入れ枠。地域の医療・福祉ネットワークとの接点として機能します。</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="pension-quote">
-      <h3>"払える人だけが入れる施設"ではなく、<br><span class="em">年金の中に人生の余白を残せる施設</span>を増やす。</h3>
-      <p>これは、Care Support Pass 導入施設が目指す入居設計です。<br>運営事業者の方には、別途モデルの詳細をご案内します。</p>
-    </div>
+      <div class="plc-arrow">介護施設の方へ →</div>
+    </a>
   </div>
 </section>
 
-<!-- ============ FACILITY ELIGIBILITY ============ -->
-<section id="eligibility" class="eligibility">
+
+<!-- ============ AUDIENCES ============ -->
+<section id="audiences" class="audiences-section">
   <div class="wrap">
     <div class="section-head center">
-      <span class="eyebrow">Membership Criteria</span>
-      <h2 class="section-title">加盟施設の条件。<br>支援金は、不動産ではなく入居者の暮らしへ。</h2>
-      <p class="section-lead">Care Support Pass は、<b>土地建物を所有していない介護運営会社</b>に限定して加盟を受け付けます。支援金が不動産オーナーの賃料収益や借入返済に流れる構造を、入口から排除する設計です。</p>
+      <span class="eyebrow">For Each of Us</span>
+      <h2 class="section-title">あなたの立場で、<br>関わり方を選んでください。</h2>
     </div>
 
-    <div class="elig-figures-2up">
-      <figure>
-        <img src="/assets/images/housing-exterior.jpg" alt="モダンな小規模高齢者住宅の外観" loading="lazy">
-        <figcaption>外観 — 介護施設ではなく、住まいとして。</figcaption>
-      </figure>
-      <figure>
-        <img src="/assets/images/housing-interior.jpg" alt="共用スペースの内装" loading="lazy">
-        <figcaption>内装 — 上質なシェアハウスのような共用空間。</figcaption>
-      </figure>
-    </div>
+    <div class="aud-grid">
+      <a class="aud-card individual" href="#apply" onclick="event.preventDefault();go('apply')">
+        <div class="aud-num">01</div>
+        <div class="aud-label">FOR YOU</div>
+        <h3>個人として参加する</h3>
+        <p>月100円から、生活応援パスに参加。提携店優待を受けながら、先輩世代の住まいを支える。</p>
+        <span class="aud-cta">参加申込へ <span class="aud-arrow">→</span></span>
+      </a>
 
-    <div class="eligibility-grid">
-      <div class="elig-card good">
-        <div class="elig-tag good">加盟できる施設</div>
-        <ul>
-          <li>建物賃借型の有料老人ホーム</li>
-          <li>サービス付き高齢者向け住宅の運営会社</li>
-          <li>住宅型有料老人ホームの運営会社</li>
-          <li>グループホーム等の運営会社</li>
-          <li>小規模高齢者住宅の運営会社</li>
-          <li>介護事業者が借り上げて運営する住まい</li>
-        </ul>
-      </div>
-      <div class="elig-card bad">
-        <div class="elig-tag bad">対象外となる施設</div>
-        <ul>
-          <li>土地建物を自社所有している施設</li>
-          <li>オーナー法人と運営法人が実質同一の施設</li>
-          <li>代表者・親族・関連会社が物件を所有</li>
-          <li>不動産収益を優先している施設</li>
-          <li>支援金が賃料保証・借入返済に流れる構造</li>
-          <li>「激安施設」「生活保護専門」として売りたい施設</li>
-        </ul>
-      </div>
-    </div>
+      <a class="aud-card partner" href="/partners.html">
+        <div class="aud-num">02</div>
+        <div class="aud-label">FOR PARTNERS</div>
+        <h3>協力会社として参加する</h3>
+        <p>飲食・薬局・配食・タクシー等の事業者向け。販促費を地域貢献に変える、新しい集客のかたち。</p>
+        <span class="aud-cta">協力会社の方へ <span class="aud-arrow">→</span></span>
+      </a>
 
-    <div class="elig-funds">
-      <div class="elig-funds-head">
-        <span class="eyebrow">Use of Funds</span>
-        <h3>支援金の使途は、入居者負担軽減に限定します。</h3>
-      </div>
-      <div class="funds-grid">
-        <div class="funds-col ok">
-          <h4>支援金が使えるもの</h4>
-          <ul>
-            <li>入居者の家賃負担軽減</li>
-            <li>共益費・生活支援費の軽減</li>
-            <li>入居初期費用の軽減</li>
-            <li>家財整理・住み替え費用の一部支援</li>
-            <li>生活用品・寝具・衣類等の初期支援</li>
-            <li>本人負担5万円以内の実現</li>
-          </ul>
-        </div>
-        <div class="funds-col ng">
-          <h4>支援金を使えないもの</h4>
-          <ul>
-            <li>役員報酬・株主配当</li>
-            <li>借入返済・不動産取得費</li>
-            <li>オーナーへの追加賃料</li>
-            <li>関連会社への不透明な委託費</li>
-            <li>広告宣伝費の補填</li>
-            <li>本人負担軽減と関係ない改修費</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="elig-ranks">
-      <div class="elig-ranks-head">
-        <span class="eyebrow">Partner Ranks</span>
-        <h3>加盟施設は3ランクで運用します。</h3>
-        <p>審査内容と現場体制に応じて、Certified / Partner / Trial の3段階で受け入れます。</p>
-      </div>
-      <div class="rank-grid">
-        <div class="rank-card a">
-          <div class="rank-label">A — Certified</div>
-          <h4>Care Support Certified</h4>
-          <p>賃借型かつ本人負担5万円以内枠あり。年金余白モデル適合・地域連携・使途報告すべて満たす最優先パートナー。</p>
-          <ul>
-            <li>サイト掲載・優先送客</li>
-            <li>支援対象施設として公開</li>
-            <li>支援金の優先配分</li>
-          </ul>
-        </div>
-        <div class="rank-card b">
-          <div class="rank-label">B — Partner</div>
-          <h4>Care Support Partner</h4>
-          <p>賃借型だが対象室が少ない、または5万円以内が現状難しい施設。改善計画付きで加盟。</p>
-          <ul>
-            <li>条件付き掲載</li>
-            <li>改善計画への合意</li>
-            <li>段階的な対象室拡大</li>
-          </ul>
-        </div>
-        <div class="rank-card c">
-          <div class="rank-label">C — Trial</div>
-          <h4>Care Support Trial</h4>
-          <p>3〜6ヶ月の試験導入。対象者数を限定し、支援金の使途確認後に本加盟へ移行します。</p>
-          <ul>
-            <li>試験期間限定</li>
-            <li>使途レポート提出必須</li>
-            <li>本加盟への移行審査</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="elig-rooms">
-      <div class="elig-rooms-head">
-        <span class="eyebrow">Target Rooms</span>
-        <h3>対象室の目安。施設規模に応じた最低設置数。</h3>
-        <p>本人負担5万円以内を目指す「Care Support Pass 対象室」を、規模に応じて一定数設けていただきます。</p>
-      </div>
-      <div class="rooms-table-wrap">
-        <table class="rooms-table">
-          <thead>
-            <tr><th>施設規模</th><th>対象室の最低設置数</th><th>月額加盟費（事務局運営費）</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>9〜29室</td><td>2室以上 / 10%以上</td><td class="num">5,000円</td></tr>
-            <tr><td>30〜44室</td><td>4室以上 / 10%以上</td><td class="num">10,000円</td></tr>
-            <tr><td>45〜59室</td><td>6室以上 / 12%以上</td><td class="num">15,000円</td></tr>
-            <tr><td>60〜79室</td><td>8室以上 / 12%以上</td><td class="num">20,000円</td></tr>
-            <tr><td>80室以上</td><td>10室以上 / 10%以上</td><td class="num">30,000円</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="elig-rooms-note">※ 初期審査費：5万円〜10万円（書面確認・現地調査含む）。加盟費は事務局運営費であり、入居者支援金とは完全に分離して管理します。本人負担5万円は家賃・共益費・基本生活支援費の合計を指し、食費・医療費・介護保険自己負担は別設計とします。</p>
-    </div>
-
-    <div class="elig-ng">
-      <h3>以下に該当する場合、点数に関係なく加盟不可とします。</h3>
-      <ul>
-        <li>土地建物を自社または代表者・親族・関連会社が所有している</li>
-        <li>関連会社オーナーで賃料設定が不透明</li>
-        <li>支援金を賃料・借入・役員報酬に充当する意図がある</li>
-        <li>入居者負担軽減の対象室を設定しない</li>
-        <li>使途報告を拒む</li>
-        <li>過去に重大な行政処分・虐待・不正請求がある</li>
-        <li>処方薬等の危険なクーポン連携を希望する</li>
-        <li>「激安施設」「生活保護専門」として売りたい</li>
-        <li>現場人員が明らかに足りない</li>
-      </ul>
-    </div>
-
-    <div class="elig-cta">
-      <h3>空室を埋めるためではなく、<br><span class="em">入居できなかった人の選択肢を増やす</span>ために。</h3>
-      <p>Care Support Pass は、土地建物を所有しない介護運営会社を対象とした入居者負担軽減型の加盟制度です。<br>支援原資が不動産側に流れることを防ぎ、入居者の生活に直接つながる仕組みをつくります。</p>
-      <div class="cta-row">
-        <a class="btn primary large" href="#corporate">運営会社として相談する</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ MONTHLY CARE REPORT ============ -->
-<section id="reporting" class="reporting">
-  <div class="wrap">
-    <div class="section-head center">
-      <span class="eyebrow">Monthly Care Report</span>
-      <h2 class="section-title">支援金は、<br>報告する施設にだけ届く。</h2>
-      <figure class="reporting-figure">
-        <img src="/assets/images/hero-generational.jpg" alt="同じテーブルで同じものに手を伸ばす" loading="lazy">
-        <figcaption>透明性とは、同じテーブルで、同じ事実を見ること。</figcaption>
-      </figure>
-      <p class="section-lead">Care Support Pass では、加盟施設に<b>月次活動報告の公開</b>を義務づけます。支援金が入居者の本人負担軽減や住まいの継続に使われていることを、支援する人が毎月確認できる仕組みです。報告できない月は、原則として翌月以降の支援金交付を停止または保留します。</p>
-    </div>
-
-    <div class="report-pillars">
-      <div class="rp-card">
-        <div class="rp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
-        </div>
-        <h4>支援者への説明責任</h4>
-        <p>支援者は、自分の100円が、どの施設で、どう使われたかを毎月確認できます。</p>
-      </div>
-      <div class="rp-card">
-        <div class="rp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <h4>入居者の生活改善を確認</h4>
-        <p>支援金が利益補填ではなく、本人負担軽減や生活改善に使われていることを毎月数値で確認します。</p>
-      </div>
-      <div class="rp-card">
-        <div class="rp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <h4>加盟施設の品質維持</h4>
-        <p>毎月の報告ができない施設は、そもそも支援金を扱う資格がないと考えています。</p>
-      </div>
-      <div class="rp-card">
-        <div class="rp-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-        </div>
-        <h4>仕組み全体の透明性</h4>
-        <p>支援者・施設・事務局・NPO・公益財団のすべてが同じ事実を見られる状態をつくります。</p>
-      </div>
-    </div>
-
-    <div class="report-flow">
-      <div class="rf-head">
-        <span class="eyebrow">Workflow</span>
-        <h3>月次報告のフロー</h3>
-        <p>提出→確認→公開→交付判断、を毎月の固定スケジュールで回します。</p>
-      </div>
-      <div class="flow-timeline">
-        <div class="ft-step">
-          <div class="ft-date">毎月 5日まで</div>
-          <h4>加盟施設が提出</h4>
-          <p>前月分の月次活動報告を Care Support Pass 事務局に提出。</p>
-        </div>
-        <div class="ft-step">
-          <div class="ft-date">毎月 10日まで</div>
-          <h4>事務局が内容確認</h4>
-          <p>必要に応じて修正依頼。個人情報を除く公開情報を整理。</p>
-        </div>
-        <div class="ft-step">
-          <div class="ft-date">毎月 15日</div>
-          <h4>サイト上で公開</h4>
-          <p>支援者・会員・一般の方が、施設ページから確認できます。</p>
-        </div>
-        <div class="ft-step">
-          <div class="ft-date">毎月 末</div>
-          <h4>翌月の支援金交付判断</h4>
-          <p>NPO・公益財団・支援基金から実績ベースで翌月の支援金を交付。</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="report-content">
-      <div class="rc-head">
-        <span class="eyebrow">What's Reported</span>
-        <h3>毎月、何を報告するのか。</h3>
-        <p>個人情報は厳格に保護し、施設運営と支援金の使途に関する情報のみを公開します。</p>
-      </div>
-      <div class="rc-grid">
-        <div class="rc-col public">
-          <div class="rc-tag good">サイト上で公開する情報</div>
-          <ul>
-            <li>施設名・施設規模・所在地</li>
-            <li>Care Support Pass 対象室数</li>
-            <li>今月の対象入居者数</li>
-            <li>今月の支援金総額</li>
-            <li>本人負担軽減総額・平均軽減額</li>
-            <li>平均本人負担額</li>
-            <li>支援金の使途内訳（家賃軽減・共益費・初期費用等）</li>
-            <li>地域連携・協力会社との活動</li>
-            <li>来月の支援予定</li>
-            <li>施設責任者コメント</li>
-          </ul>
-        </div>
-        <div class="rc-col private">
-          <div class="rc-tag bad">非公開（内部監査のみ）</div>
-          <ul>
-            <li>入居者個別情報・氏名</li>
-            <li>顔写真・要介護度・病名</li>
-            <li>具体的な収入・年金額</li>
-            <li>契約書・請求明細</li>
-            <li>家族情報</li>
-            <li>苦情・事故の詳細</li>
-            <li>医療・介護記録</li>
-          </ul>
-          <p class="rc-note">個人名・顔写真・病名・要介護度等は、本人同意がない限り公開しません。事務局・NPO・公益財団・指定監査人のみが必要に応じて確認します。</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="report-sample">
-      <div class="rs-head-outer">
-        <span class="eyebrow">Sample Report</span>
-        <h3>公開される月次レポートのイメージ</h3>
-        <p>下記は表示イメージのサンプルです。実際の公開レポートは、加盟施設の実数値に基づき毎月15日に公開されます。</p>
-      </div>
-      <div class="rs-card">
-        <div class="rs-card-head">
-          <span class="rs-card-tag">MONTHLY CARE REPORT</span>
-          <h4>2026年6月 月次ケアレポート</h4>
-          <p class="rs-facility">Care Support Pass 加盟施設：○○ホーム（サンプル）</p>
-        </div>
-
-        <div class="rs-summary">
-          <p>今月は、Care Support Pass 対象室10室のうち <b>8室に支援を実施</b>しました。支援金総額は <b>240,000円</b>。すべて入居者本人の月額負担軽減と入居初期用品の購入に充当しました。</p>
-        </div>
-
-        <div class="rs-numbers">
-          <div class="rsn-item"><span class="rsn-label">対象室数</span><span class="rsn-val">10<small>室</small></span></div>
-          <div class="rsn-item"><span class="rsn-label">対象入居者</span><span class="rsn-val">8<small>名</small></span></div>
-          <div class="rsn-item"><span class="rsn-label">支援金総額</span><span class="rsn-val">240,000<small>円</small></span></div>
-          <div class="rsn-item"><span class="rsn-label">平均本人負担</span><span class="rsn-val">48,500<small>円</small></span></div>
-          <div class="rsn-item"><span class="rsn-label">平均軽減額</span><span class="rsn-val">27,500<small>円</small></span></div>
-          <div class="rsn-item"><span class="rsn-label">年金生活者枠</span><span class="rsn-val">7<small>名</small></span></div>
-        </div>
-
-        <div class="rs-usage">
-          <h5>今月の使い道</h5>
-          <ul>
-            <li><span>家賃負担軽減</span><b>160,000円</b></li>
-            <li><span>共益費軽減</span><b>60,000円</b></li>
-            <li><span>寝具・生活用品支援</span><b>20,000円</b></li>
-          </ul>
-        </div>
-
-        <div class="rs-comment">
-          <h5>施設責任者コメント</h5>
-          <p>支援金により、今月は新たに2名の方が本人負担5万円以内で入居できました。継続入居中の6名についても、平均27,500円の月額負担軽減を行いました。今後も、年金の中に暮らしの余白を残せる運営を続けます。</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="report-violation">
-      <div class="rv-head">
-        <h3>未提出・虚偽報告への対応</h3>
-        <p>支援金は、報告できる施設にだけ届きます。報告がない施設、使途が確認できない施設には、支援金を交付しません。</p>
-      </div>
-      <div class="violation-table-wrap">
-        <table class="violation-table">
-          <thead><tr><th>状況</th><th>対応</th></tr></thead>
-          <tbody>
-            <tr><td>期限内に提出</td><td>通常支援金交付</td></tr>
-            <tr><td>7日以内の遅延</td><td>注意・支援金一部保留</td></tr>
-            <tr><td>15日以上遅延</td><td>支援金交付停止</td></tr>
-            <tr><td>2ヶ月連続未提出</td><td>加盟一時停止</td></tr>
-            <tr class="severe"><td>虚偽報告</td><td>即時加盟取消・既交付分の返還請求</td></tr>
-            <tr class="severe"><td>使途不明</td><td>支援金停止・第三者監査対象</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="rv-note">加盟契約には、月次報告義務・公開同意・支援金交付条件・虚偽報告時の対応・監査受入義務を明記します。年1回、第三者または NPO・公益財団による確認・監査を受けていただきます。</p>
-    </div>
-
-    <div class="report-conclusion">
-      <h3>支援金は、<span class="em">透明性のある施設にだけ届く。</span></h3>
-      <p>それが、Care Support Pass の信頼の土台です。<br>支援する人が、自分のお金の使い道を見られること。<br>それを Care Support Pass はルールとして守ります。</p>
-    </div>
-  </div>
-</section>
-<section id="split" class="npo-section">
-  <div class="wrap">
-    <div class="section-head center">
-      <span class="eyebrow">Two Routes</span>
-      <h2 class="section-title">実利型と寄附型を、<br>分けて設計します。</h2>
-      <p class="section-lead">クーポンなどの経済的メリットを受ける会員サービスと、寄附控除を目指す寄附窓口は明確に分けます。これにより、実利を求める方も、節税・公益支援を求める方も、それぞれ適切な形で参加できます。</p>
-    </div>
-    <div class="split-grid">
-      <div class="split-card accent">
-        <span class="split-tag">CARE SUPPORT PASS / 実利型</span>
-        <h3>毎月使える会員サービス</h3>
-        <ul>
-          <li>月額会員サービス</li>
-          <li>提携店優待あり</li>
-          <li>税控除対象ではない</li>
-          <li>売上の一部を支援へ</li>
-          <li>個人・企業・店舗が参加しやすい</li>
-        </ul>
-      </div>
-      <div class="split-card muted">
-        <span class="split-tag">NPO / FOUNDATION / 寄附型</span>
-        <h3>返礼なしの寄附窓口</h3>
-        <ul>
-          <li>返礼なし</li>
-          <li>寄附金受領証明の発行</li>
-          <li>将来的な寄附控除導線</li>
-          <li>大口寄附・企業寄附に対応</li>
-          <li>使途を公開</li>
-        </ul>
-      </div>
-    </div>
-    <p class="split-note">※ 寄附控除のお手続きやご相談を希望される方には、別途、提携NPO・公益財団の寄附窓口をご案内します。Care Support Pass の会費とは別の口になります。</p>
-  </div>
-</section>
-
-<!-- ============ STORE & CORPORATE ============ -->
-<section class="dual-section">
-  <div class="dual-row">
-    <div id="store">
-      <span class="eyebrow">For Partner Stores</span>
-      <h2>地域のお店が、<br>支援の入口になる。</h2>
-      <p class="lead">Care Support Pass の提携店になることで、地域貢献と集客を同時に実現できます。空き時間の集客、介護家族層へのリーチ、店舗独自クーポンの自由設計が可能です。</p>
-      <ul class="merits">
-        <li>地域貢献を見える化できる</li>
-        <li>高齢者家族層に届く</li>
-        <li>介護職員・支援者への認知が広がる</li>
-        <li>空き時間・平日昼間の集客につながる</li>
-        <li>店舗独自のクーポンを出せる</li>
-        <li>NPO・公益財団の支援ネットワークに参加</li>
-      </ul>
-      <div class="partner-plans">
-        <div class="partner-plan">
-          <div class="pn">FREE PARTNER</div>
-          <div class="pp">¥0 / 月</div>
-          <p class="pd">クーポン提供のみ・店舗掲載</p>
-        </div>
-        <div class="partner-plan">
-          <div class="pn">LOCAL PARTNER</div>
-          <div class="pp">¥3,000 / 月</div>
-          <p class="pd">店舗紹介ページ・優先掲載</p>
-        </div>
-        <div class="partner-plan">
-          <div class="pn">CARE PARTNER</div>
-          <div class="pp">¥10,000 / 月</div>
-          <p class="pd">重点掲載・地域協力店バッジ</p>
-        </div>
-        <div class="partner-plan">
-          <div class="pn">SPONSOR</div>
-          <div class="pp">¥30,000〜 / 月</div>
-          <p class="pd">特集掲載・CSR枠連動</p>
-        </div>
-      </div>
-      <button class="btn primary large" onclick="goTab('store');go('apply')">提携店として参加する</button>
-    </div>
-    <div id="corporate">
-      <span class="eyebrow">For Corporate</span>
-      <h2>社員1人あたり月100円の、<br>介護離職対策。</h2>
-      <p class="lead">Care Support Pass を福利厚生として導入することで、社員の親介護不安と、地域高齢者支援を同時に支えます。CSR・ESG文脈でも説明しやすい新しい福利厚生の形です。</p>
-      <ul class="merits">
-        <li>社員の親介護不安を軽減</li>
-        <li>福利厚生として導入しやすい</li>
-        <li>社員に提携店優待を提供</li>
-        <li>介護離職対策になる</li>
-        <li>CSR / ESG として説明しやすい</li>
-        <li>NPO・公益財団への寄附導線も作れる</li>
-      </ul>
-      <div class="price-row">
-        <div class="pr"><div class="lbl">社員 100名</div><div class="val">¥10,000 / 月</div></div>
-        <div class="pr"><div class="lbl">社員 500名</div><div class="val">¥50,000 / 月</div></div>
-        <div class="pr"><div class="lbl">社員 1,000名</div><div class="val">¥100,000 / 月</div></div>
-        <div class="pr"><div class="lbl">社員 10,000名</div><div class="val">¥1,000,000 / 月</div></div>
-      </div>
-      <button class="btn primary large" onclick="goTab('corp');go('apply')">法人導入を相談する</button>
+      <a class="aud-card facility" href="/facilities.html">
+        <div class="aud-num">03</div>
+        <div class="aud-label">FOR FACILITIES</div>
+        <h3>介護施設として加盟する</h3>
+        <p>土地建物を所有しない介護運営会社向け。月次活動報告を義務化した、透明性のある支援制度。</p>
+        <span class="aud-cta">介護施設の方へ <span class="aud-arrow">→</span></span>
+      </a>
     </div>
   </div>
 </section>
@@ -2252,22 +1759,6 @@ section[id]{scroll-margin-top:80px}
   </div>
 </section>
 
-<!-- ============ CLOSING ============ -->
-<section class="closing">
-  <div class="closing-in">
-    <span class="eyebrow">Why Care Support Pass</span>
-    <h2>誰かを助けるだけの仕組みではありません。</h2>
-    <p>支援は、我慢では続かない。<br>だから、<b>支援する人にも、地域のお店にも、参加する理由がある仕組み</b>にする。</p>
-    <p>生活が少し得になる。<br>地域のお店に人が流れる。<br>その一部で、先輩世代の住まいが守られる。</p>
-    <p>Care Support Pass は、<br><b>親を守ること。</b><br><b>未来の自分を守ること。</b><br>そして、日本を支えてきた人たちへの感謝を、<br>見える形で循環させる仕組みです。</p>
-    <p class="final">100円から、社会の支え方を変える。<br>それが Care Support Pass です。</p>
-    <div class="closing-cta">
-      <button class="btn primary large" onclick="go('apply')">月100円で参加する</button>
-      <button class="btn large" onclick="goTab('store')">店舗・企業として参加する</button>
-    </div>
-  </div>
-</section>
-
 <!-- ============ APPLICATION FORM ============ -->
 <section id="apply" class="form-section">
   <img src="/assets/images/deco-blob.png" alt="" class="apply-deco" aria-hidden="true">
@@ -2275,12 +1766,7 @@ section[id]{scroll-margin-top:80px}
     <div class="section-head center">
       <span class="eyebrow">Sign Up</span>
       <h2 class="section-title">参加のお申し込み</h2>
-      <p class="section-lead">ご希望のお申し込み区分を選択してください。</p>
-    </div>
-    <div class="form-tabs">
-      <button class="form-tab active" data-tab="individual" onclick="switchTab('individual')">個人会員</button>
-      <button class="form-tab" data-tab="store" onclick="switchTab('store')">店舗</button>
-      <button class="form-tab" data-tab="corp" onclick="switchTab('corp')">法人</button>
+      <p class="section-lead">個人会員として、月100円から参加できます。<br>店舗・法人・介護施設の方は、それぞれのページからお申し込みください。</p>
     </div>
 
     <!-- INDIVIDUAL -->
@@ -2349,72 +1835,26 @@ section[id]{scroll-margin-top:80px}
       </div>
     </div>
 
-    <!-- STORE -->
-    <div class="form-panel" id="panel-store">
-      <div class="form-card">
-        <h3>提携店としてのお申し込み</h3>
-        <p class="form-desc">地域貢献と集客を同時に実現する、Care Support Pass の提携店ネットワークにご参加ください。</p>
-        <div class="form-grid-2">
-          <div class="form-row"><label>店舗名<span class="req">必須</span></label><input type="text" placeholder="例：○○食堂"></div>
-          <div class="form-row"><label>業種<span class="req">必須</span></label>
-            <select><option>飲食店</option><option>薬局・ドラッグストア</option><option>配食・買い物代行</option><option>タクシー・移送</option><option>理美容</option><option>家財整理・住まい関連</option><option>その他</option></select>
-          </div>
-        </div>
-        <div class="form-row"><label>所在地<span class="req">必須</span></label><input type="text" placeholder="東京都○○区○○ 1-2-3"></div>
-        <div class="form-grid-2">
-          <div class="form-row"><label>担当者名<span class="req">必須</span></label><input type="text"></div>
-          <div class="form-row"><label>電話<span class="req">必須</span></label><input type="tel"></div>
-        </div>
-        <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email"></div>
-        <div class="form-row"><label>提供できる優待内容<span class="opt">任意</span></label><textarea placeholder="例：平日ランチ150円OFF、紙おむつ5%OFF など"></textarea></div>
-        <div class="form-row">
-          <label>掲載希望プラン<span class="req">必須</span></label>
-          <select>
-            <option>Free Partner（月0円）</option>
-            <option>Local Partner（月3,000円）</option>
-            <option>Care Partner（月10,000円）</option>
-            <option>Sponsor Partner（月30,000円〜）</option>
-          </select>
-        </div>
-        <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea></textarea></div>
-        <button type="button" class="btn primary large" style="width:100%" onclick="window.location.href='/thanks.html?type=store'">提携店として申し込む</button>
+    <!-- 店舗・法人・介護施設は別ページへ誘導 -->
+    <div class="apply-other-routes">
+      <div class="aor-head">
+        <span class="aor-eyebrow">For Stores · Companies · Facilities</span>
+        <h3>店舗・法人・介護施設の方は<br>専用ページからお申し込みください。</h3>
+      </div>
+      <div class="aor-grid">
+        <a class="aor-card" href="/partners.html">
+          <div class="aor-num">→</div>
+          <h4>協力会社の方</h4>
+          <p>飲食・薬局・配食・タクシー等の事業者向け。販促費を地域貢献に変える参加プラン。</p>
+        </a>
+        <a class="aor-card" href="/facilities.html">
+          <div class="aor-num">→</div>
+          <h4>介護施設の方</h4>
+          <p>土地建物を所有しない介護運営会社向け。月次活動報告を義務化した透明な制度。</p>
+        </a>
       </div>
     </div>
 
-    <!-- CORP -->
-    <div class="form-panel" id="panel-corp">
-      <div class="form-card">
-        <h3>法人導入のご相談</h3>
-        <p class="form-desc">福利厚生・CSR・寄附等の枠組みでの導入をご検討いただけます。担当者よりご連絡いたします。</p>
-        <div class="form-grid-2">
-          <div class="form-row"><label>会社名<span class="req">必須</span></label><input type="text"></div>
-          <div class="form-row"><label>担当者名<span class="req">必須</span></label><input type="text"></div>
-        </div>
-        <div class="form-grid-2">
-          <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email"></div>
-          <div class="form-row"><label>電話<span class="opt">任意</span></label><input type="tel"></div>
-        </div>
-        <div class="form-grid-2">
-          <div class="form-row"><label>社員数<span class="req">必須</span></label>
-            <select><option>〜50名</option><option>51〜100名</option><option>101〜500名</option><option>501〜1,000名</option><option>1,001〜10,000名</option><option>10,001名以上</option></select>
-          </div>
-          <div class="form-row"><label>導入希望時期<span class="opt">任意</span></label>
-            <select><option>すぐに</option><option>3ヶ月以内</option><option>半年以内</option><option>1年以内</option><option>未定</option></select>
-          </div>
-        </div>
-        <div class="form-row">
-          <label>ご相談内容<span class="req">必須</span></label>
-          <select>
-            <option>福利厚生としての導入</option>
-            <option>CSR / ESG 文脈での導入</option>
-            <option>NPO・公益財団への寄附相談</option>
-            <option>複合的に相談したい</option>
-          </select>
-        </div>
-        <div class="form-row"><label>備考<span class="opt">任意</span></label><textarea placeholder="ご検討中の背景・課題などをご記入ください"></textarea></div>
-        <button type="button" class="btn primary large" style="width:100%" onclick="window.location.href='/thanks.html?type=corp'">法人導入を相談する</button>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -2426,22 +1866,18 @@ section[id]{scroll-margin-top:80px}
         <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"><img src="/assets/images/logo-symbol.png" alt="" class="footer-symbol" aria-hidden="true"></div>
         <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
       </div>
-      <div class="footer-col">
+            <div class="footer-col">
         <h5>Service</h5>
-        <a href="#mechanism">仕組み</a>
-        <a href="#plans">プラン</a>
-        <a href="#coupons">優待例</a>
-        <a href="#targets">支援先</a>
-        <a href="#reporting">月次活動報告</a>
+        <a href="/#statement">コンセプト</a>
+        <a href="/#how">仕組み</a>
+        <a href="/#pension">年金余白</a>
+        <a href="/concept.html">詳しい理念</a>
       </div>
-      <div class="footer-col">
+            <div class="footer-col">
         <h5>For Partners</h5>
-        <a href="/partners.html">協力会社の方</a>
-        <a href="#eligibility">加盟施設</a>
-        <a href="#store">店舗の方</a>
-        <a href="#corporate">法人の方</a>
-        <a href="#split">NPO・公益財団</a>
-        <a href="https://tamjump.com/" target="_blank" rel="noopener">運営について</a>
+        <a href="/partners.html">協力会社の方へ</a>
+        <a href="/facilities.html">介護施設の方へ</a>
+        <a href="https://tamjump.com/" target="_blank" rel="noopener">運営会社について</a>
       </div>
       <div class="footer-col">
         <h5>Support</h5>
@@ -2468,14 +1904,6 @@ section[id]{scroll-margin-top:80px}
 function go(id){
   const el=document.getElementById(id);
   if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-}
-function switchTab(name){
-  document.querySelectorAll('.form-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
-  document.querySelectorAll('.form-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
-}
-function goTab(name){
-  switchTab(name);
-  setTimeout(()=>go('apply'),50);
 }
 </script>
 </body>
