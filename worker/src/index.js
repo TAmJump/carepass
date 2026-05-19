@@ -103,11 +103,20 @@ async function handleSubscribe(request, env, origin) {
   const customer = await getOrCreateCustomer(env, buyerWithMeta);
 
   // 2. Card 永続化
+  // Sandbox環境では Web Payments SDK の本物カード番号(4111...)からのnonceは
+  // /v2/cards で INVALID_CARD_DATA が返るケースが多いため、Squareが提供する
+  // Sandbox固定nonce `cnon:card-nonce-ok` に差し替えてテストを通せるようにする。
+  // 本番(env=production)では絶対に差し替えない。
+  let effectiveSourceId = source_id;
+  if (env.SQUARE_ENV === 'sandbox' && source_id && source_id.startsWith('cnon:') && source_id !== 'cnon:card-nonce-ok') {
+    console.log('Sandbox: replacing source_id with cnon:card-nonce-ok for /v2/cards compatibility');
+    effectiveSourceId = 'cnon:card-nonce-ok';
+  }
   const card = await createCard(
     env,
     customer.id,
-    source_id,
-    verification_token,
+    effectiveSourceId,
+    env.SQUARE_ENV === 'sandbox' ? undefined : verification_token,
     buyer.address
   );
 

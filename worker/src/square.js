@@ -77,22 +77,26 @@ export async function getOrCreateCustomer(env, buyer) {
 // --- Cards ---
 
 export async function createCard(env, customerId, sourceId, verificationToken, billingAddress) {
+  // billing_address: undefined/null は省略。空オブジェクトもSquareが嫌うので除去。
+  const cleanedAddress = billingAddress && Object.keys(billingAddress).some(k => billingAddress[k])
+    ? Object.fromEntries(Object.entries(billingAddress).filter(([_, v]) => v))
+    : undefined;
   const body = {
     idempotency_key: uuid(),
     source_id: sourceId,
-    verification_token: verificationToken,
+    ...(verificationToken ? { verification_token: verificationToken } : {}),
     card: {
       customer_id: customerId,
-      billing_address: billingAddress,
+      ...(cleanedAddress ? { billing_address: cleanedAddress } : {}),
     },
   };
   console.log('createCard payload:', JSON.stringify({
     source_id_len: sourceId?.length,
-    source_id_prefix: sourceId?.slice(0, 8),
+    source_id_prefix: sourceId?.slice(0, 16),
     has_verification_token: !!verificationToken,
     verification_token_len: verificationToken?.length,
     customer_id: customerId,
-    billing_address: billingAddress,
+    billing_address: cleanedAddress,
   }));
   const res = await sq(env, 'POST', '/v2/cards', body);
   return res.card;
