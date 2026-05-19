@@ -37,3 +37,6 @@ scripts/plans.json
 
 # Local preview files
 _local_*.html
+
+# Internal handover document (not for public repo)
+HANDOVER.md
