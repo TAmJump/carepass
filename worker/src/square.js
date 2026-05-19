@@ -86,6 +86,14 @@ export async function createCard(env, customerId, sourceId, verificationToken, b
       billing_address: billingAddress,
     },
   };
+  console.log('createCard payload:', JSON.stringify({
+    source_id_len: sourceId?.length,
+    source_id_prefix: sourceId?.slice(0, 8),
+    has_verification_token: !!verificationToken,
+    verification_token_len: verificationToken?.length,
+    customer_id: customerId,
+    billing_address: billingAddress,
+  }));
   const res = await sq(env, 'POST', '/v2/cards', body);
   return res.card;
 }
