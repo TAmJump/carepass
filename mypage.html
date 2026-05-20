@@ -216,8 +216,29 @@
         それ以前にお支払い済みの月分について、日割りでの返金はございません。
       </p>
       <div id="cancel-msg"></div>
-      <div class="btn-row">
-        <button class="btn danger" id="cancel-btn">退会する</button>
+
+      <!-- ステップ1: 退会の意思表示 -->
+      <div class="btn-row" id="cancel-step1">
+        <button class="btn danger" id="cancel-start-btn">退会する</button>
+      </div>
+
+      <!-- ステップ2: 申込番号入力で本人確認 (誤操作防止) -->
+      <div id="cancel-step2" class="hidden" style="margin-top:18px;padding:18px;background:#FFFBFB;border:1px solid #FECACA;border-radius:12px">
+        <p style="font-size:13px;color:#991B1B;margin:0 0 14px;line-height:1.8;font-weight:600">
+          確認のため、お申し込み番号をご入力ください。
+        </p>
+        <p style="font-size:12px;color:var(--sub);margin:0 0 14px;line-height:1.7">
+          上の「ご契約状況」に表示されている <strong>お申し込み番号</strong> を<br>
+          コピー＆ペーストでこちらに貼り付けてください。誤操作防止のため、<br>
+          完全一致した場合のみ退会が確定します。
+        </p>
+        <div class="field">
+          <input type="text" id="cancel-confirm-sid" placeholder="お申し込み番号を入力" autocomplete="off" spellcheck="false" style="font-family:'SF Mono','Roboto Mono',monospace;font-size:12px">
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="cancel-abort-btn" type="button">キャンセル</button>
+          <button class="btn danger" id="cancel-btn">退会を確定する</button>
+        </div>
       </div>
     </section>
 
@@ -334,6 +355,7 @@ function errorMsgFor(err) {
     case 'token_expired': return 'ログインリンクの有効期限が切れました。再度ご請求ください。';
     case 'token_already_used': return 'このログインリンクは既に使用されました。再度ご請求ください。';
     case 'unauthorized': return 'セッションの有効期限が切れました。再度ログインしてください。';
+    case 'subscription_id_mismatch': return 'お申し込み番号が一致しません。「ご契約状況」に表示されている番号をそのままコピーして貼り付けてください。';
     case 'subscription_not_found': return 'お申し込み情報が見つかりませんでした。';
     case 'db_not_configured': return 'システム準備中です。お手数ですが時間をおいて再度お試しください。';
     case 'internal_error': return 'サーバーエラーが発生しました。時間をおいて再度お試しください。';
@@ -527,24 +549,61 @@ $('change-btn').addEventListener('click', async () => {
   }
 });
 
-// === Cancel ===
+// === Cancel (2段階: 退会する → 申込番号入力 → 退会を確定する) ===
+
+// ステップ1: 「退会する」ボタン → 申込番号入力欄を表示
+$('cancel-start-btn').addEventListener('click', () => {
+  showMsg('cancel-msg', '', 'info');
+  $('cancel-step1').classList.add('hidden');
+  $('cancel-step2').classList.remove('hidden');
+  $('cancel-confirm-sid').value = '';
+  setTimeout(() => $('cancel-confirm-sid').focus(), 50);
+});
+
+// 「キャンセル」: ステップ2を閉じてステップ1に戻る
+$('cancel-abort-btn').addEventListener('click', () => {
+  $('cancel-step2').classList.add('hidden');
+  $('cancel-step1').classList.remove('hidden');
+  $('cancel-confirm-sid').value = '';
+  showMsg('cancel-msg', '', 'info');
+});
+
+// ステップ2: 「退会を確定する」: 申込番号一致チェック → 退会実行
 $('cancel-btn').addEventListener('click', async () => {
   showMsg('cancel-msg', '', 'info');
+
+  // 入力値と表示中の subscription_id を完全一致で照合
+  const entered = ($('cancel-confirm-sid').value || '').trim();
+  if (!entered) {
+    showMsg('cancel-msg', 'お申し込み番号を入力してください。', 'error');
+    $('cancel-confirm-sid').focus();
+    return;
+  }
+  if (entered !== (currentSubId || '')) {
+    showMsg('cancel-msg', 'お申し込み番号が一致しません。「ご契約状況」に表示されている番号をそのままコピーして貼り付けてください。', 'error');
+    $('cancel-confirm-sid').focus();
+    $('cancel-confirm-sid').select();
+    return;
+  }
+
   const cancelEffStr = currentNextBillingDate ? fmtDate(currentNextBillingDate) : '次回課金日';
   if (!confirm(
     `本当に退会しますか？\n\n`
     + `次回のご決済 (${cancelEffStr}) を最後に自動課金が停止します。\n`
     + `それ以前にお支払い済みの分について、日割り返金はありません。`
   )) return;
+
   setLoading('cancel-btn', true);
   try {
     let r;
     if (isSessionLogin) {
-      r = await apiPost('/api/me/cancel', {});
+      // セッション認証経路: subscription_id をフロントでも照合済だがサーバー側にも送って二重チェック
+      r = await apiPost('/api/me/cancel', { confirm_subscription_id: entered });
     } else {
       r = await apiPost('/api/cancel', {
         subscription_id: currentSubId,
         email: currentEmail,
+        confirm_subscription_id: entered,
       });
     }
     if (!r.ok) {
@@ -552,8 +611,10 @@ $('cancel-btn').addEventListener('click', async () => {
       return;
     }
     showMsg('cancel-msg', `退会手続きが完了しました。解約予定日: ${fmtDate(r.data.canceled_date)}。ご利用ありがとうございました。`, 'success');
+    // 退会完了後 UI を畳む
     $('change-card').classList.add('hidden');
-    $('cancel-btn').disabled = true;
+    $('cancel-step2').classList.add('hidden');
+    $('cancel-step1').classList.add('hidden');
     const badge = $('info-status');
     badge.textContent = '解約済み';
     badge.className = 'status-badge canceled';

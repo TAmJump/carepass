@@ -326,6 +326,11 @@ async function handleCancel(request, env, origin) {
   if (!subscription_id || !email) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
+  // フロントから confirm_subscription_id (退会時の追加認証) が送られていれば一致確認
+  if (body.confirm_subscription_id !== undefined &&
+      body.confirm_subscription_id !== subscription_id) {
+    return jsonResponse({ error: 'subscription_id_mismatch' }, 400, env, origin);
+  }
   const auth = await authBySubAndEmail(env, subscription_id, email);
   if (auth.error) return jsonResponse({ error: auth.error }, auth.status, env, origin);
   const canceled = await cancelSubscription(env, subscription_id);
@@ -578,9 +583,16 @@ async function handleMeChangeFacility(request, env, origin) {
 async function handleMeCancel(request, env, origin) {
   const auth = await requireAuth(env, request, jsonResponse, origin);
   if (!auth.ok) return auth.response;
+  const body = await request.json().catch(() => ({}));
   const member = await env.DB.prepare('SELECT * FROM members WHERE account_id = ? LIMIT 1')
     .bind(auth.account.id).first();
   if (!member) return jsonResponse({ error: 'no_membership' }, 404, env, origin);
+
+  // フロントから confirm_subscription_id (退会時の追加認証) が送られていれば一致確認
+  if (body && body.confirm_subscription_id !== undefined &&
+      body.confirm_subscription_id !== member.square_subscription_id) {
+    return jsonResponse({ error: 'subscription_id_mismatch' }, 400, env, origin);
+  }
 
   const canceled = await cancelSubscription(env, member.square_subscription_id);
   // 解約完了メール
