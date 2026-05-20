@@ -222,8 +222,29 @@
       <div class="btn-row">
         <button class="btn primary" id="magic-btn">ログインリンクを送る</button>
       </div>
-      <p class="alt-mode-link">
+      <p class="alt-mode-link" style="margin-top:18px">
+        パスワードをお持ちの方は <a id="show-password-link">パスワードでログイン</a> /
         申込番号でログインする場合は <a id="show-legacy-link">こちら</a>
+      </p>
+    </section>
+
+    <!-- ログインフォーム (パスワード, デモ・管理者用) -->
+    <section class="card hidden" id="password-card">
+      <h2>パスワードでログイン</h2>
+      <div id="password-msg"></div>
+      <div class="field">
+        <label for="pw-email">メールアドレス</label>
+        <input type="email" id="pw-email" placeholder="example@email.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="pw-password">パスワード</label>
+        <input type="password" id="pw-password" placeholder="パスワード" autocomplete="current-password">
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="pw-btn">ログイン</button>
+      </div>
+      <p class="alt-mode-link">
+        メールでログインする場合は <a id="show-magic-from-pw-link">こちら</a>
       </p>
     </section>
 
@@ -663,12 +684,14 @@ function showLoggedInState() {
   // ログインフォームを隠してログアウトボタン表示
   $('magic-card').classList.add('hidden');
   $('legacy-card').classList.add('hidden');
+  $('password-card').classList.add('hidden');
   $('logout-row').classList.remove('hidden');
 }
 
 function showLoggedOutState() {
   $('magic-card').classList.remove('hidden');
   $('legacy-card').classList.add('hidden');
+  $('password-card').classList.add('hidden');
   $('logout-row').classList.add('hidden');
   $('info-card').classList.add('hidden');
   $('change-card').classList.add('hidden');
@@ -683,12 +706,58 @@ function showLoggedOutState() {
 // === モード切替 ===
 $('show-legacy-link').addEventListener('click', () => {
   $('magic-card').classList.add('hidden');
+  $('password-card').classList.add('hidden');
   $('legacy-card').classList.remove('hidden');
 });
 $('show-magic-link').addEventListener('click', () => {
   $('legacy-card').classList.add('hidden');
+  $('password-card').classList.add('hidden');
   $('magic-card').classList.remove('hidden');
 });
+$('show-password-link').addEventListener('click', () => {
+  $('magic-card').classList.add('hidden');
+  $('legacy-card').classList.add('hidden');
+  $('password-card').classList.remove('hidden');
+  // メアドが入力済なら引き継ぐ
+  const e = $('magic-email').value.trim();
+  if (e && !$('pw-email').value) $('pw-email').value = e;
+});
+$('show-magic-from-pw-link').addEventListener('click', () => {
+  $('password-card').classList.add('hidden');
+  $('magic-card').classList.remove('hidden');
+});
+
+// === パスワードログイン ===
+$('pw-btn').addEventListener('click', doPasswordLogin);
+$('pw-password').addEventListener('keydown', (e) => { if (e.key === 'Enter') doPasswordLogin(); });
+async function doPasswordLogin() {
+  showMsg('password-msg', '', 'info');
+  const email = $('pw-email').value.trim();
+  const password = $('pw-password').value;
+  if (!email || !password) {
+    showMsg('password-msg', 'メールアドレスとパスワードを入力してください。', 'error');
+    return;
+  }
+  setLoading('pw-btn', true);
+  try {
+    const r = await apiPost('/api/auth/password-login', { email, password });
+    if (!r.ok) {
+      const msg = r.data?.error === 'invalid_credentials'
+        ? 'メールアドレスまたはパスワードが正しくありません。'
+        : r.data?.error === 'account_suspended'
+          ? 'このアカウントは停止されています。'
+          : ('ログインに失敗しました: ' + (r.data?.error || ''));
+      showMsg('password-msg', msg, 'error');
+      return;
+    }
+    // ログイン成功 → セッション開始済。ロール別リダイレクトは init() に任せて再読込
+    location.href = '/mypage.html';
+  } catch (e) {
+    showMsg('password-msg', 'ネットワークエラーが発生しました。', 'error');
+  } finally {
+    setLoading('pw-btn', false);
+  }
+}
 
 // === マジックリンク送信 ===
 $('magic-btn').addEventListener('click', async () => {

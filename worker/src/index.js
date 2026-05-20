@@ -56,6 +56,7 @@ import {
   recordWebhookEvent,
   markWebhookProcessed,
   grantPublishedCouponsToMember,
+  verifyPassword,
 } from './db.js';
 import {
   SESSION_COOKIE_NAME,
@@ -147,6 +148,9 @@ export default {
       }
       if (path === '/api/auth/verify-magic-link' && request.method === 'GET') {
         return await handleVerifyMagicLink(request, env, origin, url);
+      }
+      if (path === '/api/auth/password-login' && request.method === 'POST') {
+        return await handlePasswordLogin(request, env, origin);
       }
       if (path === '/api/auth/logout' && request.method === 'POST') {
         return await handleLogout(request, env, origin);
@@ -638,6 +642,43 @@ async function handleVerifyMagicLink(request, env, origin, url) {
   const { id: sid, expires_at } = await createSession(env, result.account.id, 30);
   const cookie = buildSessionCookie(sid, expires_at);
   return redirectResponse(next, env, origin, { 'Set-Cookie': cookie });
+}
+
+// =====================================================================
+// パスワード認証 (営業デモ用、本番の個人会員は使わない)
+// =====================================================================
+//   body: { email, password }
+//   accounts.password_hash が pbkdf2$... 形式で格納されていれば検証して
+//   セッション発行する。マジックリンクと併存。
+async function handlePasswordLogin(request, env, origin) {
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const body = await request.json().catch(() => null);
+  if (!body || !body.email || !body.password) {
+    return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  }
+  const account = await findAccountByEmail(env, String(body.email).trim());
+  if (!account || !account.password_hash) {
+    // メアドの存在を晒さないため、両ケース同じエラー
+    return jsonResponse({ error: 'invalid_credentials' }, 401, env, origin);
+  }
+  const ok = await verifyPassword(body.password, account.password_hash);
+  if (!ok) {
+    return jsonResponse({ error: 'invalid_credentials' }, 401, env, origin);
+  }
+  if (account.status === 'suspended') {
+    return jsonResponse({ error: 'account_suspended' }, 403, env, origin);
+  }
+  const { id: sid, expires_at } = await createSession(env, account.id, 30);
+  const cookie = buildSessionCookie(sid, expires_at);
+  return jsonResponse({
+    ok: true,
+    account: {
+      id: account.id,
+      email: account.email,
+      role: account.role,
+      display_name: account.display_name,
+    },
+  }, 200, env, origin, { 'Set-Cookie': cookie });
 }
 
 async function handleLogout(request, env, origin) {

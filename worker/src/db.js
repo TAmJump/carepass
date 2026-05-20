@@ -34,6 +34,65 @@ export function isoDaysFromNow(days) {
 }
 
 // =====================================================================
+// パスワード検証 (PBKDF2-SHA256)
+// =====================================================================
+//
+// 格納フォーマット: `pbkdf2$<iter>$<salt_hex>$<hash_hex>`
+//   iter      : 反復回数 (例: 100000)
+//   salt_hex  : 16 byte (32 hex chars)
+//   hash_hex  : 32 byte (64 hex chars)
+//
+// node でハッシュ生成:
+//   node -e "const c=require('crypto');const p=process.argv[1];
+//            const s=c.randomBytes(16);
+//            const h=c.pbkdf2Sync(p,s,100000,32,'sha256');
+//            console.log('pbkdf2\\$100000\\$'+s.toString('hex')+'\\$'+h.toString('hex'));" "PASSWORD"
+//
+// Cloudflare Workers の Web Crypto で同じ計算をして比較する。
+function hexToBytes(hex) {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  return bytes;
+}
+function bytesToHex(buf) {
+  return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2, '0')).join('');
+}
+// 定数時間比較 (timing-safe)
+function timingSafeEqualHex(a, b) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+export async function verifyPassword(plain, storedHash) {
+  if (!plain || !storedHash) return false;
+  const parts = String(storedHash).split('$');
+  if (parts.length !== 4 || parts[0] !== 'pbkdf2') return false;
+  const iter = parseInt(parts[1], 10);
+  const saltHex = parts[2];
+  const expectedHex = parts[3];
+  if (!iter || !saltHex || !expectedHex) return false;
+
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', enc.encode(plain), 'PBKDF2', false, ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: hexToBytes(saltHex),
+      iterations: iter,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    expectedHex.length * 4, // 32byte = 256bit (1 hex char = 4 bit)
+  );
+  const actualHex = bytesToHex(bits);
+  return timingSafeEqualHex(actualHex, expectedHex);
+}
+
+// =====================================================================
 // accounts
 // =====================================================================
 
