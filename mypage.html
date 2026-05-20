@@ -122,17 +122,69 @@
 }
 .qr-modal .close-btn:hover{background:#ebebeb}
 
-/* === Reports === */
-.reports-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.report-link{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 14px;border:1px solid var(--line);border-radius:10px;
-  font-size:13px;color:var(--ink);text-decoration:none;background:#fafafa;
-  transition:background .15s ease;
+/* === Reports (facility card style) === */
+.facility-report-card{
+  margin-top:14px;padding:18px 20px;
+  border:1px solid var(--line);border-radius:12px;
+  background:linear-gradient(135deg, #FBFAF7 0%, #F4F2EC 100%);
+  display:flex;flex-direction:column;gap:14px;
 }
-.report-link:hover{background:#f0f0f0}
-.report-link .period{font-weight:600}
-.report-link .external{font-size:11px;color:var(--sub)}
+.facility-report-card .frc-head{
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;color:var(--sub);letter-spacing:.08em;
+  text-transform:uppercase;font-weight:600;
+}
+.facility-report-card .frc-head::before{
+  content:"";display:inline-block;width:6px;height:6px;
+  background:var(--accent);border-radius:50%;
+}
+.facility-report-card .frc-name{
+  font-size:18px;font-weight:700;color:var(--ink);
+  line-height:1.4;
+}
+.facility-report-card .frc-meta{
+  display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--sub);
+}
+.facility-report-card .frc-meta-pill{
+  padding:3px 9px;border-radius:999px;background:#fff;
+  border:1px solid var(--line);
+}
+.facility-report-card .frc-cta{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 18px;margin-top:4px;
+  background:var(--ink);color:#fff;border-radius:10px;
+  text-decoration:none;font-weight:600;font-size:14px;
+  transition:transform .15s ease, background .15s ease;
+}
+.facility-report-card .frc-cta:hover{
+  background:#000;transform:translateY(-1px);
+}
+.facility-report-card .frc-cta-label{display:flex;flex-direction:column;gap:2px}
+.facility-report-card .frc-cta-period{font-size:11px;opacity:.7;font-weight:500;letter-spacing:.04em}
+.facility-report-card .frc-cta-arrow{font-size:18px;opacity:.8}
+.facility-report-card .frc-sub{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--sub);
+}
+.facility-report-card .frc-sub a{
+  color:var(--accent);text-decoration:none;font-weight:600;
+}
+.facility-report-card .frc-sub a:hover{text-decoration:underline}
+
+/* === Password reveal toggle === */
+.pw-wrap{position:relative;display:block}
+.pw-wrap input{padding-right:48px !important}
+.pw-reveal{
+  position:absolute;top:50%;right:6px;transform:translateY(-50%);
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;border-radius:8px;cursor:pointer;
+  color:var(--sub);transition:color .15s ease, background .15s ease;
+  padding:0;
+}
+.pw-reveal:hover{color:var(--accent);background:rgba(0,0,0,.04)}
+.pw-reveal:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.pw-reveal svg{display:block}
+.pw-reveal .hidden{display:none}
 .btn-row{display:flex;gap:12px;flex-wrap:wrap}
 .btn-row .btn{flex:1;min-width:140px}
 .status-row{
@@ -237,7 +289,13 @@
       </div>
       <div class="field">
         <label for="pw-password">パスワード</label>
-        <input type="password" id="pw-password" placeholder="パスワード" autocomplete="current-password">
+        <div class="pw-wrap">
+          <input type="password" id="pw-password" placeholder="パスワード" autocomplete="current-password">
+          <button type="button" class="pw-reveal" data-pw-target="pw-password" aria-label="パスワードを表示する" aria-pressed="false">
+            <svg class="pw-icon-show" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="pw-icon-hide hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
       </div>
       <div class="btn-row">
         <button class="btn primary" id="pw-btn">ログイン</button>
@@ -262,9 +320,23 @@
       <div class="status-row"><span class="k">開始日</span><span class="v" id="info-start"></span></div>
       <div class="status-row"><span class="k">次回課金日</span><span class="v" id="info-next"></span></div>
       <div class="status-row"><span class="k">現在の支援先</span><span class="v" id="info-facility" style="color:var(--accent);font-weight:600"></span></div>
-      <div id="info-reports" class="hidden" style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)">
-        <div style="font-size:12px;font-weight:600;color:var(--sub);margin-bottom:8px;letter-spacing:.02em">支援先からの月次活動報告</div>
-        <div class="reports-list" id="info-reports-list"></div>
+      <div id="info-reports" class="hidden" style="margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)">
+        <div class="facility-report-card" id="info-facility-report-card">
+          <div class="frc-head">支援先からの月次活動報告</div>
+          <div class="frc-name" id="frc-name">—</div>
+          <div class="frc-meta" id="frc-meta"></div>
+          <a class="frc-cta" id="frc-cta-link" href="#" target="_blank" rel="noopener">
+            <span class="frc-cta-label">
+              <span class="frc-cta-period" id="frc-cta-period">—</span>
+              <span>最新の月次活動報告を読む</span>
+            </span>
+            <span class="frc-cta-arrow">↗</span>
+          </a>
+          <div class="frc-sub">
+            <span id="frc-sub-count">—</span>
+            <a id="frc-archive-link" href="#" target="_blank" rel="noopener">過去の月次報告 一覧 ↗</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -669,31 +741,57 @@ function closeQrModal() {
   loadCoupons();
 }
 
-// === 月次報告書 ===
+// === 月次報告書 (施設カード1個 + 最新月リンク) ===
 async function loadMyFacilityReports() {
   try {
     const r = await apiGet('/api/me/my-facility-reports');
     if (!r.ok || !r.data?.ok) return;
     const reports = r.data.reports || [];
-    if (reports.length === 0) {
+    const facility = r.data.facility || null;
+    if (!facility || reports.length === 0) {
       $('info-reports').classList.add('hidden');
       return;
     }
-    const list = $('info-reports-list');
-    list.innerHTML = '';
-    for (const rep of reports) {
-      const a = document.createElement('a');
-      a.className = 'report-link';
-      a.href = rep.url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.innerHTML = `<span class="period">${rep.period} の活動報告</span><span class="external">外部サイトを開く ↗</span>`;
-      list.appendChild(a);
+    // reports は period DESC で来る想定。先頭が最新月。
+    const latest = reports[0];
+    const archiveUrl = facility.report_base_url || (latest.url ? latest.url.replace(/\/[^/]+$/, '/') : '#');
+
+    // 施設名
+    $('frc-name').textContent = facility.name || '支援先施設';
+
+    // メタ(都道府県・カテゴリ・受付状況など、あれば)
+    const metaEl = $('frc-meta');
+    metaEl.innerHTML = '';
+    const pills = [];
+    if (facility.prefecture) pills.push(facility.prefecture);
+    if (facility.category) pills.push(facility.category);
+    for (const p of pills) {
+      const span = document.createElement('span');
+      span.className = 'frc-meta-pill';
+      span.textContent = p;
+      metaEl.appendChild(span);
     }
+
+    // 最新月リンク (例: "2026年5月の活動報告")
+    const periodLabel = formatPeriodJa(latest.period);
+    $('frc-cta-period').textContent = periodLabel;
+    $('frc-cta-link').href = latest.url;
+
+    // 副: 累計件数 + 一覧へのリンク
+    $('frc-sub-count').textContent = `公開済 ${reports.length} ヶ月分`;
+    $('frc-archive-link').href = archiveUrl;
+
     $('info-reports').classList.remove('hidden');
   } catch (e) {
     // 無視
   }
+}
+
+function formatPeriodJa(period) {
+  // "2026-05" → "2026年5月の活動報告"
+  const m = String(period || '').match(/^(\d{4})-(\d{2})$/);
+  if (!m) return `${period} の活動報告`;
+  return `${m[1]}年${parseInt(m[2], 10)}月の活動報告`;
 }
 
 function showLoggedInState() {
@@ -733,6 +831,27 @@ $('show-magic-from-pw-link').addEventListener('click', () => {
 // === パスワードログイン ===
 $('pw-btn').addEventListener('click', doPasswordLogin);
 $('pw-password').addEventListener('keydown', (e) => { if (e.key === 'Enter') doPasswordLogin(); });
+
+// パスワード表示/非表示トグル (ページ内全 .pw-reveal ボタンに有効)
+document.addEventListener('click', (ev) => {
+  const btn = ev.target.closest('.pw-reveal');
+  if (!btn) return;
+  ev.preventDefault();
+  const targetId = btn.getAttribute('data-pw-target');
+  const input = document.getElementById(targetId);
+  if (!input) return;
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+  btn.setAttribute('aria-pressed', String(!showing));
+  btn.setAttribute('aria-label', showing ? 'パスワードを表示する' : 'パスワードを隠す');
+  const iconShow = btn.querySelector('.pw-icon-show');
+  const iconHide = btn.querySelector('.pw-icon-hide');
+  if (iconShow && iconHide) {
+    iconShow.classList.toggle('hidden', !showing); // showing=true(現在text表示中)→次は隠す→showアイコンに戻す動作
+    iconHide.classList.toggle('hidden', showing);
+  }
+});
+
 async function doPasswordLogin() {
   showMsg('password-msg', '', 'info');
   const email = $('pw-email').value.trim();
