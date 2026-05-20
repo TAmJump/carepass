@@ -115,6 +115,44 @@ export async function findMemberBySubscriptionId(env, subId) {
 }
 
 // =====================================================================
+// member_coupons: 新規会員への自動配布
+// =====================================================================
+//
+// 「公開中 (status='published') かつ 有効期間内」のクーポンを、
+// その会員にまだ持たせていないものだけ 'available' で配布する。
+// 申込時 + クーポン公開時 (将来) の両方から呼べる冪等な実装。
+export async function grantPublishedCouponsToMember(env, accountId) {
+  const nowIsoStr = nowIso();
+  const candidates = await db(env)
+    .prepare(`
+      SELECT c.id FROM coupons c
+       WHERE c.status = 'published'
+         AND c.valid_from  <= ?
+         AND c.valid_until >= ?
+         AND NOT EXISTS (
+           SELECT 1 FROM member_coupons mc
+            WHERE mc.account_id = ? AND mc.coupon_id = c.id
+         )
+    `)
+    .bind(nowIsoStr, nowIsoStr, accountId)
+    .all();
+  const rows = candidates?.results || candidates || [];
+  let granted = 0;
+  for (const c of rows) {
+    try {
+      await db(env)
+        .prepare(`INSERT INTO member_coupons (id, account_id, coupon_id, state) VALUES (?, ?, ?, 'available')`)
+        .bind(uuid(), accountId, c.id)
+        .run();
+      granted++;
+    } catch (e) {
+      console.warn('[grantCoupons] insert failed for coupon', c.id, e.message);
+    }
+  }
+  return granted;
+}
+
+// =====================================================================
 // login_tokens (マジックリンク)
 // =====================================================================
 

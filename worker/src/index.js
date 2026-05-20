@@ -55,6 +55,7 @@ import {
   deleteSession,
   recordWebhookEvent,
   markWebhookProcessed,
+  grantPublishedCouponsToMember,
 } from './db.js';
 import {
   SESSION_COOKIE_NAME,
@@ -64,6 +65,34 @@ import {
   requireAuth,
 } from './auth.js';
 import { sendSubscribeWelcome, sendMagicLink, sendCancelConfirmation } from './mail.js';
+import {
+  listMemberCoupons,
+  reserveCoupon,
+  scanCoupon,
+  listScanHistory,
+  partnerDashboardStats,
+  listPartnerCoupons,
+  createPartnerCoupon,
+  updatePartnerCoupon,
+  deletePartnerCoupon,
+} from './coupons.js';
+import {
+  searchFacilitiesDirectory,
+  getFacilityWithReports,
+  listFacilityReports,
+  listMyFacilityReports,
+  getFacilityForAdminAccount,
+  updateFacilityProfile,
+  registerFacilityReport,
+  retractFacilityReport,
+  facilityDashboardStats,
+  facilitySupporters,
+  adminOverview,
+  adminListFacilities,
+  adminListPartners,
+  adminListMembers,
+  adminListReports,
+} from './facilities.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -135,6 +164,109 @@ export default {
       }
       if (path === '/api/me/cancel' && request.method === 'POST') {
         return await handleMeCancel(request, env, origin);
+      }
+
+      // --- 会員: クーポン / 月次報告書 (Phase 2 / 2.5) ---
+      if (path === '/api/me/coupons' && request.method === 'GET') {
+        return await handleMeCoupons(request, env, origin);
+      }
+      {
+        const m = path.match(/^\/api\/me\/coupons\/([^/]+)\/reserve$/);
+        if (m && request.method === 'POST') {
+          return await handleMeCouponReserve(request, env, origin, m[1]);
+        }
+      }
+      if (path === '/api/me/my-facility-reports' && request.method === 'GET') {
+        return await handleMeMyFacilityReports(request, env, origin);
+      }
+
+      // --- 公開: 施設ディレクトリ (Phase 2.5) ---
+      if (path === '/api/facilities/directory' && request.method === 'GET') {
+        return await handleFacilitiesDirectory(request, env, origin, url);
+      }
+      {
+        const m = path.match(/^\/api\/facilities\/([^/]+)\/reports$/);
+        if (m && request.method === 'GET') {
+          return await handleFacilityReportsPublic(request, env, origin, m[1]);
+        }
+      }
+      {
+        const m = path.match(/^\/api\/facilities\/([^/]+)$/);
+        if (m && request.method === 'GET') {
+          return await handleFacilityPublic(request, env, origin, m[1]);
+        }
+      }
+
+      // --- 施設管理者: ダッシュボード (Phase 3) ---
+      if (path === '/api/facility/me' && request.method === 'GET') {
+        return await handleFacilityMe(request, env, origin);
+      }
+      if (path === '/api/facility/dashboard' && request.method === 'GET') {
+        return await handleFacilityDashboard(request, env, origin);
+      }
+      if (path === '/api/facility/supporters' && request.method === 'GET') {
+        return await handleFacilitySupporters(request, env, origin);
+      }
+      if (path === '/api/facility/reports' && request.method === 'GET') {
+        return await handleFacilityReportsList(request, env, origin);
+      }
+      if (path === '/api/facility/reports/register' && request.method === 'POST') {
+        return await handleFacilityReportRegister(request, env, origin);
+      }
+      {
+        const m = path.match(/^\/api\/facility\/reports\/([^/]+)\/retract$/);
+        if (m && request.method === 'POST') {
+          return await handleFacilityReportRetract(request, env, origin, m[1]);
+        }
+      }
+      if (path === '/api/facility/profile' && (request.method === 'PUT' || request.method === 'POST')) {
+        return await handleFacilityProfileUpdate(request, env, origin);
+      }
+
+      // --- 企業: ダッシュボード (Phase 2-3) ---
+      if (path === '/api/partner/me' && request.method === 'GET') {
+        return await handlePartnerMe(request, env, origin);
+      }
+      if (path === '/api/partner/dashboard' && request.method === 'GET') {
+        return await handlePartnerDashboard(request, env, origin);
+      }
+      if (path === '/api/partner/coupons' && request.method === 'GET') {
+        return await handlePartnerCouponsList(request, env, origin);
+      }
+      if (path === '/api/partner/coupons' && request.method === 'POST') {
+        return await handlePartnerCouponCreate(request, env, origin);
+      }
+      {
+        const m = path.match(/^\/api\/partner\/coupons\/([^/]+)$/);
+        if (m && request.method === 'PUT') {
+          return await handlePartnerCouponUpdate(request, env, origin, m[1]);
+        }
+        if (m && request.method === 'DELETE') {
+          return await handlePartnerCouponDelete(request, env, origin, m[1]);
+        }
+      }
+      if (path === '/api/partner/scan' && request.method === 'POST') {
+        return await handlePartnerScan(request, env, origin);
+      }
+      if (path === '/api/partner/scan-history' && request.method === 'GET') {
+        return await handlePartnerScanHistory(request, env, origin);
+      }
+
+      // --- 運営: ダッシュボード (Phase 4) ---
+      if (path === '/api/admin/overview' && request.method === 'GET') {
+        return await handleAdminOverview(request, env, origin);
+      }
+      if (path === '/api/admin/facilities' && request.method === 'GET') {
+        return await handleAdminFacilities(request, env, origin);
+      }
+      if (path === '/api/admin/partners' && request.method === 'GET') {
+        return await handleAdminPartners(request, env, origin);
+      }
+      if (path === '/api/admin/members' && request.method === 'GET') {
+        return await handleAdminMembers(request, env, origin);
+      }
+      if (path === '/api/admin/facility-reports' && request.method === 'GET') {
+        return await handleAdminReports(request, env, origin);
       }
 
       // --- Webhook ---
@@ -239,6 +371,9 @@ async function handleSubscribe(request, env, origin) {
         square_subscription_id: subscription.id,
         current_facility_id: facility_id,
       });
+      // 公開中クーポンを新規会員に配布 (best-effort; 失敗してもサブスクは成立)
+      try { await grantPublishedCouponsToMember(env, account.id); }
+      catch (e) { console.warn('[subscribe] grant coupons failed:', e.message); }
       // マジックリンク発行
       const { token } = await createLoginToken(env, account.id, 60 * 24 * 7); // 申込完了メール用は7日有効
       const siteBase = env.SITE_BASE_URL || 'https://carepass.tamjump.com';
@@ -655,4 +790,277 @@ async function handleWebhook(request, env) {
     try { await markWebhookProcessed(env, event.event_id); } catch (e) {}
   }
   return new Response('ok', { status: 200 });
+}
+
+// =====================================================================
+// Phase 2: 会員クーポン / 月次報告書リンク
+// =====================================================================
+
+async function handleMeCoupons(request, env, origin) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const data = await listMemberCoupons(env, auth.account.id);
+  return jsonResponse({ ok: true, ...data }, 200, env, origin);
+}
+
+async function handleMeCouponReserve(request, env, origin, memberCouponId) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  if (!env.COUPON_HMAC_KEY) return jsonResponse({ error: 'coupon_hmac_key_not_set' }, 500, env, origin);
+  const r = await reserveCoupon(env, auth.account.id, memberCouponId);
+  if (!r.ok) return jsonResponse({ error: r.error }, r.status, env, origin);
+  return jsonResponse({ ok: true, token: r.token, reserved_until: r.reserved_until, expires_at_ms: r.expires_at_ms, ttl_sec: r.ttl_sec }, 200, env, origin);
+}
+
+async function handleMeMyFacilityReports(request, env, origin) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const data = await listMyFacilityReports(env, auth.account.id);
+  return jsonResponse({ ok: true, ...data }, 200, env, origin);
+}
+
+// =====================================================================
+// Phase 2.5: 公開 施設ディレクトリ
+// =====================================================================
+
+async function handleFacilitiesDirectory(request, env, origin, url) {
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const q = Object.fromEntries(url.searchParams.entries());
+  const data = await searchFacilitiesDirectory(env, q);
+  return jsonResponse({ ok: true, ...data }, 200, env, origin);
+}
+
+async function handleFacilityPublic(request, env, origin, facilityId) {
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const f = await getFacilityWithReports(env, facilityId);
+  if (!f) return jsonResponse({ error: 'not_found' }, 404, env, origin);
+  return jsonResponse({ ok: true, facility: f }, 200, env, origin);
+}
+
+async function handleFacilityReportsPublic(request, env, origin, facilityId) {
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const reports = await listFacilityReports(env, facilityId, false);
+  return jsonResponse({ ok: true, reports }, 200, env, origin);
+}
+
+// =====================================================================
+// Phase 3: 施設管理者
+// =====================================================================
+
+async function requireFacilityAdmin(env, request) {
+  const auth = await requireAuth(env, request, jsonResponse, '');
+  if (!auth.ok) return { error: jsonResponse({ error: 'unauthorized' }, 401, env, '') };
+  if (auth.account.role !== 'facility' && auth.account.role !== 'admin') {
+    return { error: jsonResponse({ error: 'forbidden' }, 403, env, '') };
+  }
+  const facility = await getFacilityForAdminAccount(env, auth.account.id);
+  if (!facility) return { error: jsonResponse({ error: 'no_facility_assigned' }, 404, env, '') };
+  return { account: auth.account, facility };
+}
+
+async function handleFacilityMe(request, env, origin) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+  if (auth.account.role !== 'facility' && auth.account.role !== 'admin') {
+    return jsonResponse({ error: 'forbidden' }, 403, env, origin);
+  }
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const facility = await getFacilityForAdminAccount(env, auth.account.id);
+  return jsonResponse({ ok: true, account: { email: auth.account.email, display_name: auth.account.display_name }, facility }, 200, env, origin);
+}
+
+async function handleFacilityDashboard(request, env, origin) {
+  const r = await requireFacilityAdmin(env, request);
+  if (r.error) return r.error;
+  const stats = await facilityDashboardStats(env, r.facility.id);
+  return jsonResponse({ ok: true, facility: r.facility, stats }, 200, env, origin);
+}
+
+async function handleFacilitySupporters(request, env, origin) {
+  const r = await requireFacilityAdmin(env, request);
+  if (r.error) return r.error;
+  const supporters = await facilitySupporters(env, r.facility.id);
+  return jsonResponse({ ok: true, supporters }, 200, env, origin);
+}
+
+async function handleFacilityReportsList(request, env, origin) {
+  const r = await requireFacilityAdmin(env, request);
+  if (r.error) return r.error;
+  const reports = await listFacilityReports(env, r.facility.id, true);
+  return jsonResponse({ ok: true, reports }, 200, env, origin);
+}
+
+async function handleFacilityReportRegister(request, env, origin) {
+  const r = await requireFacilityAdmin(env, request);
+  if (r.error) return r.error;
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
+  const res = await registerFacilityReport(env, r.facility, body);
+  if (!res.ok) return jsonResponse({ error: res.error }, res.status || 400, env, origin);
+  return jsonResponse({ ok: true, report: res.report, verified: res.verified }, 200, env, origin);
+}
+
+async function handleFacilityReportRetract(request, env, origin, reportId) {
+  const r = await requireFacilityAdmin(env, request);
+  if (r.error) return r.error;
+  const res = await retractFacilityReport(env, r.facility.id, reportId);
+  if (!res.ok) return jsonResponse({ error: res.error }, res.status || 400, env, origin);
+  return jsonResponse({ ok: true }, 200, env, origin);
+}
+
+async function handleFacilityProfileUpdate(request, env, origin) {
+  const r = await requireFacilityAdmin(env, request);
+  if (r.error) return r.error;
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
+  const updated = await updateFacilityProfile(env, r.facility.id, body);
+  return jsonResponse({ ok: true, facility: updated }, 200, env, origin);
+}
+
+// =====================================================================
+// Phase 2-3: 企業管理者
+// =====================================================================
+
+async function getPartnerForAdminAccount(env, accountId) {
+  const r = await env.DB.prepare(`
+    SELECT p.*
+      FROM partners p
+      JOIN partner_admins pa ON pa.partner_id = p.id
+     WHERE pa.account_id = ?
+     LIMIT 1
+  `).bind(accountId).first();
+  return r || null;
+}
+
+async function requirePartnerAdmin(env, request) {
+  const auth = await requireAuth(env, request, jsonResponse, '');
+  if (!auth.ok) return { error: jsonResponse({ error: 'unauthorized' }, 401, env, '') };
+  if (auth.account.role !== 'partner' && auth.account.role !== 'admin') {
+    return { error: jsonResponse({ error: 'forbidden' }, 403, env, '') };
+  }
+  const partner = await getPartnerForAdminAccount(env, auth.account.id);
+  if (!partner) return { error: jsonResponse({ error: 'no_partner_assigned' }, 404, env, '') };
+  return { account: auth.account, partner };
+}
+
+async function handlePartnerMe(request, env, origin) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+  if (auth.account.role !== 'partner' && auth.account.role !== 'admin') {
+    return jsonResponse({ error: 'forbidden' }, 403, env, origin);
+  }
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const partner = await getPartnerForAdminAccount(env, auth.account.id);
+  return jsonResponse({ ok: true, account: { email: auth.account.email, display_name: auth.account.display_name }, partner }, 200, env, origin);
+}
+
+async function handlePartnerDashboard(request, env, origin) {
+  const r = await requirePartnerAdmin(env, request);
+  if (r.error) return r.error;
+  const stats = await partnerDashboardStats(env, r.partner.id);
+  return jsonResponse({ ok: true, partner: r.partner, stats }, 200, env, origin);
+}
+
+async function handlePartnerCouponsList(request, env, origin) {
+  const r = await requirePartnerAdmin(env, request);
+  if (r.error) return r.error;
+  const coupons = await listPartnerCoupons(env, r.partner.id);
+  return jsonResponse({ ok: true, coupons }, 200, env, origin);
+}
+
+async function handlePartnerCouponCreate(request, env, origin) {
+  const r = await requirePartnerAdmin(env, request);
+  if (r.error) return r.error;
+  const body = await request.json().catch(() => null);
+  if (!body || !body.title || !body.discount_type || !body.valid_from || !body.valid_until) {
+    return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  }
+  const created = await createPartnerCoupon(env, r.partner.id, body);
+  return jsonResponse({ ok: true, coupon: created }, 200, env, origin);
+}
+
+async function handlePartnerCouponUpdate(request, env, origin, couponId) {
+  const r = await requirePartnerAdmin(env, request);
+  if (r.error) return r.error;
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
+  const updated = await updatePartnerCoupon(env, r.partner.id, couponId, body);
+  if (!updated) return jsonResponse({ error: 'not_found' }, 404, env, origin);
+  return jsonResponse({ ok: true, coupon: updated }, 200, env, origin);
+}
+
+async function handlePartnerCouponDelete(request, env, origin, couponId) {
+  const r = await requirePartnerAdmin(env, request);
+  if (r.error) return r.error;
+  await deletePartnerCoupon(env, r.partner.id, couponId);
+  return jsonResponse({ ok: true }, 200, env, origin);
+}
+
+async function handlePartnerScan(request, env, origin) {
+  const r = await requirePartnerAdmin(env, request);
+  if (r.error) return r.error;
+  if (!env.COUPON_HMAC_KEY) return jsonResponse({ error: 'coupon_hmac_key_not_set' }, 500, env, origin);
+  const body = await request.json().catch(() => null);
+  if (!body || !body.token) return jsonResponse({ error: 'missing_token' }, 400, env, origin);
+  const res = await scanCoupon(env, { token: body.token, partnerId: r.partner.id, staffId: body.staff_id });
+  if (!res.ok) return jsonResponse({ error: res.error }, res.status || 400, env, origin);
+  return jsonResponse({ ok: true, ...res }, 200, env, origin);
+}
+
+async function handlePartnerScanHistory(request, env, origin) {
+  const r = await requirePartnerAdmin(env, request);
+  if (r.error) return r.error;
+  const history = await listScanHistory(env, r.partner.id, 100);
+  return jsonResponse({ ok: true, history }, 200, env, origin);
+}
+
+// =====================================================================
+// Phase 4: 運営
+// =====================================================================
+
+async function requireAdmin(env, request) {
+  const auth = await requireAuth(env, request, jsonResponse, '');
+  if (!auth.ok) return { error: jsonResponse({ error: 'unauthorized' }, 401, env, '') };
+  if (auth.account.role !== 'admin') {
+    return { error: jsonResponse({ error: 'forbidden' }, 403, env, '') };
+  }
+  return { account: auth.account };
+}
+
+async function handleAdminOverview(request, env, origin) {
+  const r = await requireAdmin(env, request);
+  if (r.error) return r.error;
+  const data = await adminOverview(env);
+  return jsonResponse({ ok: true, ...data }, 200, env, origin);
+}
+
+async function handleAdminFacilities(request, env, origin) {
+  const r = await requireAdmin(env, request);
+  if (r.error) return r.error;
+  const facilities = await adminListFacilities(env);
+  return jsonResponse({ ok: true, facilities }, 200, env, origin);
+}
+
+async function handleAdminPartners(request, env, origin) {
+  const r = await requireAdmin(env, request);
+  if (r.error) return r.error;
+  const partners = await adminListPartners(env);
+  return jsonResponse({ ok: true, partners }, 200, env, origin);
+}
+
+async function handleAdminMembers(request, env, origin) {
+  const r = await requireAdmin(env, request);
+  if (r.error) return r.error;
+  const members = await adminListMembers(env, 200);
+  return jsonResponse({ ok: true, members }, 200, env, origin);
+}
+
+async function handleAdminReports(request, env, origin) {
+  const r = await requireAdmin(env, request);
+  if (r.error) return r.error;
+  const reports = await adminListReports(env);
+  return jsonResponse({ ok: true, reports }, 200, env, origin);
 }

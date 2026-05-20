@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';
+  script-src 'self' 'unsafe-inline';
+  connect-src 'self' https://carepass-api.tamjump.com;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' data: https://fonts.gstatic.com;
+  img-src 'self' data: blob: https:;
+">
+<meta name="description" content="Care Support Pass 施設管理ダッシュボード">
+<meta name="robots" content="noindex,nofollow">
+<title>施設ダッシュボード | Care Support Pass</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css?v=20260520d">
+<style>
+.dash{min-height:80vh;padding:96px 24px 96px;background:#fafafa}
+.dash-wrap{max-width:1100px;margin:0 auto}
+.dash h1{font-size:clamp(22px,2.6vw,28px);font-weight:700;margin:0 0 6px;color:var(--ink)}
+.dash h1 .role{font-size:11px;font-weight:600;color:#fff;background:#0d9488;padding:3px 8px;border-radius:6px;vertical-align:middle;margin-left:10px;letter-spacing:.04em}
+.dash .desc{font-size:13px;color:var(--sub);margin:0 0 28px}
+.facility-name{font-size:18px;color:var(--accent);font-weight:700;margin:0 0 4px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:28px}
+.kpi-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.kpi-card .label{font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.kpi-card .value{font-size:26px;font-weight:700;color:var(--ink);font-family:'Inter',system-ui;letter-spacing:-.02em}
+.kpi-card .sub{font-size:11px;color:var(--sub);margin-top:4px}
+.section{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px}
+.section h2{font-size:14px;font-weight:700;margin:0 0 16px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.section h2::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 0 18px;flex-wrap:wrap}
+.tab-btn{padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;font-size:12px;color:var(--sub);cursor:pointer;font-weight:500}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab-panel{display:none}.tab-panel.active{display:block}
+table{width:100%;border-collapse:collapse;font-size:12px}
+table th,table td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+table th{font-weight:600;color:var(--sub);background:#fafafa;font-size:11px;letter-spacing:.02em;text-transform:uppercase}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--sub);margin-bottom:5px;letter-spacing:.02em;text-transform:uppercase}
+.field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;color:var(--ink);box-sizing:border-box}
+.field .hint{font-size:11px;color:var(--sub);margin-top:5px;line-height:1.6}
+.row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.url-preview{padding:10px 12px;background:#f5f5f5;border-radius:8px;font-family:'SF Mono',Consolas,monospace;font-size:11px;color:var(--sub);word-break:break-all;margin-top:8px}
+.btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.btn-row .btn{padding:9px 16px;border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.btn-row .btn.primary{background:var(--accent);color:#fff}
+.btn-row .btn.primary:hover{opacity:.85}
+.btn-row .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.msg{padding:10px 14px;border-radius:8px;font-size:12px;margin:10px 0;line-height:1.6}
+.msg.success{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.msg.error{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.msg.info{background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
+.badge.published{background:#dcfce7;color:#166534}
+.badge.retracted{background:#e5e7eb;color:#374151}
+.badge.broken{background:#fee2e2;color:#991b1b}
+.unauth{padding:80px 24px;text-align:center}
+.empty{padding:24px;text-align:center;color:var(--sub);font-size:12px}
+.mono{font-family:'SF Mono','Roboto Mono',Consolas,monospace;font-size:11px;color:var(--sub)}
+.right{text-align:right}
+.user-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding:10px 16px;background:#0d9488;color:#fff;border-radius:10px;font-size:12px}
+.user-bar .email{font-weight:600}
+.user-bar .logout{background:none;border:1px solid #fff;color:#fff;padding:5px 12px;border-radius:6px;font-family:inherit;font-size:11px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
+    <div class="nav-menu"></div>
+    <div class="nav-cta">
+      <a class="btn ghost" href="/mypage.html">マイページ</a>
+    </div>
+  </div>
+</nav>
+
+<main class="dash">
+  <div class="dash-wrap">
+
+    <div id="unauth" class="unauth hidden">
+      <h2>施設管理者ログインが必要です</h2>
+      <p>このページは Care Support Pass 加盟施設の管理者専用です。</p>
+      <a class="btn primary" href="/mypage.html">ログインページへ</a>
+    </div>
+
+    <div id="dash-body" class="hidden">
+      <div class="user-bar">
+        <span><span class="email" id="me-email"></span> としてログイン中</span>
+        <button class="logout" id="logout-btn">ログアウト</button>
+      </div>
+
+      <h1>施設ダッシュボード<span class="role">FACILITY</span></h1>
+      <p class="facility-name" id="facility-name"></p>
+      <p class="desc">支援者数、累計支援額、月次活動報告書の管理ができます。</p>
+
+      <!-- KPI -->
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- タブ -->
+      <div class="section">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="supporters">支援者一覧</button>
+          <button class="tab-btn" data-tab="reports">月次活動報告書</button>
+          <button class="tab-btn" data-tab="profile">施設情報</button>
+        </div>
+
+        <!-- 支援者一覧 -->
+        <div class="tab-panel active" id="tab-supporters">
+          <h2>当施設を支援している会員</h2>
+          <p style="font-size:11px;color:var(--sub);margin:0 0 12px">プライバシー保護のため、個人情報は伏せて表示しています。</p>
+          <div id="supporters-table"></div>
+        </div>
+
+        <!-- 月次報告書 -->
+        <div class="tab-panel" id="tab-reports">
+          <h2>月次活動報告書 URL 管理</h2>
+          <p style="font-size:12px;color:var(--sub);margin:0 0 14px;line-height:1.7">
+            月次の活動報告書は <strong>貴施設の自社サイトで公開</strong>していただきます。当社が支給する HTML テンプレートを使い、下記URLパターンで公開した上で、対象月をご登録ください。
+          </p>
+
+          <div class="row" style="margin-bottom:14px">
+            <div class="field">
+              <label>対象月</label>
+              <input type="month" id="report-period" />
+              <div class="hint">未指定の場合は今月。</div>
+            </div>
+            <div class="field">
+              <label>URL (自動組立)</label>
+              <input type="text" id="report-url-override" placeholder="自動組立を使う場合は空欄" />
+              <div class="hint">通常は空欄のまま。下記URLが使われます。</div>
+            </div>
+          </div>
+          <div class="url-preview" id="url-preview">URL: (施設情報の「報告書 Base URL」を先に設定してください)</div>
+
+          <div id="report-msg"></div>
+          <div class="btn-row">
+            <button class="btn primary" id="register-report-btn">この月の報告書を登録</button>
+          </div>
+
+          <h2 style="margin-top:26px">登録済 月次報告書</h2>
+          <div id="reports-table"></div>
+        </div>
+
+        <!-- 施設情報 -->
+        <div class="tab-panel" id="tab-profile">
+          <h2>施設プロフィール</h2>
+          <p style="font-size:12px;color:var(--sub);margin:0 0 14px;line-height:1.7">
+            検索・表示用の基本情報を編集できます。<strong>「報告書 Base URL」</strong> は月次報告書を貴社サイトのどこに置くかを示します (例: <code class="mono">https://example.com/carepass</code>)。
+          </p>
+          <div class="row">
+            <div class="field">
+              <label>施設名</label>
+              <input type="text" id="f-name" />
+            </div>
+            <div class="field">
+              <label>ふりがな (検索用)</label>
+              <input type="text" id="f-name_kana" />
+            </div>
+            <div class="field">
+              <label>都道府県</label>
+              <input type="text" id="f-prefecture" placeholder="例: 東京都" />
+            </div>
+            <div class="field">
+              <label>カテゴリ</label>
+              <input type="text" id="f-category" placeholder="例: グループホーム" />
+            </div>
+            <div class="field">
+              <label>所在地 (住所表示用)</label>
+              <input type="text" id="f-location" placeholder="例: 東京都新宿区..." />
+            </div>
+            <div class="field">
+              <label>公式サイトURL</label>
+              <input type="url" id="f-website" placeholder="https://..." />
+            </div>
+          </div>
+          <div class="field">
+            <label>報告書 Base URL</label>
+            <input type="url" id="f-report_base_url" placeholder="例: https://example.com/carepass" />
+            <div class="hint">月次報告書はこの URL に対して <code class="mono">/YYYY-MM.html</code> として配置してください。</div>
+          </div>
+          <div id="profile-msg"></div>
+          <div class="btn-row">
+            <button class="btn primary" id="save-profile-btn">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-bot"><div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div></div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = 'https://carepass-api.tamjump.com';
+const $ = (id) => document.getElementById(id);
+let facilityCache = null;
+
+async function apiGet(path) {
+  const res = await fetch(`${API_BASE}${path}`, { credentials: 'include' });
+  let data = null; try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+async function apiPost(path, body) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    credentials: 'include', body: JSON.stringify(body || {}),
+  });
+  let data = null; try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+async function apiPut(path, body) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+    credentials: 'include', body: JSON.stringify(body || {}),
+  });
+  let data = null; try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+}
+function fmtDate(s){ if(!s) return '—'; const d=new Date(s); if(isNaN(d.getTime())) return s; return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; }
+function thisMonth() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+function yen(n) { return '¥' + Number(n || 0).toLocaleString('ja-JP'); }
+function showMsg(elId, text, kind) { const el = $(elId); if (!text) { el.innerHTML = ''; return; } el.innerHTML = `<div class="msg ${kind}">${escapeHtml(text)}</div>`; }
+
+function renderKpi(stats) {
+  $('kpi-grid').innerHTML = `
+    <div class="kpi-card"><div class="label">支援者数</div><div class="value">${stats.supporters || 0}</div><div class="sub">Current supporters</div></div>
+    <div class="kpi-card"><div class="label">今月の新規支援者</div><div class="value">${stats.new_this_month || 0}</div><div class="sub">${thisMonth()} 申込分</div></div>
+    <div class="kpi-card"><div class="label">累計支援額</div><div class="value">${yen(stats.total_paid_jpy)}</div><div class="sub">会員からの累計</div></div>
+  `;
+}
+
+function renderFacility(f) {
+  facilityCache = f;
+  $('facility-name').textContent = f.name;
+  $('f-name').value             = f.name || '';
+  $('f-name_kana').value        = f.name_kana || '';
+  $('f-prefecture').value       = f.prefecture || '';
+  $('f-category').value         = f.category || '';
+  $('f-location').value         = f.location || '';
+  $('f-website').value          = f.website || '';
+  $('f-report_base_url').value  = f.report_base_url || '';
+  updateUrlPreview();
+}
+
+function updateUrlPreview() {
+  const period = $('report-period').value || thisMonth();
+  const override = $('report-url-override').value.trim();
+  let preview = '';
+  if (override) {
+    preview = override;
+  } else if (facilityCache?.report_base_url) {
+    preview = `${facilityCache.report_base_url.replace(/\/$/, '')}/${period}.html`;
+  } else {
+    preview = '(施設情報の「報告書 Base URL」を先に設定してください)';
+  }
+  $('url-preview').textContent = `URL: ${preview}`;
+}
+['report-period','report-url-override'].forEach(id => $(id).addEventListener('input', updateUrlPreview));
+
+function renderSupporters(list) {
+  if (!list.length) { $('supporters-table').innerHTML = '<div class="empty">まだ支援者がいません。</div>'; return; }
+  $('supporters-table').innerHTML = `
+    <table><thead><tr><th>支援者ID</th><th>申込日</th><th>最終決済</th><th class="right">累計支援額</th></tr></thead>
+      <tbody>
+        ${list.map(s => `
+          <tr>
+            <td class="mono">${escapeHtml(s.supporter_ref)}</td>
+            <td>${fmtDate(s.applied_at)}</td>
+            <td>${fmtDate(s.last_billed_at)}</td>
+            <td class="right">${yen(s.total_paid_jpy)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderReports(list) {
+  if (!list.length) { $('reports-table').innerHTML = '<div class="empty">まだ登録された月次報告書がありません。</div>'; return; }
+  $('reports-table').innerHTML = `
+    <table>
+      <thead><tr><th>対象月</th><th>URL</th><th>状態</th><th>公開日</th><th>最終確認</th><th></th></tr></thead>
+      <tbody>
+        ${list.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.period)}</strong></td>
+            <td><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener" class="mono" style="color:var(--accent)">${escapeHtml(r.url)} ↗</a></td>
+            <td><span class="badge ${r.status}">${escapeHtml(r.status)}</span></td>
+            <td>${fmtDate(r.published_at)}</td>
+            <td>${fmtDate(r.verified_at) || '—'}</td>
+            <td class="right">${r.status === 'published' ? `<button class="btn ghost" data-retract="${escapeHtml(r.id)}" style="padding:5px 10px;font-size:11px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer">撤回</button>` : ''}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+  document.querySelectorAll('[data-retract]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('この報告書を撤回します。よろしいですか？')) return;
+      const id = btn.dataset.retract;
+      const r = await apiPost(`/api/facility/reports/${encodeURIComponent(id)}/retract`, {});
+      if (r.ok) loadReports();
+      else alert('撤回に失敗しました: ' + (r.data?.error || ''));
+    });
+  });
+}
+
+async function loadReports() {
+  const r = await apiGet('/api/facility/reports');
+  if (r.ok) renderReports(r.data.reports || []);
+}
+
+document.querySelectorAll('[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    $(`tab-${btn.dataset.tab}`).classList.add('active');
+  });
+});
+
+$('register-report-btn').addEventListener('click', async () => {
+  showMsg('report-msg', '', 'info');
+  const period = $('report-period').value || thisMonth();
+  const override = $('report-url-override').value.trim();
+  const body = { period };
+  if (override) body.url = override;
+  const r = await apiPost('/api/facility/reports/register', body);
+  if (!r.ok) {
+    showMsg('report-msg', `登録に失敗しました: ${r.data?.error || ''}`, 'error');
+    return;
+  }
+  showMsg('report-msg',
+    r.data.verified
+      ? `${period} の報告書を登録しました。URL の到達性も確認できました。`
+      : `${period} の報告書を登録しました。ただし URL に到達できませんでした。後ほど公開状態をご確認ください。`,
+    r.data.verified ? 'success' : 'info');
+  loadReports();
+});
+
+$('save-profile-btn').addEventListener('click', async () => {
+  showMsg('profile-msg', '', 'info');
+  const body = {
+    name:            $('f-name').value.trim(),
+    name_kana:       $('f-name_kana').value.trim(),
+    prefecture:      $('f-prefecture').value.trim(),
+    category:        $('f-category').value.trim(),
+    location:        $('f-location').value.trim(),
+    website:         $('f-website').value.trim() || null,
+    report_base_url: $('f-report_base_url').value.trim() || null,
+  };
+  const r = await apiPut('/api/facility/profile', body);
+  if (!r.ok) {
+    showMsg('profile-msg', `保存に失敗しました: ${r.data?.error || ''}`, 'error');
+    return;
+  }
+  showMsg('profile-msg', '施設情報を保存しました。', 'success');
+  renderFacility(r.data.facility);
+});
+
+$('logout-btn').addEventListener('click', async () => {
+  try { await apiPost('/api/auth/logout', {}); } catch {}
+  location.href = '/mypage.html';
+});
+
+async function init() {
+  const me = await apiGet('/api/auth/me');
+  if (!me.ok || !me.data?.authenticated || (me.data.account?.role !== 'facility' && me.data.account?.role !== 'admin')) {
+    $('unauth').classList.remove('hidden');
+    return;
+  }
+  $('me-email').textContent = me.data.account.email;
+  $('dash-body').classList.remove('hidden');
+
+  const [dash, sup, rep] = await Promise.all([
+    apiGet('/api/facility/dashboard'),
+    apiGet('/api/facility/supporters'),
+    apiGet('/api/facility/reports'),
+  ]);
+  if (dash.ok) {
+    renderFacility(dash.data.facility);
+    renderKpi(dash.data.stats);
+  } else if (dash.status === 404) {
+    $('facility-name').textContent = '(施設の割り当てがありません)';
+  }
+  if (sup.ok) renderSupporters(sup.data.supporters || []);
+  if (rep.ok) renderReports(rep.data.reports || []);
+  // 今月をデフォルトに
+  $('report-period').value = thisMonth();
+  updateUrlPreview();
+}
+init();
+</script>
+
+</body>
+</html>

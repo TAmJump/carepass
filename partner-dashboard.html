@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';
+  script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+  connect-src 'self' https://carepass-api.tamjump.com;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' data: https://fonts.gstatic.com;
+  img-src 'self' data: blob: https:;
+  media-src 'self' blob:;
+">
+<meta name="description" content="Care Support Pass 協力企業ダッシュボード">
+<meta name="robots" content="noindex,nofollow">
+<title>協力企業ダッシュボード | Care Support Pass</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css?v=20260520d">
+<style>
+.dash{min-height:80vh;padding:96px 24px 96px;background:#fafafa}
+.dash-wrap{max-width:1200px;margin:0 auto}
+.dash h1{font-size:clamp(22px,2.6vw,28px);font-weight:700;margin:0 0 6px;color:var(--ink)}
+.dash h1 .role{font-size:11px;font-weight:600;color:#fff;background:#1d4ed8;padding:3px 8px;border-radius:6px;vertical-align:middle;margin-left:10px;letter-spacing:.04em}
+.dash .partner-name{font-size:15px;color:var(--ink);font-weight:600;margin:0 0 4px}
+.dash .desc{font-size:13px;color:var(--sub);margin:0 0 28px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px}
+.kpi-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.kpi-card .label{font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.kpi-card .value{font-size:24px;font-weight:700;color:var(--ink);font-family:'Inter',system-ui;letter-spacing:-.02em}
+.kpi-card .sub{font-size:11px;color:var(--sub);margin-top:4px}
+.section{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px}
+.section h2{font-size:14px;font-weight:700;margin:0 0 16px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.section h2::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 0 18px;flex-wrap:wrap}
+.tab-btn{padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;font-size:12px;color:var(--sub);cursor:pointer;font-weight:500}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.row.three{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:560px){.row,.row.three{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.02em;text-transform:uppercase}
+.field input,.field select,.field textarea{padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;background:#fff;color:var(--ink);outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(233,68,54,.1)}
+.field textarea{min-height:60px;resize:vertical}
+.field .hint{font-size:10px;color:var(--sub)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+table th,table td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+table th{font-weight:600;color:var(--sub);background:#fafafa;font-size:11px;letter-spacing:.02em;text-transform:uppercase}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
+.badge.published{background:#dcfce7;color:#166534}
+.badge.draft{background:#e5e7eb;color:#374151}
+.badge.paused{background:#fef3c7;color:#92400e}
+.badge.ended{background:#fee2e2;color:#991b1b}
+.unauth{padding:80px 24px;text-align:center}
+.empty{padding:24px;text-align:center;color:var(--sub);font-size:12px}
+.mono{font-family:'SF Mono','Roboto Mono',Consolas,monospace;font-size:11px;color:var(--sub)}
+.right{text-align:right}
+.user-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding:10px 16px;background:#1d4ed8;color:#fff;border-radius:10px;font-size:12px}
+.user-bar .email{font-weight:600}
+.user-bar .logout{background:none;border:1px solid #fff;color:#fff;padding:5px 12px;border-radius:6px;font-family:inherit;font-size:11px;cursor:pointer}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.msg{padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:10px;line-height:1.6}
+.msg.success{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.msg.error{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.msg.info{background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd}
+
+/* スキャナー */
+.scanner-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.scanner-wrap{grid-template-columns:1fr}}
+.scanner-video{position:relative;background:#000;border-radius:12px;overflow:hidden;aspect-ratio:1/1;max-width:420px;margin:0 auto;width:100%}
+.scanner-video video{width:100%;height:100%;object-fit:cover;display:block}
+.scanner-video .overlay{position:absolute;inset:18%;border:2px solid #fff;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.25)}
+.scanner-state{padding:14px;background:#0f172a;color:#fff;border-radius:10px;font-size:12px;line-height:1.7;min-height:64px}
+.scanner-state.ok{background:#166534}
+.scanner-state.error{background:#991b1b}
+.scanner-state.idle{background:#0f172a}
+.scanner-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.scanner-history{font-size:12px;margin-top:14px}
+.scan-result h3{margin:0 0 6px;font-size:14px;font-weight:700}
+.scan-result .partner{font-size:11px;color:var(--sub);margin:0 0 8px}
+.scan-result .title{font-size:14px;font-weight:600;margin:0 0 4px}
+.scan-result .desc{font-size:11px;color:var(--sub)}
+.dim{opacity:.5}
+.coupon-actions{display:flex;gap:6px}
+.coupon-actions button{padding:5px 10px;font-size:11px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;font-family:inherit}
+.coupon-actions button:hover{background:#fafafa}
+.coupon-actions button.danger{color:#991b1b;border-color:#fca5a5}
+.coupon-actions button.danger:hover{background:#fef2f2}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal .inner{background:#fff;border-radius:14px;padding:24px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h3{margin:0 0 16px;font-size:16px;font-weight:700}
+.modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
+    <div class="nav-menu"></div>
+    <div class="nav-cta">
+      <a class="btn ghost" href="/mypage.html">マイページ</a>
+    </div>
+  </div>
+</nav>
+
+<main class="dash">
+  <div class="dash-wrap">
+
+    <div id="unauth" class="unauth hidden">
+      <h2>協力企業ログインが必要です</h2>
+      <p>このページは Care Support Pass 協力企業の担当者専用です。</p>
+      <a class="btn primary" href="/mypage.html">ログインページへ</a>
+    </div>
+
+    <div id="dash-body" class="hidden">
+      <div class="user-bar">
+        <span><span class="email" id="me-email"></span> としてログイン中</span>
+        <button class="logout" id="logout-btn">ログアウト</button>
+      </div>
+
+      <h1>協力企業ダッシュボード<span class="role">PARTNER</span></h1>
+      <p class="partner-name" id="partner-name"></p>
+      <p class="desc">クーポンの発行・管理、店頭での利用受付 (QRスキャン)、利用統計を確認できます。</p>
+
+      <!-- KPI -->
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- タブ -->
+      <div class="section">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="scan">QRスキャナー</button>
+          <button class="tab-btn" data-tab="coupons">クーポン管理</button>
+          <button class="tab-btn" data-tab="history">利用履歴</button>
+        </div>
+
+        <!-- スキャナー -->
+        <div class="tab-panel active" id="tab-scan">
+          <h2>店頭でのクーポン利用受付</h2>
+          <p style="font-size:12px;color:var(--sub);margin:0 0 14px;line-height:1.7">
+            来店された Care Support Pass 会員のスマホ画面に表示された QR コードを、下のカメラで読み取ってください。<strong>会員側でQRが有効なのは表示から30秒間</strong>です。
+          </p>
+
+          <div class="scanner-controls">
+            <button class="btn primary" id="scan-start">📷 カメラを起動</button>
+            <button class="btn ghost" id="scan-stop" style="display:none">停止</button>
+            <button class="btn ghost" id="scan-manual">QRが読めない場合は手入力</button>
+          </div>
+
+          <div class="scanner-wrap">
+            <div>
+              <div class="scanner-video" id="scanner-video-wrap">
+                <video id="scanner-video" playsinline muted></video>
+                <div class="overlay"></div>
+              </div>
+              <canvas id="scanner-canvas" style="display:none"></canvas>
+            </div>
+            <div>
+              <div class="scanner-state idle" id="scan-state">
+                カメラを起動して QR にかざすと、ここに利用クーポンの内容が表示されます。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- クーポン管理 -->
+        <div class="tab-panel" id="tab-coupons">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h2 style="margin:0">自社クーポン一覧</h2>
+            <button class="btn primary" id="new-coupon-btn" style="font-size:12px;padding:8px 14px">＋ 新規クーポン</button>
+          </div>
+          <div id="coupons-table"></div>
+        </div>
+
+        <!-- 履歴 -->
+        <div class="tab-panel" id="tab-history">
+          <h2>クーポン利用履歴 (直近100件)</h2>
+          <div id="history-table"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- クーポン編集モーダル -->
+<div class="modal" id="coupon-modal">
+  <div class="inner">
+    <h3 id="cm-title">新規クーポン</h3>
+    <div id="cm-msg"></div>
+    <div class="field"><label>タイトル *</label><input type="text" id="cm-coupon-title" placeholder="例: ドリンク1杯無料" /></div>
+    <div class="field" style="margin-top:10px"><label>説明</label><textarea id="cm-description" placeholder="例: 当店ご注文1,000円以上で1杯無料"></textarea></div>
+    <div class="row three" style="margin-top:10px">
+      <div class="field"><label>割引タイプ *</label>
+        <select id="cm-discount_type">
+          <option value="item">アイテム提供</option>
+          <option value="service">サービス提供</option>
+          <option value="percent">パーセント割引</option>
+          <option value="amount">金額割引</option>
+        </select>
+      </div>
+      <div class="field"><label>割引値</label><input type="number" id="cm-discount_value" placeholder="30 (%) or 500 (円)"></div>
+      <div class="field"><label>状態</label>
+        <select id="cm-status">
+          <option value="published">公開中</option>
+          <option value="draft">下書き</option>
+          <option value="paused">一時停止</option>
+          <option value="ended">終了</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-top:10px"><label>利用条件</label><textarea id="cm-conditions" placeholder="例: 1日1回まで。他クーポンとの併用不可。"></textarea></div>
+    <div class="row" style="margin-top:10px">
+      <div class="field"><label>有効期間 開始 *</label><input type="date" id="cm-valid_from"></div>
+      <div class="field"><label>有効期間 終了 *</label><input type="date" id="cm-valid_until"></div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="cm-cancel">キャンセル</button>
+      <button class="btn primary" id="cm-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 手入力モーダル -->
+<div class="modal" id="manual-modal">
+  <div class="inner">
+    <h3>QRトークンを手入力</h3>
+    <p style="font-size:12px;color:var(--sub);margin:0 0 12px;line-height:1.6">
+      会員側の QR コードが読み取れない場合、QRに含まれるテキスト (base64url 文字列) を会員に読み上げてもらい、ここに貼り付けて確定できます。
+    </p>
+    <div class="field"><label>QRトークン</label><textarea id="mm-token" placeholder="eyJ2..." style="font-family:'SF Mono',monospace;font-size:11px;min-height:80px"></textarea></div>
+    <div class="actions">
+      <button class="btn ghost" id="mm-cancel">キャンセル</button>
+      <button class="btn primary" id="mm-confirm">利用確定</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-bot"><div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+const API_BASE = 'https://carepass-api.tamjump.com';
+const $ = (id) => document.getElementById(id);
+let partnerCache = null;
+
+async function apiGet(path){ const r=await fetch(`${API_BASE}${path}`,{credentials:'include'}); let d=null; try{d=await r.json();}catch{} return {ok:r.ok,status:r.status,data:d}; }
+async function apiPost(path,body){ const r=await fetch(`${API_BASE}${path}`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body||{})}); let d=null; try{d=await r.json();}catch{} return {ok:r.ok,status:r.status,data:d}; }
+async function apiPut(path,body){ const r=await fetch(`${API_BASE}${path}`,{method:'PUT',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body||{})}); let d=null; try{d=await r.json();}catch{} return {ok:r.ok,status:r.status,data:d}; }
+async function apiDelete(path){ const r=await fetch(`${API_BASE}${path}`,{method:'DELETE',credentials:'include'}); let d=null; try{d=await r.json();}catch{} return {ok:r.ok,status:r.status,data:d}; }
+
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function fmtDate(s){ if(!s) return '—'; const d=new Date(s); if(isNaN(d.getTime())) return s; return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; }
+function fmtDateTime(s){ if(!s) return '—'; const d=new Date(s); if(isNaN(d.getTime())) return s; return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+function showMsg(elId,text,kind){ const el=$(elId); if(!text){el.innerHTML='';return;} el.innerHTML=`<div class="msg ${kind}">${escapeHtml(text)}</div>`; }
+function discountLabel(type,val){
+  if(type==='percent') return `${val||'?'}% OFF`;
+  if(type==='amount')  return `¥${(val||0).toLocaleString('ja-JP')} OFF`;
+  if(type==='item')    return 'アイテム提供';
+  if(type==='service') return 'サービス提供';
+  return type;
+}
+
+// =============== KPI / 一覧 ===============
+function renderKpi(stats){
+  $('kpi-grid').innerHTML = `
+    <div class="kpi-card"><div class="label">公開中クーポン</div><div class="value">${stats.published_coupons||0}</div><div class="sub">Live coupons</div></div>
+    <div class="kpi-card"><div class="label">今月利用件数</div><div class="value">${stats.used_this_month||0}</div><div class="sub">This month</div></div>
+    <div class="kpi-card"><div class="label">累計利用件数</div><div class="value">${stats.used_total||0}</div><div class="sub">All-time</div></div>
+    <div class="kpi-card"><div class="label">リピーター会員数</div><div class="value">${stats.repeating_members||0}</div><div class="sub">2回以上利用</div></div>
+  `;
+}
+
+let couponsCache = [];
+function renderCoupons(list){
+  couponsCache = list;
+  if(!list.length){ $('coupons-table').innerHTML='<div class="empty">クーポンを登録すると、会員に配布できるようになります。「＋ 新規クーポン」で作成してください。</div>'; return; }
+  $('coupons-table').innerHTML = `
+    <table>
+      <thead><tr><th>タイトル</th><th>割引</th><th>状態</th><th>有効期間</th><th class="right">利用</th><th></th></tr></thead>
+      <tbody>
+        ${list.map(c => `
+          <tr>
+            <td><strong>${escapeHtml(c.title)}</strong><div class="mono">${escapeHtml(c.id)}</div></td>
+            <td>${escapeHtml(discountLabel(c.discount_type,c.discount_value))}</td>
+            <td><span class="badge ${c.status}">${escapeHtml(c.status)}</span></td>
+            <td>${fmtDate(c.valid_from)} 〜 ${fmtDate(c.valid_until)}</td>
+            <td class="right">${c.used_count||0}</td>
+            <td><div class="coupon-actions">
+              <button data-edit="${escapeHtml(c.id)}">編集</button>
+              <button data-del="${escapeHtml(c.id)}" class="danger">削除</button>
+            </div></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+  document.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click',()=> openCouponModal(b.dataset.edit)));
+  document.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async ()=>{
+    if(!confirm('このクーポンを削除します。よろしいですか？')) return;
+    const r = await apiDelete(`/api/partner/coupons/${encodeURIComponent(b.dataset.del)}`);
+    if(r.ok) loadCoupons(); else alert('削除に失敗: '+(r.data?.error||''));
+  }));
+}
+
+function renderHistory(list){
+  if(!list.length){ $('history-table').innerHTML='<div class="empty">まだ利用履歴がありません。</div>'; return; }
+  $('history-table').innerHTML = `
+    <table>
+      <thead><tr><th>日時</th><th>クーポン</th><th>会員ID</th><th>スタッフ</th></tr></thead>
+      <tbody>
+        ${list.map(h => `
+          <tr>
+            <td>${fmtDateTime(h.used_at)}</td>
+            <td><strong>${escapeHtml(h.title||'—')}</strong><div class="mono">${escapeHtml(discountLabel(h.discount_type,h.discount_value))}</div></td>
+            <td class="mono">${escapeHtml((h.account_id||'').slice(0,8))}…</td>
+            <td>${escapeHtml(h.staff_id||'—')}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+async function loadCoupons(){ const r=await apiGet('/api/partner/coupons'); if(r.ok) renderCoupons(r.data.coupons||[]); }
+async function loadHistory(){ const r=await apiGet('/api/partner/scan-history'); if(r.ok) renderHistory(r.data.history||[]); }
+async function loadDashboard(){ const r=await apiGet('/api/partner/dashboard'); if(r.ok){ partnerCache=r.data.partner; $('partner-name').textContent=r.data.partner?.name||''; renderKpi(r.data.stats||{}); } }
+
+// =============== クーポン編集モーダル ===============
+function openCouponModal(couponId){
+  const c = couponId ? couponsCache.find(x => x.id===couponId) : null;
+  $('cm-title').textContent = c ? 'クーポン編集' : '新規クーポン';
+  $('cm-msg').innerHTML='';
+  $('cm-coupon-title').value = c?.title || '';
+  $('cm-description').value = c?.description || '';
+  $('cm-discount_type').value = c?.discount_type || 'item';
+  $('cm-discount_value').value = c?.discount_value ?? '';
+  $('cm-status').value = c?.status || 'published';
+  $('cm-conditions').value = c?.conditions || '';
+  $('cm-valid_from').value = (c?.valid_from || '').slice(0,10);
+  $('cm-valid_until').value = (c?.valid_until || '').slice(0,10);
+  $('coupon-modal').dataset.editing = couponId || '';
+  $('coupon-modal').classList.add('show');
+}
+$('new-coupon-btn').addEventListener('click', () => openCouponModal(null));
+$('cm-cancel').addEventListener('click', () => $('coupon-modal').classList.remove('show'));
+$('cm-save').addEventListener('click', async () => {
+  const editingId = $('coupon-modal').dataset.editing;
+  const body = {
+    title: $('cm-coupon-title').value.trim(),
+    description: $('cm-description').value.trim() || null,
+    discount_type: $('cm-discount_type').value,
+    discount_value: $('cm-discount_value').value ? parseInt($('cm-discount_value').value,10) : null,
+    status: $('cm-status').value,
+    conditions: $('cm-conditions').value.trim() || null,
+    valid_from: $('cm-valid_from').value ? new Date($('cm-valid_from').value).toISOString() : null,
+    valid_until: $('cm-valid_until').value ? new Date($('cm-valid_until').value + 'T23:59:59').toISOString() : null,
+  };
+  if(!body.title || !body.discount_type || !body.valid_from || !body.valid_until){
+    showMsg('cm-msg','タイトル/割引タイプ/有効期間 開始/終了 は必須です','error');
+    return;
+  }
+  const r = editingId
+    ? await apiPut(`/api/partner/coupons/${encodeURIComponent(editingId)}`, body)
+    : await apiPost('/api/partner/coupons', body);
+  if(!r.ok){ showMsg('cm-msg','保存に失敗: '+(r.data?.error||''),'error'); return; }
+  $('coupon-modal').classList.remove('show');
+  loadCoupons();
+});
+
+// =============== スキャナー ===============
+let scanStream = null;
+let scanLoopHandle = null;
+let lastScannedToken = null;
+let lastScannedAt = 0;
+
+async function startScanner(){
+  $('scan-state').className='scanner-state idle';
+  $('scan-state').textContent='カメラを起動中…';
+  try{
+    scanStream = await navigator.mediaDevices.getUserMedia({ video:{facingMode:'environment'}, audio:false });
+  }catch(e){
+    $('scan-state').className='scanner-state error';
+    $('scan-state').textContent='カメラへのアクセスが拒否されました。ブラウザのカメラ権限をご確認ください。 ('+e.message+')';
+    return;
+  }
+  $('scan-start').style.display='none';
+  $('scan-stop').style.display='inline-flex';
+  const video = $('scanner-video');
+  video.srcObject = scanStream;
+  await video.play();
+  $('scan-state').textContent='QRコードにカメラを向けてください。';
+  scanLoop();
+}
+function stopScanner(){
+  if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; }
+  if(scanLoopHandle){ cancelAnimationFrame(scanLoopHandle); scanLoopHandle=null; }
+  $('scan-start').style.display='inline-flex';
+  $('scan-stop').style.display='none';
+  $('scan-state').className='scanner-state idle';
+  $('scan-state').textContent='カメラを停止しました。';
+}
+function scanLoop(){
+  scanLoopHandle = requestAnimationFrame(scanLoop);
+  const video = $('scanner-video');
+  const canvas = $('scanner-canvas');
+  if(video.readyState !== video.HAVE_ENOUGH_DATA) return;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+  const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+  const code = (typeof jsQR === 'function') ? jsQR(imageData.data, imageData.width, imageData.height) : null;
+  if(code && code.data){
+    const now = Date.now();
+    if(code.data === lastScannedToken && now - lastScannedAt < 3000) return;
+    lastScannedToken = code.data;
+    lastScannedAt = now;
+    confirmScan(code.data);
+  }
+}
+async function confirmScan(token){
+  $('scan-state').className='scanner-state idle';
+  $('scan-state').textContent='スキャン成功。利用確定中…';
+  const r = await apiPost('/api/partner/scan', { token, staff_id: 'pos-1' });
+  if(!r.ok){
+    $('scan-state').className='scanner-state error';
+    const reason = r.data?.error || 'unknown_error';
+    const niceMsg = {
+      expired:'⏱ QRコードの有効期限切れです。会員にもう一度発行してもらってください。',
+      reservation_expired:'⏱ QRコードの有効期限切れです (30秒)。会員にもう一度「使う」を押してもらってください。',
+      coupon_expired:'⏱ このクーポンの有効期限が切れています。',
+      already_used:'⚠ このクーポンは既に利用済みです。',
+      other_partner_coupon:'⚠ このクーポンは他社のものです。',
+      wrong_partner:'⚠ このクーポンは他社のものです。',
+      invalid_signature:'⚠ QRが無効です (署名検証エラー)。',
+      bad_token:'⚠ QRデータの形式が不正です。',
+      not_reserved:'⚠ このクーポンは「利用予約」されていません。会員に「使う」ボタンを押し直してもらってください。',
+      not_found:'⚠ このクーポンは見つかりません。',
+      coupon_not_found:'⚠ このクーポンは見つかりません。',
+      missing_token:'⚠ QRデータが不正です。',
+      coupon_unavailable:'⚠ このクーポンは現在ご利用いただけません (終了または停止中)。',
+      coupon_hmac_key_not_set:'⚠ サーバ設定エラー: 運営にご連絡ください。',
+    }[reason] || `エラー: ${reason}`;
+    $('scan-state').textContent = niceMsg;
+    return;
+  }
+  $('scan-state').className='scanner-state ok';
+  const d = r.data || {};
+  $('scan-state').innerHTML = `
+    <div class="scan-result">
+      <h3>✓ 利用確定しました</h3>
+      <p class="title">${escapeHtml(d.coupon_title || 'クーポン')}</p>
+      <p class="desc">割引: <strong>${escapeHtml(discountLabel(d.discount_type, d.discount_value))}</strong></p>
+      <p class="desc" style="margin-top:6px;font-size:10px;opacity:.7">ID: ${escapeHtml(d.member_coupon_id || '')}</p>
+    </div>
+  `;
+  // 統計を再ロード
+  loadDashboard(); loadHistory();
+}
+
+$('scan-start').addEventListener('click', startScanner);
+$('scan-stop').addEventListener('click', stopScanner);
+$('scan-manual').addEventListener('click', () => {
+  $('mm-token').value='';
+  $('manual-modal').classList.add('show');
+});
+$('mm-cancel').addEventListener('click', () => $('manual-modal').classList.remove('show'));
+$('mm-confirm').addEventListener('click', async () => {
+  const token = $('mm-token').value.trim();
+  if(!token){ alert('トークンを入力してください'); return; }
+  $('manual-modal').classList.remove('show');
+  confirmScan(token);
+});
+
+// =============== タブ ===============
+document.querySelectorAll('[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    $(`tab-${btn.dataset.tab}`).classList.add('active');
+    if(btn.dataset.tab === 'history') loadHistory();
+    if(btn.dataset.tab !== 'scan' && scanStream) stopScanner();
+  });
+});
+
+$('logout-btn').addEventListener('click', async () => {
+  try { await apiPost('/api/auth/logout', {}); } catch {}
+  location.href = '/mypage.html';
+});
+
+async function init(){
+  const me = await apiGet('/api/auth/me');
+  if(!me.ok || !me.data?.authenticated || (me.data.account?.role !== 'partner' && me.data.account?.role !== 'admin')){
+    $('unauth').classList.remove('hidden'); return;
+  }
+  $('me-email').textContent = me.data.account.email;
+  $('dash-body').classList.remove('hidden');
+
+  await loadDashboard();
+  await loadCoupons();
+  // history は履歴タブで遅延ロード
+}
+init();
+</script>
+
+</body>
+</html>

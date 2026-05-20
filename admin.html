@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';
+  script-src 'self' 'unsafe-inline';
+  connect-src 'self' https://carepass-api.tamjump.com;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' data: https://fonts.gstatic.com;
+  img-src 'self' data: blob: https:;
+">
+<meta name="description" content="Care Support Pass 運営ダッシュボード">
+<meta name="robots" content="noindex,nofollow">
+<title>運営ダッシュボード | Care Support Pass</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css?v=20260520d">
+<style>
+.dash{min-height:80vh;padding:96px 24px 96px;background:#fafafa}
+.dash-wrap{max-width:1200px;margin:0 auto}
+.dash h1{font-size:clamp(22px,2.6vw,28px);font-weight:700;margin:0 0 6px;color:var(--ink)}
+.dash h1 .role{font-size:11px;font-weight:600;color:#fff;background:#0f172a;padding:3px 8px;border-radius:6px;vertical-align:middle;margin-left:10px;letter-spacing:.04em}
+.dash .desc{font-size:13px;color:var(--sub);margin:0 0 28px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px}
+.kpi-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.kpi-card .label{font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.kpi-card .value{font-size:24px;font-weight:700;color:var(--ink);font-family:'Inter',system-ui;letter-spacing:-.02em}
+.kpi-card .sub{font-size:11px;color:var(--sub);margin-top:4px}
+.section{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px}
+.section h2{font-size:14px;font-weight:700;margin:0 0 16px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.section h2::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 0 18px;flex-wrap:wrap}
+.tab-btn{padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;font-size:12px;color:var(--sub);cursor:pointer;font-weight:500}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab-panel{display:none}.tab-panel.active{display:block}
+table{width:100%;border-collapse:collapse;font-size:12px}
+table th,table td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+table th{font-weight:600;color:var(--sub);background:#fafafa;font-size:11px;letter-spacing:.02em;text-transform:uppercase}
+table tr:hover td{background:#fcfcfc}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;letter-spacing:.02em}
+.badge.active{background:#dcfce7;color:#166534}
+.badge.pending{background:#fef3c7;color:#92400e}
+.badge.suspended{background:#fee2e2;color:#991b1b}
+.badge.broken{background:#fee2e2;color:#991b1b}
+.badge.retracted{background:#e5e7eb;color:#374151}
+.badge.published{background:#dbeafe;color:#1e3a8a}
+.unauth{padding:80px 24px;text-align:center}
+.unauth h2{font-size:18px;color:var(--ink);margin:0 0 12px}
+.unauth p{font-size:13px;color:var(--sub);margin:0 0 18px}
+.empty{padding:24px;text-align:center;color:var(--sub);font-size:12px}
+.warn{padding:10px 14px;background:#fef3c7;border:1px solid #fbbf24;border-radius:8px;font-size:12px;color:#92400e;margin-bottom:14px}
+.mono{font-family:'SF Mono','Roboto Mono',Consolas,monospace;font-size:11px;color:var(--sub)}
+.export-btn{padding:8px 14px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer;font-weight:600}
+.export-btn:hover{opacity:.85}
+.right{text-align:right}
+.user-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding:10px 16px;background:#0f172a;color:#fff;border-radius:10px;font-size:12px}
+.user-bar .email{font-weight:600}
+.user-bar .logout{background:none;border:1px solid #fff;color:#fff;padding:5px 12px;border-radius:6px;font-family:inherit;font-size:11px;cursor:pointer}
+.user-bar .logout:hover{background:rgba(255,255,255,.1)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
+    <div class="nav-menu"></div>
+    <div class="nav-cta">
+      <a class="btn ghost" href="/mypage.html">マイページ</a>
+    </div>
+  </div>
+</nav>
+
+<main class="dash">
+  <div class="dash-wrap">
+
+    <!-- 未認証時 -->
+    <div id="unauth" class="unauth hidden">
+      <h2>運営者ログインが必要です</h2>
+      <p>このページは Care Support Pass の運営者専用です。</p>
+      <a class="btn primary" href="/mypage.html">ログインページへ</a>
+    </div>
+
+    <!-- 認証済 -->
+    <div id="dash-body" class="hidden">
+      <div class="user-bar">
+        <span><span class="email" id="me-email"></span> としてログイン中</span>
+        <button class="logout" id="logout-btn">ログアウト</button>
+      </div>
+
+      <h1>運営ダッシュボード<span class="role">ADMIN</span></h1>
+      <p class="desc">Care Support Pass 全体の運営状況を確認できます。</p>
+
+      <!-- 全体KPI -->
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <!-- セクションタブ -->
+      <div class="section">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="facilities">介護施設</button>
+          <button class="tab-btn" data-tab="partners">協力企業</button>
+          <button class="tab-btn" data-tab="members">会員</button>
+          <button class="tab-btn" data-tab="reports">月次活動報告書</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-facilities">
+          <h2>導入施設一覧</h2>
+          <div id="facilities-warn" class="warn hidden"></div>
+          <div id="facilities-table"></div>
+        </div>
+
+        <div class="tab-panel" id="tab-partners">
+          <h2>協力企業一覧</h2>
+          <div id="partners-table"></div>
+        </div>
+
+        <div class="tab-panel" id="tab-members">
+          <h2>会員一覧 (最新200件)</h2>
+          <div style="text-align:right;margin-bottom:10px">
+            <button class="export-btn" id="export-members-btn">CSV ダウンロード</button>
+          </div>
+          <div id="members-table"></div>
+        </div>
+
+        <div class="tab-panel" id="tab-reports">
+          <h2>月次活動報告書 公開状況</h2>
+          <p style="font-size:12px;color:var(--sub);margin:0 0 14px;line-height:1.7">各施設が自社サイトで公開した月次報告書のURLを当社が管理しています。今月分が未登録の施設は要督促です。</p>
+          <div id="reports-table"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-bot">
+      <div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = 'https://carepass-api.tamjump.com';
+const $ = (id) => document.getElementById(id);
+
+async function apiGet(path) {
+  const res = await fetch(`${API_BASE}${path}`, { credentials: 'include' });
+  let data = null; try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+async function apiPost(path, body) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    credentials: 'include', body: JSON.stringify(body || {}),
+  });
+  let data = null; try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return s;
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+function yen(n) { return '¥' + Number(n || 0).toLocaleString('ja-JP'); }
+
+function renderKpi(data) {
+  const items = [
+    { label: '会員数',        value: data.members_count,     sub: 'Active members' },
+    { label: '月次売上 (MRR)', value: yen(data.mrr_jpy),      sub: '¥100 × 会員数' },
+    { label: '累計支援額',     value: yen(data.total_paid_jpy), sub: '会員から施設へ' },
+    { label: '導入施設数',     value: data.facilities_count,  sub: 'Facilities' },
+    { label: '協力企業数',     value: data.partners_count,    sub: 'Active partners' },
+    { label: '公開クーポン数',  value: data.published_coupons, sub: 'Coupons live' },
+    { label: 'クーポン利用数',  value: data.used_coupons,      sub: '累計' },
+    { label: '公開済 月次報告', value: data.published_reports, sub: 'Reports' },
+  ];
+  $('kpi-grid').innerHTML = items.map(i => `
+    <div class="kpi-card">
+      <div class="label">${escapeHtml(i.label)}</div>
+      <div class="value">${escapeHtml(String(i.value ?? '—'))}</div>
+      <div class="sub">${escapeHtml(i.sub)}</div>
+    </div>
+  `).join('');
+}
+
+function renderFacilities(list) {
+  if (!list.length) { $('facilities-table').innerHTML = '<div class="empty">施設データがありません。</div>'; return; }
+  const thisMonth = new Date().toISOString().slice(0,7);
+  let missing = 0;
+  for (const f of list) {
+    if (f.accepting && f.latest_report_period !== thisMonth) missing++;
+  }
+  const warn = $('facilities-warn');
+  if (missing > 0) {
+    warn.textContent = `今月分 (${thisMonth}) の月次活動報告書が未登録の施設が ${missing} 件あります。`;
+    warn.classList.remove('hidden');
+  } else {
+    warn.classList.add('hidden');
+  }
+  $('facilities-table').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>施設名</th><th>都道府県</th><th>カテゴリ</th><th>受付</th>
+        <th class="right">支援者数</th><th>最新報告月</th><th>公開済報告数</th>
+      </tr></thead>
+      <tbody>
+        ${list.map(f => `
+          <tr>
+            <td><strong>${escapeHtml(f.name)}</strong><div class="mono">${escapeHtml(f.id)}</div></td>
+            <td>${escapeHtml(f.prefecture || f.location || '—')}</td>
+            <td>${escapeHtml(f.category || '—')}</td>
+            <td><span class="badge ${f.accepting ? 'active' : 'suspended'}">${f.accepting ? '受付中' : '休止'}</span></td>
+            <td class="right">${f.supporters_count || 0}</td>
+            <td>${escapeHtml(f.latest_report_period || '—')}${f.latest_report_period && f.latest_report_period !== thisMonth ? ' <span class="badge broken">遅延</span>' : ''}</td>
+            <td class="right">${f.published_reports_count || 0}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderPartners(list) {
+  if (!list.length) { $('partners-table').innerHTML = '<div class="empty">企業データがありません。</div>'; return; }
+  $('partners-table').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>企業名</th><th>カテゴリ</th><th>所在地</th><th>状態</th>
+        <th class="right">クーポン数</th><th class="right">利用数</th>
+      </tr></thead>
+      <tbody>
+        ${list.map(p => `
+          <tr>
+            <td><strong>${escapeHtml(p.name)}</strong><div class="mono">${escapeHtml(p.id)}</div></td>
+            <td>${escapeHtml(p.category || '—')}</td>
+            <td>${escapeHtml(p.location || '—')}</td>
+            <td><span class="badge ${p.status}">${escapeHtml(p.status)}</span></td>
+            <td class="right">${p.coupons_count || 0}</td>
+            <td class="right">${p.used_count || 0}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+let membersCache = [];
+function renderMembers(list) {
+  membersCache = list;
+  if (!list.length) { $('members-table').innerHTML = '<div class="empty">会員データがありません。</div>'; return; }
+  $('members-table').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>メール</th><th>表示名</th><th>支援先</th><th>申込日</th>
+        <th class="right">累計支援額</th><th>Subscription</th>
+      </tr></thead>
+      <tbody>
+        ${list.map(m => `
+          <tr>
+            <td>${escapeHtml(m.email)}</td>
+            <td>${escapeHtml(m.display_name || '—')}</td>
+            <td class="mono">${escapeHtml(m.current_facility_id || '—')}</td>
+            <td>${fmtDate(m.created_at)}</td>
+            <td class="right">${yen(m.total_paid_jpy || 0)}</td>
+            <td class="mono">${escapeHtml(m.square_subscription_id || '—')}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+function downloadMembersCsv() {
+  if (!membersCache.length) return;
+  const head = ['email','display_name','role','facility_id','subscription_id','total_paid_jpy','created_at','last_billed_at'];
+  const rows = membersCache.map(m => head.map(k => {
+    const v = m[k] == null ? '' : String(m[k]).replace(/"/g, '""');
+    return `"${v}"`;
+  }).join(','));
+  const csv = '\uFEFF' + head.join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `csp_members_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function renderReports(list) {
+  if (!list.length) { $('reports-table').innerHTML = '<div class="empty">登録済の月次報告書がありません。</div>'; return; }
+  $('reports-table').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>対象月</th><th>施設</th><th>状態</th><th>URL</th><th>公開日</th><th>最終確認</th>
+      </tr></thead>
+      <tbody>
+        ${list.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.period)}</strong></td>
+            <td>${escapeHtml(r.facility_name)}</td>
+            <td><span class="badge ${r.status}">${escapeHtml(r.status)}</span></td>
+            <td><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener" class="mono" style="color:var(--accent)">${escapeHtml(r.url)} ↗</a></td>
+            <td>${fmtDate(r.published_at)}</td>
+            <td>${fmtDate(r.verified_at) || '—'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+// タブ切替
+document.querySelectorAll('[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    $(`tab-${btn.dataset.tab}`).classList.add('active');
+  });
+});
+$('export-members-btn').addEventListener('click', downloadMembersCsv);
+$('logout-btn').addEventListener('click', async () => {
+  try { await apiPost('/api/auth/logout', {}); } catch {}
+  location.href = '/mypage.html';
+});
+
+async function init() {
+  const me = await apiGet('/api/auth/me');
+  if (!me.ok || !me.data?.authenticated || me.data.account?.role !== 'admin') {
+    $('unauth').classList.remove('hidden');
+    return;
+  }
+  $('me-email').textContent = me.data.account.email;
+  $('dash-body').classList.remove('hidden');
+
+  const [overview, facs, prts, mems, reps] = await Promise.all([
+    apiGet('/api/admin/overview'),
+    apiGet('/api/admin/facilities'),
+    apiGet('/api/admin/partners'),
+    apiGet('/api/admin/members'),
+    apiGet('/api/admin/facility-reports'),
+  ]);
+  if (overview.ok) renderKpi(overview.data);
+  if (facs.ok) renderFacilities(facs.data.facilities || []);
+  if (prts.ok) renderPartners(prts.data.partners || []);
+  if (mems.ok) renderMembers(mems.data.members || []);
+  if (reps.ok) renderReports(reps.data.reports || []);
+}
+init();
+</script>
+
+</body>
+</html>

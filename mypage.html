@@ -58,6 +58,81 @@
   outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(233,68,54,.1);
 }
 .field .hint{font-size:11px;color:var(--sub);margin-top:6px;line-height:1.6}
+/* === タブ === */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 0 24px;flex-wrap:wrap}
+.tab-btn{
+  padding:12px 18px;background:none;border:none;border-bottom:2px solid transparent;
+  font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer;
+  font-weight:500;letter-spacing:.02em;transition:all .15s ease;
+}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* === クーポン === */
+.coupon-list{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:560px){.coupon-list{grid-template-columns:1fr 1fr}}
+.coupon-card{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:18px;display:flex;flex-direction:column;gap:8px;
+  position:relative;overflow:hidden;
+}
+.coupon-card.used,.coupon-card.expired{opacity:.55}
+.coupon-card .partner-name{font-size:11px;color:var(--sub);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.coupon-card .title{font-size:15px;font-weight:700;color:var(--ink);line-height:1.4}
+.coupon-card .desc{font-size:12px;color:var(--sub);line-height:1.6}
+.coupon-card .meta{font-size:11px;color:var(--sub);margin-top:auto;padding-top:8px;border-top:1px dashed var(--line)}
+.coupon-card .meta strong{color:var(--ink)}
+.coupon-card .use-btn{
+  margin-top:10px;padding:10px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s ease;
+}
+.coupon-card .use-btn:hover{opacity:.85}
+.coupon-card .use-btn:disabled{opacity:.5;cursor:not-allowed}
+.coupon-empty{text-align:center;padding:32px 16px;color:var(--sub);font-size:13px}
+
+/* === QR モーダル === */
+.qr-modal{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:1000;align-items:center;justify-content:center;padding:20px;
+}
+.qr-modal.show{display:flex}
+.qr-modal .inner{
+  background:#fff;border-radius:18px;padding:28px 24px;max-width:380px;width:100%;
+  text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.qr-modal h3{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--ink)}
+.qr-modal .partner{font-size:12px;color:var(--sub);margin:0 0 18px}
+.qr-modal .qr-wrap{
+  width:280px;height:280px;margin:0 auto 18px;
+  border:1px solid var(--line);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  padding:14px;box-sizing:border-box;background:#fff;
+}
+.qr-modal .qr-wrap svg{width:100%;height:auto;display:block}
+.qr-modal .countdown{
+  font-size:13px;color:var(--accent);font-weight:600;margin:0 0 6px;
+}
+.qr-modal .countdown.expired{color:var(--sub)}
+.qr-modal .hint{font-size:11px;color:var(--sub);line-height:1.7;margin:6px 0 18px}
+.qr-modal .close-btn{
+  padding:10px 24px;background:#f5f5f5;color:var(--ink);border:none;border-radius:8px;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+}
+.qr-modal .close-btn:hover{background:#ebebeb}
+
+/* === Reports === */
+.reports-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.report-link{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border:1px solid var(--line);border-radius:10px;
+  font-size:13px;color:var(--ink);text-decoration:none;background:#fafafa;
+  transition:background .15s ease;
+}
+.report-link:hover{background:#f0f0f0}
+.report-link .period{font-weight:600}
+.report-link .external{font-size:11px;color:var(--sub)}
 .btn-row{display:flex;gap:12px;flex-wrap:wrap}
 .btn-row .btn{flex:1;min-width:140px}
 .status-row{
@@ -188,6 +263,23 @@
       <div class="status-row"><span class="k">開始日</span><span class="v" id="info-start"></span></div>
       <div class="status-row"><span class="k">次回課金日</span><span class="v" id="info-next"></span></div>
       <div class="status-row"><span class="k">現在の支援先</span><span class="v" id="info-facility" style="color:var(--accent);font-weight:600"></span></div>
+      <div id="info-reports" class="hidden" style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)">
+        <div style="font-size:12px;font-weight:600;color:var(--sub);margin-bottom:8px;letter-spacing:.02em">支援先からの月次活動報告</div>
+        <div class="reports-list" id="info-reports-list"></div>
+      </div>
+    </section>
+
+    <!-- クーポン (Phase 2) -->
+    <section class="card hidden" id="coupons-card">
+      <h2>クーポン</h2>
+      <div class="tabs">
+        <button class="tab-btn active" data-coupon-tab="available">利用可能 <span id="cnt-available" style="opacity:.6"></span></button>
+        <button class="tab-btn" data-coupon-tab="used">利用済 <span id="cnt-used" style="opacity:.6"></span></button>
+        <button class="tab-btn" data-coupon-tab="expired">期限切れ <span id="cnt-expired" style="opacity:.6"></span></button>
+      </div>
+      <div class="tab-panel active" id="cp-available"><div class="coupon-list" id="cp-available-list"></div></div>
+      <div class="tab-panel" id="cp-used"><div class="coupon-list" id="cp-used-list"></div></div>
+      <div class="tab-panel" id="cp-expired"><div class="coupon-list" id="cp-expired-list"></div></div>
     </section>
 
     <!-- 支援先変更 -->
@@ -248,6 +340,18 @@
   </div>
 </main>
 
+<!-- QRモーダル (クーポン利用) -->
+<div class="qr-modal" id="qr-modal" role="dialog" aria-modal="true">
+  <div class="inner">
+    <h3 id="qr-title">クーポンをご利用ください</h3>
+    <div class="partner" id="qr-partner"></div>
+    <div class="qr-wrap" id="qr-svg-wrap"></div>
+    <div class="countdown" id="qr-countdown"></div>
+    <div class="hint">店舗スタッフの方にこの QR コードをご提示ください。<br>30秒経過すると無効になります。再度「使う」を押せば新しい QR を発行できます。</div>
+    <button class="close-btn" id="qr-close-btn">閉じる</button>
+  </div>
+</div>
+
 <footer class="footer">
   <div class="footer-in">
     <div class="footer-top">
@@ -268,6 +372,7 @@
       </div>
       <div class="footer-col">
         <h5>For Partners</h5>
+        <a href="/facilities-directory.html">導入施設を見る</a>
         <a href="/partners.html">協力会社の方へ</a>
         <a href="/facilities.html">介護施設の方へ</a>
       </div>
@@ -279,6 +384,7 @@
   </div>
 </footer>
 
+<script src="/assets/qrcode.js?v=20260520d"></script>
 <script>
 const API_BASE = 'https://carepass-api.tamjump.com';
 
@@ -407,6 +513,149 @@ function renderInfo(payload) {
     }
     $('change-card').classList.remove('hidden');
     $('cancel-card').classList.remove('hidden');
+  }
+
+  // セッション認証経路でのみクーポン・月次報告書を表示
+  if (isSessionLogin) {
+    loadCoupons();
+    loadMyFacilityReports();
+  }
+}
+
+// === クーポン ===
+async function loadCoupons() {
+  try {
+    const r = await apiGet('/api/me/coupons');
+    if (!r.ok || !r.data?.ok) {
+      // クーポンエンドポイント未配備 or DB未初期化 → 静かにスキップ
+      return;
+    }
+    const { available = [], used = [], expired = [] } = r.data;
+    $('cnt-available').textContent = available.length ? `(${available.length})` : '';
+    $('cnt-used').textContent      = used.length      ? `(${used.length})`      : '';
+    $('cnt-expired').textContent   = expired.length   ? `(${expired.length})`   : '';
+    renderCouponList('cp-available-list', available, 'available');
+    renderCouponList('cp-used-list',      used,      'used');
+    renderCouponList('cp-expired-list',   expired,   'expired');
+    if (available.length || used.length || expired.length) {
+      $('coupons-card').classList.remove('hidden');
+    }
+  } catch (e) {
+    // 無視
+  }
+}
+
+function renderCouponList(elId, list, kind) {
+  const el = $(elId);
+  if (!list || list.length === 0) {
+    el.innerHTML = `<div class="coupon-empty">${kind === 'available' ? '現在ご利用いただけるクーポンはありません。' : kind === 'used' ? 'まだ利用履歴はありません。' : '期限切れのクーポンはありません。'}</div>`;
+    return;
+  }
+  el.innerHTML = '';
+  for (const c of list) {
+    const card = document.createElement('div');
+    card.className = `coupon-card ${kind === 'available' ? '' : kind}`;
+    const discount = c.discount_type === 'percent'
+      ? `${c.discount_value}% OFF`
+      : c.discount_type === 'amount'
+        ? `¥${(c.discount_value || 0).toLocaleString()} OFF`
+        : c.discount_type === 'item'
+          ? '無料'
+          : 'サービス';
+    const meta = kind === 'used'
+      ? `<div class="meta">利用日: <strong>${fmtDate(c.used_at)}</strong>${c.used_partner_location ? ` / ${c.used_partner_location}` : ''}</div>`
+      : kind === 'expired'
+        ? `<div class="meta">期限: <strong>${fmtDate(c.valid_until)}</strong></div>`
+        : `<div class="meta">有効期限: <strong>${fmtDate(c.valid_until)}</strong> / ${discount}</div>`;
+    card.innerHTML = `
+      <div class="partner-name">${escapeHtml(c.partner_name || '')}${c.partner_location ? ' · ' + escapeHtml(c.partner_location) : ''}</div>
+      <div class="title">${escapeHtml(c.title || '')}</div>
+      ${c.description ? `<div class="desc">${escapeHtml(c.description)}</div>` : ''}
+      ${meta}
+      ${kind === 'available' ? `<button class="use-btn" data-mc-id="${c.member_coupon_id}" data-partner="${escapeHtml((c.partner_name || ''))}">使う</button>` : ''}
+    `;
+    el.appendChild(card);
+  }
+  // 使うボタン
+  el.querySelectorAll('.use-btn').forEach(btn => {
+    btn.addEventListener('click', () => openQrModal(btn.dataset.mcId, btn.dataset.partner));
+  });
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+// === QR モーダル ===
+let qrCountdownTimer = null;
+async function openQrModal(memberCouponId, partnerName) {
+  $('qr-partner').textContent = partnerName || '';
+  $('qr-svg-wrap').innerHTML = '<div style="color:var(--sub);font-size:12px">QRを生成中…</div>';
+  $('qr-countdown').textContent = '';
+  $('qr-countdown').classList.remove('expired');
+  $('qr-modal').classList.add('show');
+
+  try {
+    const r = await apiPost(`/api/me/coupons/${encodeURIComponent(memberCouponId)}/reserve`, {});
+    if (!r.ok || !r.data?.token) {
+      $('qr-svg-wrap').innerHTML = `<div style="color:var(--accent);font-size:12px;padding:14px;text-align:center">${errorMsgFor(r.data?.error)}</div>`;
+      return;
+    }
+    // QR 描画 (qrcode-generator)
+    const qr = qrcode(0, 'M');
+    qr.addData(r.data.token);
+    qr.make();
+    $('qr-svg-wrap').innerHTML = qr.createSvgTag({ scalable: true, cellSize: 6, margin: 0 });
+    // カウントダウン
+    const endsAt = r.data.expires_at_ms || (Date.now() + (r.data.ttl_sec || 30) * 1000);
+    const tick = () => {
+      const remain = Math.ceil((endsAt - Date.now()) / 1000);
+      if (remain > 0) {
+        $('qr-countdown').textContent = `残り ${remain} 秒`;
+      } else {
+        $('qr-countdown').textContent = '有効期限が切れました';
+        $('qr-countdown').classList.add('expired');
+        clearInterval(qrCountdownTimer);
+        // 自動で閉じてからクーポン再読込
+        setTimeout(() => { closeQrModal(); loadCoupons(); }, 1500);
+      }
+    };
+    tick();
+    if (qrCountdownTimer) clearInterval(qrCountdownTimer);
+    qrCountdownTimer = setInterval(tick, 250);
+  } catch (e) {
+    $('qr-svg-wrap').innerHTML = `<div style="color:var(--accent);font-size:12px;padding:14px;text-align:center">ネットワークエラー</div>`;
+  }
+}
+function closeQrModal() {
+  $('qr-modal').classList.remove('show');
+  if (qrCountdownTimer) { clearInterval(qrCountdownTimer); qrCountdownTimer = null; }
+}
+
+// === 月次報告書 ===
+async function loadMyFacilityReports() {
+  try {
+    const r = await apiGet('/api/me/my-facility-reports');
+    if (!r.ok || !r.data?.ok) return;
+    const reports = r.data.reports || [];
+    if (reports.length === 0) {
+      $('info-reports').classList.add('hidden');
+      return;
+    }
+    const list = $('info-reports-list');
+    list.innerHTML = '';
+    for (const rep of reports) {
+      const a = document.createElement('a');
+      a.className = 'report-link';
+      a.href = rep.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.innerHTML = `<span class="period">${rep.period} の活動報告</span><span class="external">外部サイトを開く ↗</span>`;
+      list.appendChild(a);
+    }
+    $('info-reports').classList.remove('hidden');
+  } catch (e) {
+    // 無視
   }
 }
 
@@ -635,6 +884,23 @@ $('logout-btn').addEventListener('click', async () => {
   showMsg('magic-msg', 'ログアウトしました。', 'info');
 });
 
+// === Coupon tabs ===
+document.querySelectorAll('[data-coupon-tab]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const t = btn.dataset.couponTab;
+    document.querySelectorAll('[data-coupon-tab]').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('#coupons-card .tab-panel').forEach(p => p.classList.remove('active'));
+    const panel = $(`cp-${t}`);
+    if (panel) panel.classList.add('active');
+  });
+});
+
+// === QR modal close ===
+$('qr-close-btn').addEventListener('click', closeQrModal);
+$('qr-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'qr-modal') closeQrModal();
+});
+
 // === 初期化: セッションがあれば自動ログイン ===
 async function init() {
   // URL params (login_error 表示)
@@ -654,7 +920,26 @@ async function init() {
   try {
     const me = await apiGet('/api/auth/me');
     if (me.ok && me.data?.authenticated) {
-      // セッションあり → /api/me/subscription を取得
+      const role = me.data.account?.role || 'member';
+      // ロール別の自動リダイレクト
+      if (role === 'admin') {
+        // 運営者: admin.html へ
+        if (location.pathname !== '/admin.html') {
+          location.href = '/admin.html';
+          return;
+        }
+      } else if (role === 'facility') {
+        if (location.pathname !== '/facility-dashboard.html') {
+          location.href = '/facility-dashboard.html';
+          return;
+        }
+      } else if (role === 'partner') {
+        if (location.pathname !== '/partner-dashboard.html') {
+          location.href = '/partner-dashboard.html';
+          return;
+        }
+      }
+      // member: /api/me/subscription を取得
       const subR = await apiGet('/api/me/subscription');
       if (subR.ok && subR.data?.ok) {
         currentSubId = subR.data.subscription.id;
@@ -663,6 +948,16 @@ async function init() {
         isSessionLogin = true;
         renderInfo(subR.data);
         showLoggedInState();
+        return;
+      } else if (subR.status === 404) {
+        // members 行がない (デモ会員等)
+        isSessionLogin = true;
+        showLoggedInState();
+        showMsg('magic-msg',
+          `${me.data.account.email} としてログイン中です。<br>ご契約情報がまだございません。`,
+          'info');
+        loadCoupons();           // デモクーポンが配布されていれば表示される
+        loadMyFacilityReports(); // 支援先未設定なので何も出ない
         return;
       }
     }

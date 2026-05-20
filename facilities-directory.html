@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';
+  script-src 'self' 'unsafe-inline';
+  connect-src 'self' https://carepass-api.tamjump.com;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' data: https://fonts.gstatic.com;
+  img-src 'self' data: blob: https:;
+">
+<meta name="description" content="Care Support Pass 導入介護施設の一覧と月次活動報告書">
+<title>導入施設一覧 | Care Support Pass</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css?v=20260520d">
+<style>
+.dir{min-height:80vh;padding:96px 24px 96px;background:#fafafa}
+.dir-wrap{max-width:1200px;margin:0 auto}
+.dir h1{font-size:clamp(22px,2.8vw,32px);font-weight:700;margin:0 0 8px;color:var(--ink)}
+.dir .lead{font-size:13px;color:var(--sub);margin:0 0 24px;line-height:1.7;max-width:680px}
+.search-bar{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:20px}
+.search-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end}
+@media(max-width:760px){.search-row{grid-template-columns:1fr 1fr;gap:8px}}
+.search-row .field{display:flex;flex-direction:column;gap:5px}
+.search-row label{font-size:10px;color:var(--sub);font-weight:600;letter-spacing:.02em;text-transform:uppercase}
+.search-row input,.search-row select{padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;background:#fff;color:var(--ink);outline:none}
+.search-row input:focus,.search-row select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(233,68,54,.1)}
+.search-row button{padding:9px 22px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.chip{padding:5px 11px;border:1px solid var(--line);background:#fff;border-radius:16px;font-size:11px;color:var(--sub);cursor:pointer;font-family:inherit}
+.chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:all .15s ease}
+.card:hover{box-shadow:0 6px 24px rgba(0,0,0,.06);transform:translateY(-1px);border-color:var(--accent)}
+.card .logo{width:54px;height:54px;border-radius:10px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--sub);font-size:18px;flex-shrink:0;overflow:hidden}
+.card .logo img{width:100%;height:100%;object-fit:cover}
+.card .head{display:flex;gap:12px;align-items:flex-start}
+.card .name{font-size:15px;font-weight:700;color:var(--ink);line-height:1.4;margin:0}
+.card .meta{font-size:11px;color:var(--sub);margin-top:3px}
+.card .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
+.card .badge.accepting{background:#dcfce7;color:#166534}
+.card .badge.closed{background:#fee2e2;color:#991b1b}
+.card .desc{font-size:12px;color:var(--sub);line-height:1.6;flex-grow:1}
+.card .report-cta{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#fafafa;border-radius:8px;font-size:12px;margin-top:8px}
+.card .report-cta strong{color:var(--ink);font-weight:600}
+.card .report-cta .none{color:var(--sub);font-style:italic}
+.card .report-cta a{color:var(--accent);text-decoration:none;font-weight:600}
+
+.empty{padding:40px 20px;text-align:center;color:var(--sub);font-size:13px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.pager{text-align:center;margin-top:24px}
+.pager button{padding:10px 20px;background:#fff;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;cursor:pointer;color:var(--ink);font-weight:600}
+.pager button:hover{border-color:var(--accent);color:var(--accent)}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal .inner{background:#fff;border-radius:16px;padding:28px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h3{margin:0 0 6px;font-size:18px;font-weight:700;color:var(--ink)}
+.modal .meta{font-size:12px;color:var(--sub);margin:0 0 18px}
+.modal .desc{font-size:13px;color:var(--ink);line-height:1.7;margin:0 0 18px;padding:14px;background:#fafafa;border-radius:10px}
+.modal .reports h4{margin:0 0 10px;font-size:13px;font-weight:700;color:var(--ink)}
+.modal .reports a{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--line);border-radius:8px;font-size:13px;color:var(--ink);text-decoration:none;background:#fafafa;margin-bottom:6px;transition:background .15s ease}
+.modal .reports a:hover{background:#fff;border-color:var(--accent);color:var(--accent)}
+.modal .close{display:block;margin:20px auto 0;padding:10px 24px;background:#f5f5f5;color:var(--ink);border:none;border-radius:8px;font-family:inherit;font-size:13px;cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
+    <div class="nav-menu">
+      <a href="/concept.html">理念</a>
+      <a href="/facilities.html">参加施設</a>
+      <a href="/partners.html">協力企業</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn ghost" href="/mypage.html">マイページ</a>
+      <a class="btn primary" href="/#join">支援を始める</a>
+    </div>
+  </div>
+</nav>
+
+<main class="dir">
+  <div class="dir-wrap">
+
+    <h1>導入施設 ディレクトリ</h1>
+    <p class="lead">
+      Care Support Pass にご参加いただいている介護施設の一覧です。各施設の<strong>月次活動報告書</strong>は、施設のサイトで毎月公開されます。会員は自分が選んだ施設の活動を、いつでもこのページから確認できます。
+    </p>
+
+    <div class="search-bar">
+      <div class="search-row">
+        <div class="field">
+          <label>キーワード</label>
+          <input type="text" id="q" placeholder="施設名 / ふりがな で検索">
+        </div>
+        <div class="field">
+          <label>都道府県</label>
+          <select id="prefecture"><option value="">すべて</option></select>
+        </div>
+        <div class="field">
+          <label>カテゴリ</label>
+          <select id="category">
+            <option value="">すべて</option>
+            <option>特別養護老人ホーム</option>
+            <option>グループホーム</option>
+            <option>デイサービス</option>
+            <option>訪問介護</option>
+            <option>有料老人ホーム</option>
+            <option>サービス付き高齢者向け住宅</option>
+            <option>小規模多機能</option>
+            <option>その他</option>
+          </select>
+        </div>
+        <button id="search-btn">検索</button>
+      </div>
+      <div class="chips">
+        <button class="chip" data-toggle="accepting">受付中のみ表示</button>
+      </div>
+    </div>
+
+    <div id="results" class="grid"></div>
+    <div id="empty" class="empty hidden">該当する施設が見つかりませんでした。検索条件を変更してください。</div>
+    <div id="pager" class="pager hidden"><button id="more-btn">さらに読み込む</button></div>
+
+  </div>
+</main>
+
+<!-- 施設詳細モーダル -->
+<div class="modal" id="facility-modal">
+  <div class="inner">
+    <h3 id="fm-name"></h3>
+    <p class="meta" id="fm-meta"></p>
+    <div class="desc" id="fm-desc"></div>
+    <div class="reports">
+      <h4>月次活動報告書 (新しい順)</h4>
+      <div id="fm-reports"></div>
+    </div>
+    <button class="close" id="fm-close">閉じる</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-bot"><div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div></div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = 'https://carepass-api.tamjump.com';
+const $ = (id) => document.getElementById(id);
+
+async function apiGet(path){ const r=await fetch(`${API_BASE}${path}`,{credentials:'include'}); let d=null; try{d=await r.json();}catch{} return {ok:r.ok,status:r.status,data:d}; }
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function fmtPeriodJa(p){ if(!p) return ''; const [y,m]=p.split('-'); return `${y}年${parseInt(m,10)}月`; }
+
+const PREFS = ['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'];
+PREFS.forEach(p => { const o=document.createElement('option'); o.value=p; o.textContent=p; $('prefecture').appendChild(o); });
+
+let acceptingOnly = false;
+let cursor = null;
+let isLoading = false;
+
+function buildQuery(opts={}){
+  const params = new URLSearchParams();
+  const q = $('q').value.trim();
+  const pref = $('prefecture').value;
+  const cat  = $('category').value;
+  if(q) params.set('q', q);
+  if(pref) params.set('prefecture', pref);
+  if(cat)  params.set('category', cat);
+  if(acceptingOnly) params.set('accepting','1');
+  if(opts.cursor) params.set('cursor', opts.cursor);
+  params.set('limit','24');
+  return params.toString();
+}
+
+function renderCard(f){
+  const acceptingClass = f.accepting ? 'accepting' : 'closed';
+  const acceptingText  = f.accepting ? '受付中' : '休止';
+  const initial = (f.name || '?').slice(0,1);
+  const reportCta = f.latest_report
+    ? `<div class="report-cta">
+         <strong>${escapeHtml(fmtPeriodJa(f.latest_report.period))} の活動報告</strong>
+         <a href="${escapeHtml(f.latest_report.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">見る ↗</a>
+       </div>`
+    : `<div class="report-cta"><span class="none">月次報告書は未公開です</span></div>`;
+  return `
+    <div class="card" data-fid="${escapeHtml(f.id)}">
+      <div class="head">
+        <div class="logo">${f.logo_url ? `<img src="${escapeHtml(f.logo_url)}" alt="">` : escapeHtml(initial)}</div>
+        <div style="flex:1">
+          <h3 class="name">${escapeHtml(f.name)}</h3>
+          <div class="meta">
+            ${escapeHtml(f.prefecture || f.location || '')}${f.category ? ' · ' + escapeHtml(f.category) : ''}
+            <span class="badge ${acceptingClass}" style="margin-left:6px">${acceptingText}</span>
+          </div>
+        </div>
+      </div>
+      ${f.description ? `<p class="desc">${escapeHtml(f.description)}</p>` : ''}
+      ${reportCta}
+    </div>
+  `;
+}
+
+async function search(opts={}){
+  if(isLoading) return;
+  isLoading = true;
+  const qs = buildQuery(opts);
+  const r = await apiGet(`/api/facilities/directory?${qs}`);
+  isLoading = false;
+  if(!r.ok) return;
+  const data = r.data || {};
+  const list = data.facilities || [];
+  if(!opts.cursor){
+    $('results').innerHTML = list.map(renderCard).join('');
+    $('empty').classList.toggle('hidden', list.length > 0);
+  } else {
+    $('results').insertAdjacentHTML('beforeend', list.map(renderCard).join(''));
+  }
+  document.querySelectorAll('.card[data-fid]').forEach(card => {
+    card.onclick = () => openFacilityModal(card.dataset.fid);
+  });
+  cursor = data.next_cursor || null;
+  $('pager').classList.toggle('hidden', !cursor);
+}
+
+async function openFacilityModal(facilityId){
+  const r = await apiGet(`/api/facilities/${encodeURIComponent(facilityId)}`);
+  if(!r.ok) return;
+  const f = r.data.facility || {};
+  $('fm-name').textContent = f.name || '';
+  $('fm-meta').textContent = [f.prefecture||f.location, f.category].filter(Boolean).join(' · ');
+  $('fm-desc').textContent = f.description || '紹介文は準備中です。';
+  const reps = (f.reports || []).filter(r => r.status === 'published');
+  $('fm-reports').innerHTML = reps.length
+    ? reps.map(r => `
+        <a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">
+          <span><strong>${escapeHtml(fmtPeriodJa(r.period))}</strong></span>
+          <span style="font-size:11px;color:var(--sub)">${escapeHtml(r.url)} ↗</span>
+        </a>
+      `).join('')
+    : '<div style="font-size:12px;color:var(--sub);padding:8px">まだ公開された月次活動報告書はありません。</div>';
+  $('facility-modal').classList.add('show');
+}
+
+$('search-btn').addEventListener('click', () => { cursor=null; search(); });
+$('q').addEventListener('keydown', e => { if(e.key==='Enter'){ cursor=null; search(); }});
+$('prefecture').addEventListener('change', () => { cursor=null; search(); });
+$('category').addEventListener('change', () => { cursor=null; search(); });
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    chip.classList.toggle('active');
+    acceptingOnly = chip.classList.contains('active');
+    cursor=null; search();
+  });
+});
+$('more-btn').addEventListener('click', () => { if(cursor) search({cursor}); });
+$('fm-close').addEventListener('click', () => $('facility-modal').classList.remove('show'));
+$('facility-modal').addEventListener('click', e => { if(e.target.id==='facility-modal') $('facility-modal').classList.remove('show'); });
+
+search();
+</script>
+
+</body>
+</html>
