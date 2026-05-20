@@ -35,5 +35,5 @@ migrations_dir = "migrations"
 #   WEBHOOK_NOTIFICATION_URL
 #
 # Phase 1 で追加:
-#   RESEND_API_KEY                   (https://resend.com 発行のAPIキー)
-#   SESSION_SECRET                   (32+ byte random hex, openssl rand -hex 32)
+#   MAIL_API_TOKEN                   (tamjump-contact-api と共通の service-to-service トークン.
+#                                     tamjump-contact-api 側の INTERNAL_TOKEN と同じ値を投入する)

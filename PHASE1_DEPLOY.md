@@ -2,16 +2,16 @@
 
 ## 全体像
 
-このセッションで push したもの:
+Phase 1 で追加されたもの:
 1. D1 マイグレーション (`worker/migrations/0001_init.sql`)
-2. Worker に `/api/auth/*` と `/api/me/*` を追加（マジックリンク認証 + セッション）
-3. `/api/subscribe` に申込完了メール送信
+2. Worker に `/api/auth/*` `/api/me/*` 追加（マジックリンク + セッション）
+3. メール送信は **既存の `tamjump-contact-api` (AWS SES) を共通基盤として利用**
 4. `mypage.html` をメアドマジックリンクプライマリ + 申込番号フォールバック
 5. 全 HTML のナビに「マイページ」ボタン
 
-## ユーザーPCで実行する手順
+## ユーザーPC作業手順
 
-### 0. (緊急) 本番テスト Subscription 2件の解約
+### 0. (緊急 §6-1) 本番テスト Subscription 2件の解約
 
 ```cmd
 curl -X POST "https://connect.squareup.com/v2/subscriptions/798c1c46-c53a-432f-96be-f64a554539ec/cancel" -H "Authorization: Bearer REDACTED_SQUARE_TOKEN" -H "Content-Type: application/json" -H "Square-Version: 2026-01-22"
@@ -19,60 +19,67 @@ curl -X POST "https://connect.squareup.com/v2/subscriptions/798c1c46-c53a-432f-9
 curl -X POST "https://connect.squareup.com/v2/subscriptions/bb21c3cd-4b0b-4ad1-bdf6-546fc27ea57f/cancel" -H "Authorization: Bearer REDACTED_SQUARE_TOKEN" -H "Content-Type: application/json" -H "Square-Version: 2026-01-22"
 ```
 
-成功なら `"status":"DEACTIVATED"` or `"canceled_date":"..."` が返る。
+✅ 完了済
 
-### 1. 最新コードを pull
+### 1. D1 作成 + マイグレーション
 
 ```cmd
 cd C:\carepass-work\carepass
 git pull
-```
-
-### 2. D1 データベース作成
-
-```cmd
 cd worker
 npx wrangler d1 create carepass-db
-```
-
-→ 出力に `database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"` が含まれる。
-この **database_id** を `worker/wrangler.toml` の `PLACEHOLDER_REPLACE_WITH_REAL_ID` と差し替える。
-
-### 3. マイグレーション適用
-
-```cmd
+:: 表示された database_id を wrangler.toml に貼る (Claude 側で対応済ならスキップ)
 npx wrangler d1 migrations apply carepass-db --remote
 ```
 
-`✅ Applied 1 migration` が出れば OK。
+✅ 完了済（`5f4e840e-28e2-4c8a-9c8d-1b70bee44d89`）
 
-### 4. シークレット投入
+### 2. tamjump-contact-api を新バージョンに置き換え
 
-#### a. Resend API キー（メール送信用）
+このセッションで Claude が生成した `worker.js`（次節）を、Cloudflare ダッシュボードの:
 
-[https://resend.com](https://resend.com) で無料アカウント作成 → Domain `carepass.tamjump.com` を verify → API Key 発行
+   Workers & Pages → `tamjump-contact-api` → **Edit code** → 全選択削除 → 貼り付け → **Save and deploy**
 
-または、最初はテストで Resend が提供する `onboarding@resend.dev` から送る方式でも可。
-その場合は `wrangler.toml` の `MAIL_FROM` を一時的に `Care Support Pass <onboarding@resend.dev>` に変える。
+差分:
+- ALLOWED_ORIGINS に `https://carepass.tamjump.com` を追加
+- PROJECT_CONFIG に `carepass` を追加
+- `/transactional` エンドポイント新設（service-to-service用）
+- carepass 用メールテンプレ 3種追加（subscribe_welcome / magic_link / cancel_confirmation）
+
+### 3. INTERNAL_TOKEN の生成・両 Worker に投入
+
+#### a. トークン生成（ユーザーPCで）
 
 ```cmd
-npx wrangler secret put RESEND_API_KEY
-（プロンプトに re_xxxxxxxxxxxx を貼る）
+:: PowerShell
+[Convert]::ToBase64String((1..32 | %{Get-Random -Maximum 256}))
 ```
 
-#### b. 既存シークレット（v6.5から残置・確認のみ）
+または cmd で:
 
-下記が既に投入済みであることを `npx wrangler secret list` で確認:
-- `SQUARE_ACCESS_TOKEN`
-- `SQUARE_LOCATION_ID`
-- `SQUARE_WEBHOOK_SIGNATURE_KEY`
-- `SQUARE_APPLICATION_ID`
-- `PLAN_VARIATION_IDS_JSON`
-- `FACILITIES_JSON`
-- `ALLOWED_ORIGIN`
-- `WEBHOOK_NOTIFICATION_URL`
+```cmd
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
 
-### 5. Worker デプロイ
+64文字のランダム文字列が出る → これが INTERNAL_TOKEN。
+
+#### b. tamjump-contact-api 側に投入
+
+Workers & Pages → `tamjump-contact-api` → **Settings** → **Variables and Secrets** → **+ Add**
+- Type: Secret
+- Name: `INTERNAL_TOKEN`
+- Value: (上記で生成したトークン)
+- Save
+
+#### c. carepass-api 側に投入（コマンドプロンプトで）
+
+```cmd
+cd C:\carepass-work\carepass\worker
+npx wrangler secret put MAIL_API_TOKEN
+:: プロンプトに同じトークンを貼る
+```
+
+### 4. carepass-api を deploy
 
 ```cmd
 npx wrangler deploy
@@ -80,7 +87,7 @@ npx wrangler deploy
 
 `Deployed carepass-api triggers` が出れば成功。
 
-### 6. 動作確認
+### 5. 動作確認
 
 #### a. ヘルスチェック
 
@@ -90,50 +97,50 @@ curl https://carepass-api.tamjump.com/api/health
 
 期待値: `{"ok":true,"env":"production","db":true,"mail":true}`
 
-`db: false` ならマイグレーション or wrangler.toml の binding 設定漏れ。
-`mail: false` なら RESEND_API_KEY 未投入。
+- `db: false` → wrangler.toml の database_id 確認
+- `mail: false` → MAIL_API_TOKEN 未投入
 
-#### b. マジックリンク送信テスト
+#### b. マジックリンクテスト
 
 ```cmd
-node scripts\smoke-test-phase1.js your-test-email@example.com
+curl -X POST https://carepass-api.tamjump.com/api/auth/request-magic-link -H "Content-Type: application/json" -H "Origin: https://carepass.tamjump.com" -d "{\"email\":\"your-test@example.com\"}"
 ```
 
-メールが届くか、Resend ダッシュボードで送信ログを確認。
+期待値: `{"ok":true,...}`
+
+ただしテストメアドが accounts テーブルに無ければメールは送られない（仕様）。
+本番テスト時は新規 Subscribe → 申込完了メール（subscribe_welcome テンプレ）が届くフローで確認するのが楽。
 
 #### c. ブラウザ確認
 
-1. https://carepass.tamjump.com/mypage.html を開く
-2. メールでログインフォームに自分のメアドを入力
-3. メールに届くリンクをクリック
-4. マイページに自動ログインされ、契約情報が表示される
+1. https://carepass.tamjump.com/mypage.html
+2. メアド入力 → ログインリンク送信
+3. 届いたメールの URL → 自動ログイン
 
-### 7. (任意) 既存ユーザーをアカウントにバックフィル
+### 6. テスト購入フローでの最終確認
 
-v6.5 までに本番テスト決済をした顧客は、まだ accounts テーブルに行がない。
-解約済みであれば無視可能。継続する場合は別途バックフィルスクリプトを作る（Phase 2 以降）。
+1. https://carepass.tamjump.com/#apply
+2. 自分のメアドで申込
+3. 申込完了メール（CSP-プレフィックス、送信元 `noreply@tamjump.com`）が届く
+4. マイページのログインリンクが動作
 
 ## トラブルシュート
 
-### マジックリンクをクリックしても "login_error=token_expired"
+### "Unauthorized" が tamjump-contact-api から返る
 
-トークンの有効期限は15分。再度マイページからログインリンクを請求する。
-
-### "db_not_configured" エラー
-
-wrangler.toml の `database_id` が PLACEHOLDER のままになっている。実IDに差し替えて再 deploy。
+INTERNAL_TOKEN と MAIL_API_TOKEN の値が一致していない。両方とも再投入。
 
 ### メールが届かない
 
-1. `/api/health` の `mail: true` を確認
-2. Resend ダッシュボードで送信ログを確認（拒否されていないか）
-3. 受信側スパムフォルダ確認
-4. Resend で `carepass.tamjump.com` ドメインが verify 済みか確認（未 verify なら DNS の SPF/DKIM レコード追加が必要）
+- `tamjump-contact-api` の Logs (Cloudflare ダッシュボード → Observability) で SES エラーがないか確認
+- SES の Sender Identity に `noreply@tamjump.com` が verify 済みか
+- 受信者がスパムフォルダに行っていないか
 
-### CORS エラー（クッキーが送られない）
+### CSP / CORS エラー
 
-ブラウザの DevTools → Network で OPTIONS リクエストのレスポンスを確認:
-- `Access-Control-Allow-Origin: https://carepass.tamjump.com` (正確に一致)
-- `Access-Control-Allow-Credentials: true`
+- mypage.html の CSP `connect-src` に `https://carepass-api.tamjump.com` が含まれているか確認 (含まれている)
+- carepass-api 側の `ALLOWED_ORIGIN` secret が `https://carepass.tamjump.com` であること
 
-セッションクッキーは `SameSite=None; Secure` で、本番では HTTPS 必須。
+### "db_not_configured"
+
+wrangler.toml の database_id が PLACEHOLDER のまま → 実 ID に差し替えて再 deploy

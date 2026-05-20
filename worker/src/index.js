@@ -78,7 +78,7 @@ export default {
           ok: true,
           env: env.SQUARE_ENV,
           db: !!env.DB,
-          mail: !!env.RESEND_API_KEY,
+          mail: !!env.MAIL_API_TOKEN,
         }, 200, env, origin);
       }
 
