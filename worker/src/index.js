@@ -1,16 +1,30 @@
-// Care Support Pass — Cloudflare Workers Backend
+// Care Support Pass — Cloudflare Workers Backend (Phase 1)
+//
 // 役割: 個人会員の Square Subscription 作成・退会・Webhook 受信、
-//       加盟店/介護施設の申込受付（課金なし）
+//       加盟店/介護施設の申込受付、
+//       マイページ用の認証 (マジックリンク + 申込番号フォールバック)。
 //
 // エンドポイント:
-//   GET  /api/health      死活
-//   GET  /api/config      フロント用 Application ID / Location ID / 施設一覧
-//   POST /api/subscribe   個人会員: フォーム送信→Square Subscription 作成
-//   POST /api/cancel      退会
-//   POST /api/apply       加盟店/施設の申込受付（決済なし・通知のみ）
-//   POST /api/webhook     Square Webhook (HMAC-SHA256 署名検証)
+//   既存:
+//     GET  /api/health                    死活確認
+//     GET  /api/config                    フロント用 Square 設定 + 施設一覧
+//     POST /api/subscribe                 個人会員: フォーム送信→Square Subscription 作成 + account作成 + 申込完了メール
+//     POST /api/apply                     加盟店/施設の申込受付
+//     POST /api/cancel                    退会 (申込番号+メアド 互換: 旧 mypage)
+//     POST /api/lookup                    申込番号+メアドで状態取得 (旧 mypage)
+//     POST /api/change-facility           申込番号+メアドで支援先変更 (旧 mypage)
+//     POST /api/webhook                   Square Webhook
+//
+//   Phase 1 新規 (マジックリンクログイン):
+//     POST /api/auth/request-magic-link   {email} → トークン発行 + メール送信
+//     GET  /api/auth/verify-magic-link    ?token=... → セッション作成 + サイトへ302
+//     POST /api/auth/logout               セッション破棄
+//     GET  /api/auth/me                   現在のセッション情報
+//     GET  /api/me/subscription           ログイン中の Subscription 状態
+//     POST /api/me/change-facility        ログイン中の支援先変更
+//     POST /api/me/cancel                 ログイン中の解約
 
-import { handleOptions, jsonResponse } from './cors.js';
+import { handleOptions, jsonResponse, redirectResponse } from './cors.js';
 import {
   getOrCreateCustomer,
   createCard,
@@ -28,6 +42,26 @@ import {
   findFacility,
 } from './plans.js';
 import { verifySquareSignature, handleEvent } from './webhook.js';
+import {
+  findAccountByEmail,
+  getOrCreateAccount,
+  upsertMember,
+  findMemberBySubscriptionId,
+  createLoginToken,
+  consumeLoginToken,
+  createSession,
+  deleteSession,
+  recordWebhookEvent,
+  markWebhookProcessed,
+} from './db.js';
+import {
+  SESSION_COOKIE_NAME,
+  buildSessionCookie,
+  buildClearSessionCookie,
+  getCurrentAccount,
+  requireAuth,
+} from './auth.js';
+import { sendSubscribeWelcome, sendMagicLink, sendCancelConfirmation } from './mail.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -38,8 +72,14 @@ export default {
     if (request.method === 'OPTIONS') return handleOptions(request, env);
 
     try {
+      // --- 公開 ---
       if (path === '/api/health' && request.method === 'GET') {
-        return jsonResponse({ ok: true, env: env.SQUARE_ENV }, 200, env, origin);
+        return jsonResponse({
+          ok: true,
+          env: env.SQUARE_ENV,
+          db: !!env.DB,
+          mail: !!env.RESEND_API_KEY,
+        }, 200, env, origin);
       }
 
       if (path === '/api/config' && request.method === 'GET') {
@@ -51,26 +91,51 @@ export default {
         }, 200, env, origin);
       }
 
+      // --- 決済 / 申込 ---
       if (path === '/api/subscribe' && request.method === 'POST') {
         return await handleSubscribe(request, env, origin);
       }
-
       if (path === '/api/apply' && request.method === 'POST') {
         return await handleApply(request, env, origin);
       }
 
+      // --- 旧 mypage (申込番号+メアド): 互換維持 ---
       if (path === '/api/cancel' && request.method === 'POST') {
         return await handleCancel(request, env, origin);
       }
-
       if (path === '/api/lookup' && request.method === 'POST') {
         return await handleLookup(request, env, origin);
       }
-
       if (path === '/api/change-facility' && request.method === 'POST') {
         return await handleChangeFacility(request, env, origin);
       }
 
+      // --- 新 マジックリンク認証 ---
+      if (path === '/api/auth/request-magic-link' && request.method === 'POST') {
+        return await handleRequestMagicLink(request, env, origin);
+      }
+      if (path === '/api/auth/verify-magic-link' && request.method === 'GET') {
+        return await handleVerifyMagicLink(request, env, origin, url);
+      }
+      if (path === '/api/auth/logout' && request.method === 'POST') {
+        return await handleLogout(request, env, origin);
+      }
+      if (path === '/api/auth/me' && request.method === 'GET') {
+        return await handleAuthMe(request, env, origin);
+      }
+
+      // --- 新 セッションベース me ---
+      if (path === '/api/me/subscription' && request.method === 'GET') {
+        return await handleMeSubscription(request, env, origin);
+      }
+      if (path === '/api/me/change-facility' && request.method === 'POST') {
+        return await handleMeChangeFacility(request, env, origin);
+      }
+      if (path === '/api/me/cancel' && request.method === 'POST') {
+        return await handleMeCancel(request, env, origin);
+      }
+
+      // --- Webhook ---
       if (path === '/api/webhook' && request.method === 'POST') {
         return await handleWebhook(request, env);
       }
@@ -83,15 +148,15 @@ export default {
   },
 };
 
-// === /api/subscribe — 個人会員 ===
+// =====================================================================
+// /api/subscribe
+// =====================================================================
 
 async function handleSubscribe(request, env, origin) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
 
   const { source_id, verification_token, buyer, facility_id } = body;
-
-  // 入力検証
   if (!source_id || !buyer || !buyer.email_address) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
@@ -103,24 +168,17 @@ async function handleSubscribe(request, env, origin) {
     return jsonResponse({ error: 'plan_not_configured' }, 500, env, origin);
   }
 
-  // 1. Customer 取得 or 作成（施設指名情報をメタデータに保存）
+  // 1. Square Customer
   const buyerWithMeta = {
     ...buyer,
-    metadata: {
-      ...(buyer.metadata || {}),
-      facility_id, // どの施設に対する100円か
-    },
+    metadata: { ...(buyer.metadata || {}), facility_id },
   };
   const customer = await getOrCreateCustomer(env, buyerWithMeta);
 
-  // 2. Card 永続化
-  // Sandbox環境では Web Payments SDK の本物カード番号(4111...)からのnonceは
-  // /v2/cards で INVALID_CARD_DATA が返るケースが多いため、Squareが提供する
-  // Sandbox固定nonce `cnon:card-nonce-ok` に差し替えてテストを通せるようにする。
-  // 本番(env=production)では絶対に差し替えない。
+  // 2. Card
   let effectiveSourceId = source_id;
   if (env.SQUARE_ENV === 'sandbox' && source_id && source_id.startsWith('cnon:') && source_id !== 'cnon:card-nonce-ok') {
-    console.log('Sandbox: replacing source_id with cnon:card-nonce-ok for /v2/cards compatibility');
+    console.log('Sandbox: replacing source_id with cnon:card-nonce-ok');
     effectiveSourceId = 'cnon:card-nonce-ok';
   }
   const card = await createCard(
@@ -131,13 +189,54 @@ async function handleSubscribe(request, env, origin) {
     buyer.address
   );
 
-  // 3. Subscription 作成（施設IDを reference に埋め込む）
+  // 3. Subscription
   const subscription = await createSubscription(env, {
     customerId: customer.id,
     planVariationId: variationId,
     cardId: card.id,
     facilityId: facility_id,
   });
+
+  // 4. D1: account + member (DB が無くてもサイト本体機能は壊さない)
+  let magicLinkUrl = null;
+  if (env.DB) {
+    try {
+      const displayName = `${buyer.family_name || ''} ${buyer.given_name || ''}`.trim() || null;
+      const account = await getOrCreateAccount(env, {
+        email: buyer.email_address,
+        role: 'member',
+        display_name: displayName,
+        square_customer_id: customer.id,
+      });
+      await upsertMember(env, {
+        account_id: account.id,
+        square_subscription_id: subscription.id,
+        current_facility_id: facility_id,
+      });
+      // マジックリンク発行
+      const { token } = await createLoginToken(env, account.id, 60 * 24 * 7); // 申込完了メール用は7日有効
+      const siteBase = env.SITE_BASE_URL || 'https://carepass.tamjump.com';
+      magicLinkUrl = `https://carepass-api.tamjump.com/api/auth/verify-magic-link?token=${token}&next=${encodeURIComponent(siteBase + '/mypage.html')}`;
+    } catch (e) {
+      // DB エラーはログだけしてレスポンスは成功扱い (Subscription は完了している)
+      console.error('[subscribe] D1 sync failed:', e.message, e.stack);
+    }
+  }
+
+  // 5. 申込完了メール (best-effort, 失敗してもサブスクは成立)
+  try {
+    const facility = findFacility(env, facility_id);
+    await sendSubscribeWelcome(env, {
+      to: buyer.email_address,
+      displayName: `${buyer.family_name || ''} ${buyer.given_name || ''}`.trim(),
+      subscriptionId: subscription.id,
+      facilityName: facility ? `${facility.name}${facility.location ? `（${facility.location}）` : ''}` : facility_id,
+      mypageUrl: (env.SITE_BASE_URL || 'https://carepass.tamjump.com') + '/mypage.html',
+      magicLinkUrl: magicLinkUrl || ((env.SITE_BASE_URL || 'https://carepass.tamjump.com') + `/mypage.html?sid=${subscription.id}&email=${encodeURIComponent(buyer.email_address)}`),
+    });
+  } catch (e) {
+    console.error('[subscribe] mail send failed:', e.message);
+  }
 
   return jsonResponse({
     ok: true,
@@ -148,7 +247,9 @@ async function handleSubscribe(request, env, origin) {
   }, 200, env, origin);
 }
 
-// === /api/apply — 加盟店/施設の申込受付（決済なし） ===
+// =====================================================================
+// /api/apply (変更なし)
+// =====================================================================
 
 async function handleApply(request, env, origin) {
   const body = await request.json().catch(() => null);
@@ -162,45 +263,46 @@ async function handleApply(request, env, origin) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
 
-  // Square の Customer Directory に登録するだけ（タグで識別）
-  // 後で運営側がダッシュボードから確認・連絡できるようにする
   const buyerLike = {
     ...applicant,
     note: JSON.stringify({
-      kind: type, // "partner" or "facility"
+      kind: type,
       submitted_at: new Date().toISOString(),
       details: applicant.details || {},
     }),
   };
   const customer = await getOrCreateCustomer(env, buyerLike);
-
-  // TODO: 運営者へのメール通知（Cloudflare Email Workers / 外部 SMTP）
   console.log(`[apply] ${type} application received:`, customer.id);
 
-  return jsonResponse({
-    ok: true,
-    customer_id: customer.id,
-    type,
-  }, 200, env, origin);
+  return jsonResponse({ ok: true, customer_id: customer.id, type }, 200, env, origin);
 }
 
-// === /api/cancel — 退会 ===
+// =====================================================================
+// 旧: /api/cancel /api/lookup /api/change-facility (申込番号+メアド)
+// =====================================================================
 
 async function handleCancel(request, env, origin) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
-
-  // 互換: customer_email でも email でも受ける
   const subscription_id = body.subscription_id;
   const email = body.email || body.customer_email;
   if (!subscription_id || !email) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
-
   const auth = await authBySubAndEmail(env, subscription_id, email);
   if (auth.error) return jsonResponse({ error: auth.error }, auth.status, env, origin);
-
   const canceled = await cancelSubscription(env, subscription_id);
+  // 解約完了メール
+  try {
+    await sendCancelConfirmation(env, {
+      to: auth.customer?.email_address || email,
+      displayName: `${auth.customer?.family_name || ''} ${auth.customer?.given_name || ''}`.trim(),
+      subscriptionId: subscription_id,
+      canceledDate: canceled.canceled_date,
+    });
+  } catch (e) {
+    console.error('[cancel] mail failed:', e.message);
+  }
   return jsonResponse({
     ok: true,
     status: canceled.status,
@@ -208,7 +310,6 @@ async function handleCancel(request, env, origin) {
   }, 200, env, origin);
 }
 
-// 共通: subscription_id + email でユーザー本人確認、sub と customer を返す
 async function authBySubAndEmail(env, subscriptionId, email) {
   const sub = await retrieveSubscription(env, subscriptionId);
   if (!sub) return { error: 'not_found', status: 404 };
@@ -220,25 +321,22 @@ async function authBySubAndEmail(env, subscriptionId, email) {
   return { sub, customer };
 }
 
-// === /api/lookup — マイページ用：subscription_id + email で現状取得 ===
-
 async function handleLookup(request, env, origin) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
-
   const { subscription_id, email } = body;
   if (!subscription_id || !email) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
-
   const auth = await authBySubAndEmail(env, subscription_id, email);
   if (auth.error) return jsonResponse({ error: auth.error }, auth.status, env, origin);
+  return jsonResponse(buildLookupPayload(env, auth.sub, auth.customer), 200, env, origin);
+}
 
-  const { sub, customer } = auth;
+function buildLookupPayload(env, sub, customer) {
   const facilityId = parseFacilityFromSourceName(sub.source?.name);
   const facility = findFacility(env, facilityId);
-
-  return jsonResponse({
+  return {
     ok: true,
     subscription: {
       id: sub.id,
@@ -255,17 +353,14 @@ async function handleLookup(request, env, origin) {
       email_address: customer?.email_address || '',
     },
     facility_id: facilityId,
-    facility, // {id,name,location,accepting} or null
-    facilities: getFacilities(env), // 切替候補
-  }, 200, env, origin);
+    facility,
+    facilities: getFacilities(env),
+  };
 }
-
-// === /api/change-facility — 支援先変更（解約せずに） ===
 
 async function handleChangeFacility(request, env, origin) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
-
   const { subscription_id, email, new_facility_id } = body;
   if (!subscription_id || !email || !new_facility_id) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
@@ -273,15 +368,21 @@ async function handleChangeFacility(request, env, origin) {
   if (!isValidFacilityId(env, new_facility_id)) {
     return jsonResponse({ error: 'invalid_facility' }, 400, env, origin);
   }
-
   const auth = await authBySubAndEmail(env, subscription_id, email);
   if (auth.error) return jsonResponse({ error: auth.error }, auth.status, env, origin);
-
-  // source.name を新 facility_id で書き換え
   const updated = await updateSubscription(env, subscription_id, {
     source: { name: `Care Support Pass / ${new_facility_id}` },
   });
-
+  // D1 にも反映 (best-effort)
+  if (env.DB) {
+    try {
+      const member = await findMemberBySubscriptionId(env, subscription_id);
+      if (member) {
+        await env.DB.prepare('UPDATE members SET current_facility_id = ? WHERE square_subscription_id = ?')
+          .bind(new_facility_id, subscription_id).run();
+      }
+    } catch (e) { console.error('[change-facility] D1 sync failed:', e.message); }
+  }
   return jsonResponse({
     ok: true,
     subscription_id: updated.id,
@@ -290,7 +391,163 @@ async function handleChangeFacility(request, env, origin) {
   }, 200, env, origin);
 }
 
-// === /api/webhook === （変更なし）
+// =====================================================================
+// 新: マジックリンク認証
+// =====================================================================
+
+// セキュリティ: メアドが accounts に存在するかは応答から判別できないようにする (oracle回避)
+//   → 存在しなくても 200 ok を返す。送信は内部判定。
+async function handleRequestMagicLink(request, env, origin) {
+  if (!env.DB) {
+    return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  }
+  const body = await request.json().catch(() => null);
+  if (!body || !body.email) return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  const email = String(body.email).trim().toLowerCase();
+  if (!email.includes('@')) return jsonResponse({ error: 'invalid_email' }, 400, env, origin);
+
+  const account = await findAccountByEmail(env, email);
+  if (account) {
+    const { token } = await createLoginToken(env, account.id, 15);
+    const siteBase = env.SITE_BASE_URL || 'https://carepass.tamjump.com';
+    const magicLinkUrl = `https://carepass-api.tamjump.com/api/auth/verify-magic-link?token=${token}&next=${encodeURIComponent(siteBase + '/mypage.html')}`;
+    try {
+      await sendMagicLink(env, { to: email, magicLinkUrl, displayName: account.display_name });
+    } catch (e) {
+      console.error('[magic-link] mail failed:', e.message);
+    }
+  } else {
+    // アカウント無し → 何もしないが応答は ok
+    console.log('[magic-link] no account for:', email);
+  }
+  return jsonResponse({ ok: true, message: 'メールアドレス宛にログインリンクをお送りしました（登録のあるメールの場合のみ）。' }, 200, env, origin);
+}
+
+async function handleVerifyMagicLink(request, env, origin, url) {
+  if (!env.DB) {
+    return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  }
+  const token = url.searchParams.get('token');
+  const next = url.searchParams.get('next') || ((env.SITE_BASE_URL || 'https://carepass.tamjump.com') + '/mypage.html');
+  if (!token) {
+    return jsonResponse({ error: 'missing_token' }, 400, env, origin);
+  }
+  const result = await consumeLoginToken(env, token);
+  if (result.error) {
+    // エラー時はマイページにエラーパラメータ付きでリダイレクト
+    const errUrl = `${next}${next.includes('?') ? '&' : '?'}login_error=${encodeURIComponent(result.error)}`;
+    return redirectResponse(errUrl, env, origin);
+  }
+  // セッション作成 + Set-Cookie + 302
+  const { id: sid, expires_at } = await createSession(env, result.account.id, 30);
+  const cookie = buildSessionCookie(sid, expires_at);
+  return redirectResponse(next, env, origin, { 'Set-Cookie': cookie });
+}
+
+async function handleLogout(request, env, origin) {
+  if (!env.DB) return jsonResponse({ ok: true }, 200, env, origin);
+  const current = await getCurrentAccount(env, request);
+  if (current) {
+    await deleteSession(env, current.session.id);
+  }
+  return jsonResponse({ ok: true }, 200, env, origin, { 'Set-Cookie': buildClearSessionCookie() });
+}
+
+async function handleAuthMe(request, env, origin) {
+  if (!env.DB) return jsonResponse({ authenticated: false, db_not_configured: true }, 200, env, origin);
+  const current = await getCurrentAccount(env, request);
+  if (!current) {
+    return jsonResponse({ authenticated: false }, 200, env, origin);
+  }
+  return jsonResponse({
+    authenticated: true,
+    account: {
+      id: current.account.id,
+      email: current.account.email,
+      role: current.account.role,
+      display_name: current.account.display_name,
+    },
+  }, 200, env, origin);
+}
+
+// =====================================================================
+// 新: セッションベース /api/me/*
+// =====================================================================
+
+async function handleMeSubscription(request, env, origin) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+
+  // members から sub_id を引き、Square から最新状態を取得
+  if (!env.DB) return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
+  const member = await env.DB.prepare('SELECT * FROM members WHERE account_id = ? LIMIT 1')
+    .bind(auth.account.id).first();
+  if (!member) return jsonResponse({ error: 'no_membership' }, 404, env, origin);
+
+  const sub = await retrieveSubscription(env, member.square_subscription_id);
+  if (!sub) return jsonResponse({ error: 'subscription_not_found' }, 404, env, origin);
+  const customer = auth.account.square_customer_id
+    ? await retrieveCustomer(env, auth.account.square_customer_id)
+    : { email_address: auth.account.email, given_name: '', family_name: '' };
+
+  return jsonResponse(buildLookupPayload(env, sub, customer), 200, env, origin);
+}
+
+async function handleMeChangeFacility(request, env, origin) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+  const body = await request.json().catch(() => null);
+  if (!body || !body.new_facility_id) return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  if (!isValidFacilityId(env, body.new_facility_id)) {
+    return jsonResponse({ error: 'invalid_facility' }, 400, env, origin);
+  }
+  const member = await env.DB.prepare('SELECT * FROM members WHERE account_id = ? LIMIT 1')
+    .bind(auth.account.id).first();
+  if (!member) return jsonResponse({ error: 'no_membership' }, 404, env, origin);
+
+  const updated = await updateSubscription(env, member.square_subscription_id, {
+    source: { name: `Care Support Pass / ${body.new_facility_id}` },
+  });
+  await env.DB.prepare('UPDATE members SET current_facility_id = ? WHERE account_id = ?')
+    .bind(body.new_facility_id, auth.account.id).run();
+
+  return jsonResponse({
+    ok: true,
+    subscription_id: updated.id,
+    facility_id: body.new_facility_id,
+    source_name: updated.source?.name,
+  }, 200, env, origin);
+}
+
+async function handleMeCancel(request, env, origin) {
+  const auth = await requireAuth(env, request, jsonResponse, origin);
+  if (!auth.ok) return auth.response;
+  const member = await env.DB.prepare('SELECT * FROM members WHERE account_id = ? LIMIT 1')
+    .bind(auth.account.id).first();
+  if (!member) return jsonResponse({ error: 'no_membership' }, 404, env, origin);
+
+  const canceled = await cancelSubscription(env, member.square_subscription_id);
+  // 解約完了メール
+  try {
+    await sendCancelConfirmation(env, {
+      to: auth.account.email,
+      displayName: auth.account.display_name,
+      subscriptionId: member.square_subscription_id,
+      canceledDate: canceled.canceled_date,
+    });
+  } catch (e) {
+    console.error('[me/cancel] mail failed:', e.message);
+  }
+  return jsonResponse({
+    ok: true,
+    status: canceled.status,
+    canceled_date: canceled.canceled_date,
+  }, 200, env, origin);
+}
+
+// =====================================================================
+// /api/webhook
+// =====================================================================
 
 async function handleWebhook(request, env) {
   const rawBody = await request.text();
@@ -303,7 +560,6 @@ async function handleWebhook(request, env) {
     rawBody,
     signatureHeader,
   });
-
   if (!valid) {
     console.warn('Webhook signature invalid');
     return new Response('forbidden', { status: 403 });
@@ -314,6 +570,21 @@ async function handleWebhook(request, env) {
     return new Response('bad_json', { status: 400 });
   }
 
+  // D1 に冪等記録
+  if (env.DB && event.event_id) {
+    try {
+      await recordWebhookEvent(env, {
+        id: event.event_id,
+        event_type: event.type,
+        payload_json: rawBody,
+      });
+    } catch (e) { console.error('[webhook] record failed:', e.message); }
+  }
+
   await handleEvent(env, event);
+
+  if (env.DB && event.event_id) {
+    try { await markWebhookProcessed(env, event.event_id); } catch (e) {}
+  }
   return new Response('ok', { status: 200 });
 }

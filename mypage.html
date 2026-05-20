@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/styles.css">
+<link rel="stylesheet" href="/assets/styles.css?v=20260520c">
 <style>
 .mypage{
   min-height:80vh;padding:96px 24px 96px;
@@ -86,6 +86,34 @@
 .btn.danger{background:#DC2626;color:#fff;border:1px solid #DC2626}
 .btn.danger:hover{background:#B91C1C;border-color:#B91C1C}
 .hidden{display:none !important}
+
+/* タブ切替 */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 0 24px}
+.tab-btn{
+  background:none;border:none;border-bottom:2px solid transparent;
+  padding:14px 20px;font-size:14px;font-weight:500;color:var(--sub);
+  cursor:pointer;transition:all .15s;
+}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* セカンダリリンク */
+.alt-mode-link{
+  text-align:center;font-size:12px;color:var(--sub);margin:14px 0 0;
+}
+.alt-mode-link a{color:var(--accent);text-decoration:underline;cursor:pointer}
+
+/* ログアウトボタン */
+.logout-row{
+  display:flex;justify-content:flex-end;margin:0 0 16px;
+}
+.logout-btn{
+  background:none;border:1px solid var(--line);color:var(--sub);
+  padding:8px 16px;border-radius:8px;font-size:12px;cursor:pointer;
+}
+.logout-btn:hover{background:#f7f7f7}
+
 .footer-brand{display:flex;align-items:center;gap:10px}
 .footer-symbol{height:28px;width:auto;margin-left:8px;opacity:.85}
 </style>
@@ -105,12 +133,29 @@
 <main class="mypage">
   <div class="mypage-wrap">
     <h1>マイページ</h1>
-    <p class="desc">お申し込み番号と登録メールアドレスを入力すると、ご契約状況の確認、支援先施設の変更、退会手続きができます。</p>
+    <p class="desc">ご契約状況の確認、支援先施設の変更、退会手続きができます。</p>
 
-    <!-- ログインフォーム -->
-    <section class="card" id="login-card">
-      <h2>ご本人確認</h2>
-      <div id="login-msg"></div>
+    <!-- ログインフォーム (メアド → マジックリンク, プライマリ) -->
+    <section class="card" id="magic-card">
+      <h2>メールでログイン</h2>
+      <div id="magic-msg"></div>
+      <div class="field">
+        <label for="magic-email">登録メールアドレス</label>
+        <input type="email" id="magic-email" placeholder="example@email.com" autocomplete="email">
+        <div class="hint">ご登録時のメールアドレスを入力すると、ログイン用のリンクをお送りします。</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="magic-btn">ログインリンクを送る</button>
+      </div>
+      <p class="alt-mode-link">
+        申込番号でログインする場合は <a id="show-legacy-link">こちら</a>
+      </p>
+    </section>
+
+    <!-- ログインフォーム (申込番号 + メアド, フォールバック) -->
+    <section class="card hidden" id="legacy-card">
+      <h2>申込番号でログイン</h2>
+      <div id="legacy-msg"></div>
       <div class="field">
         <label for="sub-id">お申し込み番号</label>
         <input type="text" id="sub-id" placeholder="例: 798c1c46-c53a-432f-96be-f64a554539ec" autocomplete="off">
@@ -123,7 +168,15 @@
       <div class="btn-row">
         <button class="btn primary" id="login-btn">ご契約状況を表示</button>
       </div>
+      <p class="alt-mode-link">
+        メールでログインする場合は <a id="show-magic-link">こちら</a>
+      </p>
     </section>
+
+    <!-- ログアウト行 -->
+    <div class="logout-row hidden" id="logout-row">
+      <button class="logout-btn" id="logout-btn">ログアウト</button>
+    </div>
 
     <!-- 契約情報 -->
     <section class="card hidden" id="info-card">
@@ -208,6 +261,7 @@ let currentSubId = null;
 let currentEmail = null;
 let currentFacilityId = null;
 let allFacilities = [];
+let isSessionLogin = false; // true: マジックリンクログイン (Cookie認証), false: 申込番号+メアド
 
 function showMsg(elId, text, kind) {
   const el = $(elId);
@@ -223,7 +277,6 @@ function setLoading(btnId, on, normalText) {
 
 function fmtDate(s) {
   if (!s) return '—';
-  // YYYY-MM-DD or ISO
   const d = new Date(s);
   if (isNaN(d.getTime())) return s;
   return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
@@ -238,11 +291,22 @@ function statusLabel(s) {
   }
 }
 
-async function api(path, body) {
+async function apiPost(path, body) {
   const res = await fetch(`${API_BASE}${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    credentials: 'include',
+    body: JSON.stringify(body || {}),
+  });
+  let data = null;
+  try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+
+async function apiGet(path) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'GET',
+    credentials: 'include',
   });
   let data = null;
   try { data = await res.json(); } catch {}
@@ -253,9 +317,17 @@ function errorMsgFor(err) {
   switch (err) {
     case 'missing_fields': return '入力に不足があります。';
     case 'invalid_json': return '入力データに誤りがあります。';
+    case 'invalid_email': return 'メールアドレスの形式が正しくありません。';
     case 'not_found': return 'お申し込み番号が見つかりませんでした。番号をご確認ください。';
     case 'email_mismatch': return 'メールアドレスがお申し込み時のものと一致しません。';
     case 'invalid_facility': return '選択された施設は現在受付できません。';
+    case 'no_membership': return 'このアカウントには有効なお申し込みが見つかりません。';
+    case 'token_not_found': return 'ログインリンクが無効です。再度ログインリンクをご請求ください。';
+    case 'token_expired': return 'ログインリンクの有効期限が切れました。再度ご請求ください。';
+    case 'token_already_used': return 'このログインリンクは既に使用されました。再度ご請求ください。';
+    case 'unauthorized': return 'セッションの有効期限が切れました。再度ログインしてください。';
+    case 'subscription_not_found': return 'お申し込み情報が見つかりませんでした。';
+    case 'db_not_configured': return 'システム準備中です。お手数ですが時間をおいて再度お試しください。';
     case 'internal_error': return 'サーバーエラーが発生しました。時間をおいて再度お試しください。';
     default: return `エラーが発生しました（${err || '不明'}）`;
   }
@@ -276,13 +348,11 @@ function renderInfo(payload) {
   $('info-facility').textContent = payload.facility ? `${payload.facility.name}（${payload.facility.location || ''}）` : (payload.facility_id || '未設定');
   $('info-card').classList.remove('hidden');
 
-  // 解約済みなら変更/退会セクションは隠す
   const canceled = ['CANCELED', 'DEACTIVATED'].includes((sub.status || '').toUpperCase());
   if (canceled) {
     $('change-card').classList.add('hidden');
     $('cancel-card').classList.add('hidden');
   } else {
-    // 施設選択 dropdown を埋める
     const sel = $('new-facility');
     sel.innerHTML = '';
     allFacilities = payload.facilities || [];
@@ -299,32 +369,86 @@ function renderInfo(payload) {
   }
 }
 
-// === Login ===
+function showLoggedInState() {
+  // ログインフォームを隠してログアウトボタン表示
+  $('magic-card').classList.add('hidden');
+  $('legacy-card').classList.add('hidden');
+  $('logout-row').classList.remove('hidden');
+}
+
+function showLoggedOutState() {
+  $('magic-card').classList.remove('hidden');
+  $('legacy-card').classList.add('hidden');
+  $('logout-row').classList.add('hidden');
+  $('info-card').classList.add('hidden');
+  $('change-card').classList.add('hidden');
+  $('cancel-card').classList.add('hidden');
+  currentSubId = null;
+  currentEmail = null;
+  currentFacilityId = null;
+  isSessionLogin = false;
+}
+
+// === モード切替 ===
+$('show-legacy-link').addEventListener('click', () => {
+  $('magic-card').classList.add('hidden');
+  $('legacy-card').classList.remove('hidden');
+});
+$('show-magic-link').addEventListener('click', () => {
+  $('legacy-card').classList.add('hidden');
+  $('magic-card').classList.remove('hidden');
+});
+
+// === マジックリンク送信 ===
+$('magic-btn').addEventListener('click', async () => {
+  showMsg('magic-msg', '', 'info');
+  const email = $('magic-email').value.trim();
+  if (!email) {
+    showMsg('magic-msg', 'メールアドレスを入力してください。', 'error');
+    return;
+  }
+  setLoading('magic-btn', true);
+  try {
+    const r = await apiPost('/api/auth/request-magic-link', { email });
+    if (!r.ok) {
+      showMsg('magic-msg', errorMsgFor(r.data?.error), 'error');
+      return;
+    }
+    showMsg('magic-msg',
+      `「${email}」 宛にログインリンクをお送りしました。<br>メールを開いてリンクをクリックすると、マイページにログインできます。<br>（リンクは15分間有効です）`,
+      'success');
+  } catch (e) {
+    showMsg('magic-msg', 'ネットワークエラーが発生しました。', 'error');
+  } finally {
+    setLoading('magic-btn', false);
+  }
+});
+
+// === Legacy: 申込番号 + メアド ログイン ===
 $('login-btn').addEventListener('click', async () => {
-  showMsg('login-msg', '', 'info');
+  showMsg('legacy-msg', '', 'info');
   const sid = $('sub-id').value.trim();
   const email = $('email').value.trim();
   if (!sid || !email) {
-    showMsg('login-msg', 'お申し込み番号とメールアドレスを入力してください。', 'error');
+    showMsg('legacy-msg', 'お申し込み番号とメールアドレスを入力してください。', 'error');
     return;
   }
   setLoading('login-btn', true);
   try {
-    const r = await api('/api/lookup', { subscription_id: sid, email });
+    const r = await apiPost('/api/lookup', { subscription_id: sid, email });
     if (!r.ok) {
-      showMsg('login-msg', errorMsgFor(r.data?.error), 'error');
+      showMsg('legacy-msg', errorMsgFor(r.data?.error), 'error');
       return;
     }
     currentSubId = sid;
     currentEmail = email;
     currentFacilityId = r.data.facility_id;
+    isSessionLogin = false;
     renderInfo(r.data);
-    // ログインカードは非表示にせず、フォームの上に状態出すだけ
-    showMsg('login-msg', 'ご本人確認できました。下の情報をご確認ください。', 'success');
-    // スクロール
+    showLoggedInState();
     setTimeout(() => $('info-card').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   } catch (e) {
-    showMsg('login-msg', 'ネットワークエラーが発生しました。', 'error');
+    showMsg('legacy-msg', 'ネットワークエラーが発生しました。', 'error');
   } finally {
     setLoading('login-btn', false);
   }
@@ -345,16 +469,20 @@ $('change-btn').addEventListener('click', async () => {
   if (!confirm(`支援先を「${$('new-facility').selectedOptions[0].textContent}」に変更します。よろしいですか？`)) return;
   setLoading('change-btn', true);
   try {
-    const r = await api('/api/change-facility', {
-      subscription_id: currentSubId,
-      email: currentEmail,
-      new_facility_id: newFid,
-    });
+    let r;
+    if (isSessionLogin) {
+      r = await apiPost('/api/me/change-facility', { new_facility_id: newFid });
+    } else {
+      r = await apiPost('/api/change-facility', {
+        subscription_id: currentSubId,
+        email: currentEmail,
+        new_facility_id: newFid,
+      });
+    }
     if (!r.ok) {
       showMsg('change-msg', errorMsgFor(r.data?.error), 'error');
       return;
     }
-    // 成功 → 再取得して表示更新
     currentFacilityId = newFid;
     const f = allFacilities.find(x => x.id === newFid);
     $('info-facility').textContent = f ? `${f.name}（${f.location || ''}）` : newFid;
@@ -372,19 +500,22 @@ $('cancel-btn').addEventListener('click', async () => {
   if (!confirm('本当に退会しますか？\n\n次回の課金日以降の自動課金が停止します。\n当月分は既に課金済みのため、日割り返金はありません。')) return;
   setLoading('cancel-btn', true);
   try {
-    const r = await api('/api/cancel', {
-      subscription_id: currentSubId,
-      email: currentEmail,
-    });
+    let r;
+    if (isSessionLogin) {
+      r = await apiPost('/api/me/cancel', {});
+    } else {
+      r = await apiPost('/api/cancel', {
+        subscription_id: currentSubId,
+        email: currentEmail,
+      });
+    }
     if (!r.ok) {
       showMsg('cancel-msg', errorMsgFor(r.data?.error), 'error');
       return;
     }
     showMsg('cancel-msg', `退会手続きが完了しました。解約予定日: ${fmtDate(r.data.canceled_date)}。ご利用ありがとうございました。`, 'success');
-    // 退会後は変更/退会ボタンを隠す
     $('change-card').classList.add('hidden');
     $('cancel-btn').disabled = true;
-    // ステータス badge も更新
     const badge = $('info-status');
     badge.textContent = '解約済み';
     badge.className = 'status-badge canceled';
@@ -396,10 +527,53 @@ $('cancel-btn').addEventListener('click', async () => {
   }
 });
 
-// URLパラメータで初期値（thanks.html からのリンクをサポート）
-const params = new URLSearchParams(location.search);
-if (params.get('sid')) $('sub-id').value = params.get('sid');
-if (params.get('email')) $('email').value = params.get('email');
+// === Logout ===
+$('logout-btn').addEventListener('click', async () => {
+  if (isSessionLogin) {
+    try { await apiPost('/api/auth/logout', {}); } catch {}
+  }
+  showLoggedOutState();
+  showMsg('magic-msg', 'ログアウトしました。', 'info');
+});
+
+// === 初期化: セッションがあれば自動ログイン ===
+async function init() {
+  // URL params (login_error 表示)
+  const params = new URLSearchParams(location.search);
+  if (params.get('login_error')) {
+    showMsg('magic-msg', errorMsgFor(params.get('login_error')), 'error');
+    history.replaceState(null, '', location.pathname);
+  }
+  // 旧仕様: thanks.html からの sid/email プリフィル
+  if (params.get('sid')) $('sub-id').value = params.get('sid');
+  if (params.get('email')) {
+    $('email').value = params.get('email');
+    $('magic-email').value = params.get('email');
+  }
+
+  // セッション確認
+  try {
+    const me = await apiGet('/api/auth/me');
+    if (me.ok && me.data?.authenticated) {
+      // セッションあり → /api/me/subscription を取得
+      const subR = await apiGet('/api/me/subscription');
+      if (subR.ok && subR.data?.ok) {
+        currentSubId = subR.data.subscription.id;
+        currentEmail = me.data.account.email;
+        currentFacilityId = subR.data.facility_id;
+        isSessionLogin = true;
+        renderInfo(subR.data);
+        showLoggedInState();
+        return;
+      }
+    }
+  } catch (e) {
+    // セッションチェック失敗は無視 (未ログイン扱い)
+  }
+  showLoggedOutState();
+}
+
+init();
 </script>
 
 </body>

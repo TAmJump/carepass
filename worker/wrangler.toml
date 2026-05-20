@@ -3,19 +3,37 @@ main = "src/index.js"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
 
-# 本番デプロイ後、Cloudflareダッシュボードで以下のRouteを設定すること:
-#   api.carepass.tamjump.com/* → このWorker
-# その後、tamjump.com Zone の DNS で:
-#   api.carepass.tamjump.com  CNAME  carepass-api.<account>.workers.dev (Proxied)
+# カスタムドメイン: carepass-api.tamjump.com (Cloudflare の Custom Domain で割当済)
 
 [vars]
 SQUARE_ENV = "production"
-# 本番切替時は wrangler deploy --var SQUARE_ENV:production または vars を変更
+SITE_BASE_URL = "https://carepass.tamjump.com"
+MAIL_FROM = "Care Support Pass <no-reply@carepass.tamjump.com>"
+MAIL_ADMIN = "tiger@tamjump.com"
 
-# secrets (wrangler secret put で設定):
+# === Cloudflare D1 binding ===
+# 初回作成手順 (ユーザーPCで実行):
+#   cd worker
+#   npx wrangler d1 create carepass-db
+#   # 出力された database_id を下の database_id に貼る
+#   npx wrangler d1 migrations apply carepass-db --remote
+[[d1_databases]]
+binding = "DB"
+database_name = "carepass-db"
+database_id = "PLACEHOLDER_REPLACE_WITH_REAL_ID"
+migrations_dir = "migrations"
+
+# === secrets (wrangler secret put で設定) ===
+# 既存 (v6.5までに設定済):
 #   SQUARE_ACCESS_TOKEN
 #   SQUARE_LOCATION_ID
 #   SQUARE_WEBHOOK_SIGNATURE_KEY
-#   SQUARE_APPLICATION_ID            (フロント用、これだけは公開してOKだが Worker でも返す)
-#   PLAN_VARIATION_IDS_JSON          (create-plans.js の出力をそのまま貼る)
-#   ALLOWED_ORIGIN                   ("https://carepass.tamjump.com")
+#   SQUARE_APPLICATION_ID
+#   PLAN_VARIATION_IDS_JSON
+#   FACILITIES_JSON
+#   ALLOWED_ORIGIN
+#   WEBHOOK_NOTIFICATION_URL
+#
+# Phase 1 で追加:
+#   RESEND_API_KEY                   (https://resend.com 発行のAPIキー)
+#   SESSION_SECRET                   (32+ byte random hex, openssl rand -hex 32)
