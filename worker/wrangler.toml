@@ -20,7 +20,7 @@ MAIL_ADMIN = "tiger@tamjump.com"
 [[d1_databases]]
 binding = "DB"
 database_name = "carepass-db"
-database_id = "PLACEHOLDER_REPLACE_WITH_REAL_ID"
+database_id = "5f4e840e-28e2-4c8a-9c8d-1b70bee44d89"
 migrations_dir = "migrations"
 
 # === secrets (wrangler secret put で設定) ===
