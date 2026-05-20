@@ -368,8 +368,11 @@
     <div class="partner" id="qr-partner"></div>
     <div class="qr-wrap" id="qr-svg-wrap"></div>
     <div class="countdown" id="qr-countdown"></div>
-    <div class="hint">店舗スタッフの方にこの QR コードをご提示ください。<br>30秒経過すると無効になります。再度「使う」を押せば新しい QR を発行できます。</div>
-    <button class="close-btn" id="qr-close-btn">閉じる</button>
+    <div class="hint">店舗スタッフの方にこの QR コードをご提示ください。<br>30秒経過すると無効になります。期限が切れたら「QRを再発行」を押してください。</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="close-btn primary hidden" id="qr-retry-btn" style="background:var(--accent);color:#fff">QRを再発行</button>
+      <button class="close-btn" id="qr-close-btn">閉じる</button>
+    </div>
   </div>
 </div>
 
@@ -609,17 +612,49 @@ function escapeHtml(s) {
 
 // === QR モーダル ===
 let qrCountdownTimer = null;
+let currentQrMcId = null;       // 再発行用
+let currentQrPartner = null;
+
+function qrFriendlyError(err) {
+  switch (err) {
+    case 'expired':
+    case 'reservation_expired':
+      return 'QRコードの有効期限 (30秒) が切れました。<br>「QRを再発行」を押すと新しいQRを取り直せます。';
+    case 'already_used':
+      return 'このクーポンは既に利用済みです。';
+    case 'not_found':
+    case 'coupon_not_found':
+      return 'このクーポンは見つかりません。';
+    case 'unauthorized':
+      return 'ログインセッションが切れました。<br>再度ログインしてください。';
+    case 'coupon_hmac_key_not_set':
+      return 'サーバー設定エラーです。運営にご連絡ください。';
+    default:
+      return `エラーが発生しました（${err || '不明'}）`;
+  }
+}
+
 async function openQrModal(memberCouponId, partnerName) {
+  currentQrMcId = memberCouponId;
+  currentQrPartner = partnerName;
   $('qr-partner').textContent = partnerName || '';
   $('qr-svg-wrap').innerHTML = '<div style="color:var(--sub);font-size:12px">QRを生成中…</div>';
   $('qr-countdown').textContent = '';
   $('qr-countdown').classList.remove('expired');
+  $('qr-retry-btn').classList.add('hidden');
   $('qr-modal').classList.add('show');
 
   try {
     const r = await apiPost(`/api/me/coupons/${encodeURIComponent(memberCouponId)}/reserve`, {});
     if (!r.ok || !r.data?.token) {
-      $('qr-svg-wrap').innerHTML = `<div style="color:var(--accent);font-size:12px;padding:14px;text-align:center">${errorMsgFor(r.data?.error)}</div>`;
+      const errKey = r.data?.error;
+      $('qr-svg-wrap').innerHTML = `<div style="color:var(--accent);font-size:13px;padding:14px;text-align:center;line-height:1.7">${qrFriendlyError(errKey)}</div>`;
+      // 期限切れ系はリトライボタンを出す。unauthorized はモーダル閉じてリロード促す
+      if (errKey === 'expired' || errKey === 'reservation_expired') {
+        $('qr-retry-btn').classList.remove('hidden');
+      } else if (errKey === 'unauthorized') {
+        setTimeout(() => { closeQrModal(); location.href = '/mypage.html'; }, 1800);
+      }
       return;
     }
     // QR 描画 (qrcode-generator)
@@ -637,8 +672,9 @@ async function openQrModal(memberCouponId, partnerName) {
         $('qr-countdown').textContent = '有効期限が切れました';
         $('qr-countdown').classList.add('expired');
         clearInterval(qrCountdownTimer);
-        // 自動で閉じてからクーポン再読込
-        setTimeout(() => { closeQrModal(); loadCoupons(); }, 1500);
+        // QR を消してリトライボタンを出す (モーダルは閉じない)
+        $('qr-svg-wrap').innerHTML = '<div style="color:var(--sub);font-size:13px;padding:14px;text-align:center;line-height:1.7">QRコードの有効期限 (30秒) が切れました。<br>「QRを再発行」を押すと新しいQRを取り直せます。</div>';
+        $('qr-retry-btn').classList.remove('hidden');
       }
     };
     tick();
@@ -651,6 +687,8 @@ async function openQrModal(memberCouponId, partnerName) {
 function closeQrModal() {
   $('qr-modal').classList.remove('show');
   if (qrCountdownTimer) { clearInterval(qrCountdownTimer); qrCountdownTimer = null; }
+  // クーポン状態を再読み込み (used → 利用済タブへ移動など)
+  loadCoupons();
 }
 
 // === 月次報告書 ===
@@ -966,6 +1004,9 @@ document.querySelectorAll('[data-coupon-tab]').forEach(btn => {
 
 // === QR modal close ===
 $('qr-close-btn').addEventListener('click', closeQrModal);
+$('qr-retry-btn').addEventListener('click', () => {
+  if (currentQrMcId) openQrModal(currentQrMcId, currentQrPartner);
+});
 $('qr-modal').addEventListener('click', (e) => {
   if (e.target.id === 'qr-modal') closeQrModal();
 });
