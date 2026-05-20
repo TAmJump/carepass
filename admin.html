@@ -298,6 +298,11 @@ function downloadMembersCsv() {
 
 function renderReports(list) {
   if (!list.length) { $('reports-table').innerHTML = '<div class="empty">登録済の月次報告書がありません。</div>'; return; }
+  const statusLabel = (s) => ({
+    published: '公開中',
+    broken:    'リンク切れ',
+    retracted: '取り下げ',
+  })[s] || s;
   $('reports-table').innerHTML = `
     <table>
       <thead><tr>
@@ -308,7 +313,10 @@ function renderReports(list) {
           <tr>
             <td><strong>${escapeHtml(r.period)}</strong></td>
             <td>${escapeHtml(r.facility_name)}</td>
-            <td><span class="badge ${r.status}">${escapeHtml(r.status)}</span></td>
+            <td>
+              <span class="badge ${r.status}">${escapeHtml(statusLabel(r.status))}</span>
+              ${r.status === 'broken' && r.notes ? `<div style="font-size:10px;color:var(--sub);margin-top:3px" title="${escapeHtml(r.notes)}">${escapeHtml(r.notes.length > 40 ? r.notes.slice(0,40)+'…' : r.notes)}</div>` : ''}
+            </td>
             <td><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener" class="mono" style="color:var(--accent)">${escapeHtml(r.url)} ↗</a></td>
             <td>${fmtDate(r.published_at)}</td>
             <td>${fmtDate(r.verified_at) || '—'}</td>
