@@ -47,21 +47,25 @@ export async function handleEvent(env, event) {
 
   switch (type) {
     case 'subscription.created':
-    case 'subscription.updated':
-      console.log('  subscription:', JSON.stringify(event.data.object?.subscription || {}));
+      console.log('  subscription created:', JSON.stringify(event.data.object?.subscription || {}));
       break;
+    case 'subscription.updated': {
+      // Square API 2026-01-22 では subscription.canceled が廃止され、
+      // キャンセルも subscription.updated (status=CANCELED) として通知される
+      const sub = event.data.object?.subscription || {};
+      if (sub.status === 'CANCELED') {
+        console.log('  subscription canceled:', JSON.stringify(sub));
+      } else {
+        console.log('  subscription updated:', JSON.stringify(sub));
+      }
+      break;
+    }
     case 'invoice.payment_made':
       console.log('  invoice payment OK:', JSON.stringify(event.data.object?.invoice || {}));
       break;
     case 'invoice.scheduled_charge_failed':
       console.log('  invoice payment FAILED:', JSON.stringify(event.data.object?.invoice || {}));
       // TODO: 管理者にメール、ユーザーへリトライ案内
-      break;
-    case 'subscription.canceled':
-      console.log('  subscription canceled:', JSON.stringify(event.data.object?.subscription || {}));
-      break;
-    case 'card.automatically_updated':
-      console.log('  card auto-updated:', JSON.stringify(event.data.object?.card || {}));
       break;
     default:
       // 未対応イベントは静かに無視
