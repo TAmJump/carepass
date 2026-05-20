@@ -541,8 +541,17 @@ __name(buildKingmakerAutoReplyEmail, "buildKingmakerAutoReplyEmail");
 // ══════════════════════════════════════
 // 【新規】Care Support Pass 用テンプレート
 // ══════════════════════════════════════
-function buildCarepassWelcomeEmail({ displayName, subscriptionId, facilityName, mypageUrl, magicLinkUrl, config }) {
+function buildCarepassWelcomeEmail({ displayName, subscriptionId, facilityName, mypageUrl, magicLinkUrl, initialAmountJpy, initialPaidAt, firstBillingDate, config }) {
   const greeting = displayName ? `${displayName} 様` : "お申し込みいただいた皆さま";
+  const amount = initialAmountJpy ? `¥${Number(initialAmountJpy).toLocaleString('ja-JP')}` : "¥100";
+  const paidAt = initialPaidAt || "本日";
+  // firstBillingDate "2026-06-30" → "2026年6月30日"
+  const fbd = firstBillingDate
+    ? (() => {
+        const [y, m, d] = firstBillingDate.split('-').map((x) => parseInt(x, 10));
+        return `${y}年${m}月${d}日`;
+      })()
+    : "翌月末";
   return `
 ${greeting}
 
@@ -554,6 +563,19 @@ Care Support Pass にお申し込みいただきありがとうございます�
 現在の支援先:${facilityName || "—"}
 ――――――――――
 
+【ご決済とご請求のスケジュール】
+・本日(${paidAt}) ${amount} の初回ご決済を承りました。
+・次回のご決済は ${fbd}(月末締め) に予定されています。
+・以降は毎月末日に ${amount} を自動でお引き落としいたします。
+
+【お支援先の変更・退会について】
+・お支援先の変更、退会のいずれもマイページからいつでも可能です。
+・お手続きの反映は翌月末のご決済からとなります。
+  (お手続きを行った月の月末ご決済までは現在の内容で進みます。)
+・お手続きに伴う日割り返金はございませんのでご了承ください。
+
+――――――――――
+
 下のリンクから、いつでもマイページにアクセスできます。
 お申し込み番号を覚えていただく必要はありません。
 メールアドレスだけでログイン用のリンクをお送りします。
@@ -561,7 +583,7 @@ Care Support Pass にお申し込みいただきありがとうございます�
 【マイページにログイン】
 ${magicLinkUrl}
 
-（このログインリンクは7日間有効です）
+(このログインリンクは7日間有効です)
 
 マイページURL:${mypageUrl}
 
@@ -606,16 +628,18 @@ function buildCarepassCancelEmail({ displayName, subscriptionId, canceledDate, c
   return `
 ${greeting}
 
-Care Support Pass の退会手続きが完了しました。
+Care Support Pass の退会お手続きを承りました。
 これまでのご支援、誠にありがとうございました。
 
 ――――――――――
 お申し込み番号:${subscriptionId}
-解約予定日:${canceledDate || "本日"}
+最終ご決済予定日(自動課金停止日):${canceledDate || "今月末"}
 ――――――――――
 
-解約予定日以降の自動課金は停止します。
-日割り返金はありませんのでご了承ください。
+【退会反映について】
+・お手続きを行った月の月末ご決済までは現在の支援先に充てられます。
+・翌月末以降の自動課金は停止いたします。
+・日割り返金はございませんのでご了承ください。
 
 またのご支援をお待ちしております。
 

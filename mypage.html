@@ -211,7 +211,10 @@
     <!-- 退会 -->
     <section class="card danger-zone hidden" id="cancel-card">
       <h2>退会する</h2>
-      <p style="font-size:13px;color:var(--sub);margin:0 0 18px;line-height:1.8">退会手続きをすると、次回の課金日以降の自動課金が停止します。当月分は既に課金済みの場合、日割り返金はありません。</p>
+      <p style="font-size:13px;color:var(--sub);margin:0 0 18px;line-height:1.8">
+        退会お手続きを行うと、次回のご決済 (<strong style="color:var(--accent)" id="cancel-last-billing-date">次回課金日</strong>) を最後に自動課金が停止します。<br>
+        それ以前にお支払い済みの月分について、日割りでの返金はございません。
+      </p>
       <div id="cancel-msg"></div>
       <div class="btn-row">
         <button class="btn danger" id="cancel-btn">退会する</button>
@@ -358,6 +361,10 @@ function renderInfo(payload) {
   const effEl = $('change-effective-date');
   if (effEl) {
     effEl.textContent = currentNextBillingDate ? `次回課金日（${fmtDate(currentNextBillingDate)}）` : '次回課金日';
+  }
+  const cancelEl = $('cancel-last-billing-date');
+  if (cancelEl) {
+    cancelEl.textContent = currentNextBillingDate ? `${fmtDate(currentNextBillingDate)}` : '次回課金日';
   }
 
   const canceled = ['CANCELED', 'DEACTIVATED'].includes((sub.status || '').toUpperCase());
@@ -523,7 +530,12 @@ $('change-btn').addEventListener('click', async () => {
 // === Cancel ===
 $('cancel-btn').addEventListener('click', async () => {
   showMsg('cancel-msg', '', 'info');
-  if (!confirm('本当に退会しますか？\n\n次回の課金日以降の自動課金が停止します。\n当月分は既に課金済みのため、日割り返金はありません。')) return;
+  const cancelEffStr = currentNextBillingDate ? fmtDate(currentNextBillingDate) : '次回課金日';
+  if (!confirm(
+    `本当に退会しますか？\n\n`
+    + `次回のご決済 (${cancelEffStr}) を最後に自動課金が停止します。\n`
+    + `それ以前にお支払い済みの分について、日割り返金はありません。`
+  )) return;
   setLoading('cancel-btn', true);
   try {
     let r;

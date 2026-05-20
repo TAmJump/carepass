@@ -35,11 +35,11 @@ async function postTransactional(env, { project = "carepass", template, to, vars
 // =====================================================================
 // 申込完了メール
 // =====================================================================
-export async function sendSubscribeWelcome(env, { to, displayName, subscriptionId, facilityName, mypageUrl, magicLinkUrl }) {
+export async function sendSubscribeWelcome(env, { to, displayName, subscriptionId, facilityName, mypageUrl, magicLinkUrl, initialAmountJpy, initialPaidAt, firstBillingDate }) {
   return await postTransactional(env, {
     template: "subscribe_welcome",
     to,
-    vars: { displayName, subscriptionId, facilityName, mypageUrl, magicLinkUrl },
+    vars: { displayName, subscriptionId, facilityName, mypageUrl, magicLinkUrl, initialAmountJpy, initialPaidAt, firstBillingDate },
   });
 }
 

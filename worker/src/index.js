@@ -33,6 +33,8 @@ import {
   retrieveCustomer,
   cancelSubscription,
   updateSubscription,
+  chargeOneShotByCardId,
+  firstDayOfNextMonthJst,
 } from './square.js';
 import {
   getMembershipVariationId,
@@ -189,12 +191,36 @@ async function handleSubscribe(request, env, origin) {
     buyer.address
   );
 
-  // 3. Subscription
+  // 3. 即時 ¥100 課金 (単発 CreatePayment, card_id 経由)
+  //   - Subscription とは別。これが「申込時の決済」。
+  //   - 失敗したら以降のステップに進まず BAD GATEWAY を返す (会員になっていない状態を維持)。
+  let initialPayment;
+  try {
+    initialPayment = await chargeOneShotByCardId(env, {
+      customerId: customer.id,
+      cardId: card.id,
+      amount: 100,
+      currency: 'JPY',
+      note: `Care Support Pass / initial ¥100 / facility=${facility_id}`,
+    });
+  } catch (e) {
+    console.error('[subscribe] initial charge failed:', e.message, JSON.stringify(e.body || {}));
+    return jsonResponse({
+      error: 'initial_charge_failed',
+      message: 'カードへの初回課金が拒否されました。カード情報をご確認ください。',
+    }, 402, env, origin);
+  }
+
+  // 4. Subscription を翌月初 start_date で作成 (anchor=31 = 月末締め)
+  //   - Square Plan Variation 側で monthly_billing_anchor_date=31 設定済みなので、
+  //     start_date が翌月初なら最初の課金は翌月末になる。
+  const subStartDate = firstDayOfNextMonthJst();
   const subscription = await createSubscription(env, {
     customerId: customer.id,
     planVariationId: variationId,
     cardId: card.id,
     facilityId: facility_id,
+    startDate: subStartDate,
   });
 
   // 4. D1: account + member (DB が無くてもサイト本体機能は壊さない)
@@ -224,8 +250,14 @@ async function handleSubscribe(request, env, origin) {
   }
 
   // 5. 申込完了メール (best-effort, 失敗してもサブスクは成立)
+  //   firstBillingDate = subStartDate (= 翌月1日) の月末 = 翌月末
   try {
     const facility = findFacility(env, facility_id);
+    // subStartDate "2026-06-01" → 翌月末 "2026-06-30"
+    const [sy, sm] = subStartDate.split('-').map((x) => parseInt(x, 10));
+    const lastDay = new Date(Date.UTC(sy, sm, 0)).getUTCDate(); // Date.UTC(year, month, 0) = 前月末日
+    const firstBillingDate = `${sy}-${String(sm).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+
     await sendSubscribeWelcome(env, {
       to: buyer.email_address,
       displayName: `${buyer.family_name || ''} ${buyer.given_name || ''}`.trim(),
@@ -233,6 +265,9 @@ async function handleSubscribe(request, env, origin) {
       facilityName: facility ? `${facility.name}${facility.location ? `（${facility.location}）` : ''}` : facility_id,
       mypageUrl: (env.SITE_BASE_URL || 'https://carepass.tamjump.com') + '/mypage.html',
       magicLinkUrl: magicLinkUrl || ((env.SITE_BASE_URL || 'https://carepass.tamjump.com') + `/mypage.html?sid=${subscription.id}&email=${encodeURIComponent(buyer.email_address)}`),
+      initialAmountJpy: 100,
+      initialPaidAt: new Date().toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' }),
+      firstBillingDate,
     });
   } catch (e) {
     console.error('[subscribe] mail send failed:', e.message);
@@ -244,6 +279,8 @@ async function handleSubscribe(request, env, origin) {
     customer_id: customer.id,
     status: subscription.status,
     facility_id,
+    initial_payment_id: initialPayment?.id || null,
+    next_billing_start: subStartDate,
   }, 200, env, origin);
 }
 
@@ -336,6 +373,15 @@ async function handleLookup(request, env, origin) {
 function buildLookupPayload(env, sub, customer) {
   const facilityId = parseFacilityFromSourceName(sub.source?.name);
   const facility = findFacility(env, facilityId);
+
+  // 次回課金日の決定ロジック:
+  //   - charged_through_date があればそれ (= 既に1回以上課金された Subscription)
+  //   - 無ければ start_date の月末を返す (= PENDING / 初課金前の Subscription)
+  let nextBillingDate = sub.charged_through_date || null;
+  if (!nextBillingDate && sub.start_date) {
+    nextBillingDate = endOfMonthOf(sub.start_date);
+  }
+
   return {
     ok: true,
     subscription: {
@@ -345,7 +391,7 @@ function buildLookupPayload(env, sub, customer) {
       charged_through_date: sub.charged_through_date,
       paid_until_date: sub.paid_until_date,
       canceled_date: sub.canceled_date || null,
-      next_billing_date: sub.charged_through_date || null,
+      next_billing_date: nextBillingDate,
     },
     customer: {
       given_name: customer?.given_name || '',
@@ -356,6 +402,16 @@ function buildLookupPayload(env, sub, customer) {
     facility,
     facilities: getFacilities(env),
   };
+}
+
+// "YYYY-MM-DD" → 同月の末日 "YYYY-MM-DD"
+//   2026-06-01 → 2026-06-30
+//   2026-02-15 → 2026-02-28 (2024-02-15 → 2024-02-29)
+function endOfMonthOf(ymd) {
+  const [y, m] = ymd.split('-').map((x) => parseInt(x, 10));
+  // Date.UTC(year, month, 0) = month-1 月の末日
+  const lastDay = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  return `${y}-${String(m).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 }
 
 async function handleChangeFacility(request, env, origin) {

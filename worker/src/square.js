@@ -36,6 +36,32 @@ function uuid() {
   return crypto.randomUUID();
 }
 
+// --- 日付ユーティリティ (JST=Asia/Tokyo 基準) ---
+
+// 「Asia/Tokyo の今日」を YYYY-MM-DD で返す
+export function todayJst() {
+  // toLocaleString で TZ 変換した YYYY/M/D を YYYY-MM-DD に整形
+  const now = new Date();
+  const fmt = now.toLocaleDateString('ja-JP', {
+    timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit',
+  });
+  // 'YYYY/MM/DD' → 'YYYY-MM-DD'
+  return fmt.replace(/\//g, '-');
+}
+
+// 申込日 (JST) の翌月1日を YYYY-MM-DD で返す
+//   2026-05-20 → 2026-06-01
+//   2026-12-31 → 2027-01-01
+export function firstDayOfNextMonthJst() {
+  const today = todayJst(); // YYYY-MM-DD
+  const [yStr, mStr] = today.split('-');
+  let y = parseInt(yStr, 10);
+  let m = parseInt(mStr, 10); // 1-12
+  m += 1;
+  if (m > 12) { m = 1; y += 1; }
+  return `${y}-${String(m).padStart(2, '0')}-01`;
+}
+
 // --- Customers ---
 
 export async function searchCustomerByEmail(env, email) {
@@ -102,11 +128,29 @@ export async function createCard(env, customerId, sourceId, verificationToken, b
   return res.card;
 }
 
+// --- Payments (単発決済) ---
+
+// CreatePayment: 申込時の即時 ¥100 を card_id (保存済カード) で課金する
+//   ref: https://developer.squareup.com/reference/square/payments-api/create-payment
+export async function chargeOneShotByCardId(env, { customerId, cardId, amount, currency = 'JPY', note }) {
+  const body = {
+    idempotency_key: uuid(),
+    source_id: cardId,
+    amount_money: { amount, currency },
+    location_id: env.SQUARE_LOCATION_ID,
+    customer_id: customerId,
+    note: note || 'Care Support Pass / initial charge',
+    autocomplete: true,
+  };
+  const res = await sq(env, 'POST', '/v2/payments', body);
+  return res.payment;
+}
+
 // --- Subscriptions ---
 
-export async function createSubscription(env, { customerId, planVariationId, cardId, facilityId }) {
-  // Square Subscription source オブジェクトには name のみ許可。url は INVALID_REQUEST。
-  // facility_id は source.name に埋め込んで Dashboard で見えるようにする。
+// CreateSubscription: 翌月初を start_date、月末を anchor として作成
+// 申込時の即時 ¥100 は本関数の責務ではなく、別途 chargeOneShotByCardId で処理する。
+export async function createSubscription(env, { customerId, planVariationId, cardId, facilityId, startDate }) {
   const body = {
     idempotency_key: uuid(),
     location_id: env.SQUARE_LOCATION_ID,
@@ -117,6 +161,7 @@ export async function createSubscription(env, { customerId, planVariationId, car
     source: {
       name: facilityId ? `Care Support Pass / ${facilityId}` : 'Care Support Pass',
     },
+    ...(startDate ? { start_date: startDate } : {}),
   };
   const res = await sq(env, 'POST', '/v2/subscriptions', body);
   return res.subscription;
@@ -133,12 +178,12 @@ export async function retrieveCustomer(env, customerId) {
 }
 
 export async function cancelSubscription(env, subscriptionId) {
-  // CancelSubscription: 現在の請求サイクル終了時に終了
+  // CancelSubscription: 現在の請求サイクル終了時に終了 = 翌月末から停止
   const res = await sq(env, 'POST', `/v2/subscriptions/${subscriptionId}/cancel`);
   return res.subscription;
 }
 
-// UpdateSubscription: source.name の書き換え等に使う（支援先施設の変更）
+// UpdateSubscription: source.name の書き換え等に使う (支援先施設の変更)
 export async function updateSubscription(env, subscriptionId, patch) {
   const res = await sq(env, 'PUT', `/v2/subscriptions/${subscriptionId}`, {
     subscription: patch,

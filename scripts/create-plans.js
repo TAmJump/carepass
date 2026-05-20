@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
- * Square Subscription Plan + Variation 作成スクリプト
+ * Square Subscription Plan + Variation 作成スクリプト (v2: 月末アンカー)
  *
- * Care Support Pass は「月100円・1プランのみ」の設計です。
- * 加盟店・介護施設は Square 課金対象ではありません（申込受付のみ）。
+ * Care Support Pass は「月100円・月末課金・1プランのみ」の設計です。
+ * 申込時の即時 ¥100 は別途 CreatePayment (単発決済) で処理し、
+ * Subscription 自体は申込日の翌月初を start_date、月末を anchor として動かします。
  *
  * 使い方:
- *   set SQUARE_ENV=sandbox
+ *   set SQUARE_ENV=production
  *   set SQUARE_ACCESS_TOKEN=xxx
  *   node create-plans.js > plans.json
  *
@@ -27,12 +28,19 @@ if (!ACCESS_TOKEN) {
   process.exit(1);
 }
 
-// 1プランだけ — 月100円・無期限月額継続
+// 1プランだけ — 月100円・月末アンカー
 const PLAN_DEFINITION = {
-  plan_name: 'Care Support Pass — Monthly Membership',
-  plan_key: 'membership',
+  plan_name: 'Care Support Pass — Monthly Membership (end-of-month)',
+  plan_key: 'membership_eom',
   variations: [
-    { key: 'care100', name: 'Care Support Pass 月額会員', price: 100 },
+    {
+      key: 'care100',
+      name: 'Care Support Pass 月額会員 (月末締め)',
+      price: 100,
+      // monthly_billing_anchor_date: 31 を指定すると、毎月の月末日 (4月は30日、2月は28/29日) に課金される
+      // ref: https://developer.squareup.com/docs/subscriptions-api/subscription-billing
+      anchor_date: 31,
+    },
   ],
 };
 
@@ -97,12 +105,13 @@ async function createPlanVariation(plan, variation) {
           },
         ],
         subscription_plan_id: plan.id,
+        monthly_billing_anchor_date: variation.anchor_date,
       },
     },
   };
   const res = await squareRequest('POST', '/v2/catalog/object', body);
   const v = res.catalog_object;
-  console.error(`  ✓ Variation: ${variation.name} ¥${variation.price} (id=${v.id})`);
+  console.error(`  ✓ Variation: ${variation.name} ¥${variation.price} anchor=${variation.anchor_date} (id=${v.id})`);
   return v;
 }
 
