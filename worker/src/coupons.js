@@ -5,7 +5,7 @@
 //   QR ペイロード: { v:1, mc: <member_coupon_id>, exp: unix_ts, sig: hmac_sha256_base64url }
 //   署名鍵: env.COUPON_HMAC_KEY (Worker secret として投入)
 
-import { uuid, isoMinutesFromNow, nowIso } from './db.js';
+import { uuid, isoMinutesFromNow, nowIso, grantCouponToAllActiveMembers } from './db.js';
 
 const RESERVE_TTL_SEC = 30;
 
@@ -319,7 +319,17 @@ export async function createPartnerCoupon(env, partnerId, body) {
     body.total_limit ?? null,
     body.status || 'draft',
   ).run();
-  return await env.DB.prepare(`SELECT * FROM coupons WHERE id = ?`).bind(id).first();
+  const created = await env.DB.prepare(`SELECT * FROM coupons WHERE id = ?`).bind(id).first();
+  // 公開状態で作成された場合は、全アクティブ会員に自動配布
+  if (created && created.status === 'published') {
+    try {
+      const result = await grantCouponToAllActiveMembers(env, id);
+      console.log('[coupons.create] auto-broadcast:', { coupon_id: id, ...result });
+    } catch (e) {
+      console.warn('[coupons.create] auto-broadcast failed:', e.message);
+    }
+  }
+  return created;
 }
 
 export async function updatePartnerCoupon(env, partnerId, couponId, body) {
@@ -334,7 +344,17 @@ export async function updatePartnerCoupon(env, partnerId, couponId, body) {
   if (sets.length === 0) return existing;
   vals.push(couponId);
   await env.DB.prepare(`UPDATE coupons SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run();
-  return await env.DB.prepare(`SELECT * FROM coupons WHERE id = ?`).bind(couponId).first();
+  const updated = await env.DB.prepare(`SELECT * FROM coupons WHERE id = ?`).bind(couponId).first();
+  // 公開状態への遷移時 (draft → published 等)、全アクティブ会員に自動配布
+  if (updated && updated.status === 'published' && existing.status !== 'published') {
+    try {
+      const result = await grantCouponToAllActiveMembers(env, couponId);
+      console.log('[coupons.update] auto-broadcast on publish:', { coupon_id: couponId, prev_status: existing.status, ...result });
+    } catch (e) {
+      console.warn('[coupons.update] auto-broadcast failed:', e.message);
+    }
+  }
+  return updated;
 }
 
 export async function deletePartnerCoupon(env, partnerId, couponId) {

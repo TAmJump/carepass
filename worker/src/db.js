@@ -236,6 +236,61 @@ export async function grantPublishedCouponsToMember(env, accountId) {
 }
 
 // =====================================================================
+// member_coupons: クーポン公開時に全アクティブ会員へ自動配布
+// =====================================================================
+//
+// 1つのクーポンを、全てのアクティブ会員(accounts.status='active' かつ
+// members レコードを持つ会員) のうち、まだ持っていない人へ 'available' で配布。
+// クーポンが status='published' かつ有効期間内であることを確認する。
+// 冪等: 既に持っている会員には INSERT しない (UNIQUE 制約 + EXISTS チェック)。
+//
+// 呼び出し: クーポン新規作成時 (status='published'), クーポン公開遷移時
+// (status: draft → published)。
+//
+// 戻り値: { granted: 配布数, skipped: スキップ理由 }
+export async function grantCouponToAllActiveMembers(env, couponId) {
+  const nowIsoStr = nowIso();
+  // クーポンが配布対象か確認
+  const coupon = await db(env)
+    .prepare(`SELECT id, status, valid_from, valid_until FROM coupons WHERE id = ?`)
+    .bind(couponId)
+    .first();
+  if (!coupon) return { granted: 0, skipped: 'coupon_not_found' };
+  if (coupon.status !== 'published') return { granted: 0, skipped: 'not_published' };
+  if (coupon.valid_until && coupon.valid_until < nowIsoStr) {
+    return { granted: 0, skipped: 'already_expired' };
+  }
+
+  // 配布対象: members レコードを持つ active アカウント、かつ未配布
+  const targets = await db(env)
+    .prepare(`
+      SELECT a.id AS account_id FROM accounts a
+        JOIN members m ON m.account_id = a.id
+       WHERE a.status = 'active'
+         AND NOT EXISTS (
+           SELECT 1 FROM member_coupons mc
+            WHERE mc.account_id = a.id AND mc.coupon_id = ?
+         )
+    `)
+    .bind(couponId)
+    .all();
+  const rows = targets?.results || targets || [];
+  let granted = 0;
+  for (const t of rows) {
+    try {
+      await db(env)
+        .prepare(`INSERT INTO member_coupons (id, account_id, coupon_id, state) VALUES (?, ?, ?, 'available')`)
+        .bind(uuid(), t.account_id, couponId)
+        .run();
+      granted++;
+    } catch (e) {
+      console.warn('[grantCouponBroadcast] insert failed for account', t.account_id, e.message);
+    }
+  }
+  return { granted, skipped: null };
+}
+
+// =====================================================================
 // login_tokens (マジックリンク)
 // =====================================================================
 
