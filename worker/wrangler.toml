@@ -9,7 +9,7 @@ compatibility_flags = ["nodejs_compat"]
 #   api.carepass.tamjump.com  CNAME  carepass-api.<account>.workers.dev (Proxied)
 
 [vars]
-SQUARE_ENV = "sandbox"
+SQUARE_ENV = "production"
 # 本番切替時は wrangler deploy --var SQUARE_ENV:production または vars を変更
 
 # secrets (wrangler secret put で設定):
