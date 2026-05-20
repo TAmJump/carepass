@@ -3,6 +3,12 @@ main = "src/index.js"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Cloudflare アカウント明示
+# (D1 migrations apply で 'given account is not valid' (code: 7403) エラーを
+#  防ぐため。wrangler が複数アカウントを見えていても、これで Workers / D1 と
+#  もに同じアカウントに紐付けられる。)
+account_id = "b9de28abfd009bbf696ceec4da62c5b8"
+
 # カスタムドメイン: carepass-api.tamjump.com (Cloudflare の Custom Domain で割当済)
 
 [vars]
