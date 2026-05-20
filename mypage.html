@@ -193,7 +193,11 @@
     <!-- 支援先変更 -->
     <section class="card hidden" id="change-card">
       <h2>支援先を変更する</h2>
-      <p style="font-size:13px;color:var(--sub);margin:0 0 18px;line-height:1.8">解約せずに、別の加盟予定施設に支援先を切り替えられます。次回課金分から変更後の施設に充てられます。</p>
+      <p style="font-size:13px;color:var(--sub);margin:0 0 18px;line-height:1.8">
+        解約せずに、別の加盟予定施設に支援先を切り替えられます。<br>
+        変更は <strong style="color:var(--accent)" id="change-effective-date">次回課金日</strong> から反映され、それ以降のご支援が変更後の施設に充てられます。<br>
+        本日から次回課金日までは現在の支援先のままとなります。
+      </p>
       <div id="change-msg"></div>
       <div class="field">
         <label for="new-facility">変更先の施設</label>
@@ -260,6 +264,7 @@ const $ = (id) => document.getElementById(id);
 let currentSubId = null;
 let currentEmail = null;
 let currentFacilityId = null;
+let currentNextBillingDate = null;
 let allFacilities = [];
 let isSessionLogin = false; // true: マジックリンクログイン (Cookie認証), false: 申込番号+メアド
 
@@ -348,6 +353,13 @@ function renderInfo(payload) {
   $('info-facility').textContent = payload.facility ? `${payload.facility.name}（${payload.facility.location || ''}）` : (payload.facility_id || '未設定');
   $('info-card').classList.remove('hidden');
 
+  // 支援先変更カードの「いつから適用されるか」を動的更新
+  currentNextBillingDate = sub.next_billing_date || null;
+  const effEl = $('change-effective-date');
+  if (effEl) {
+    effEl.textContent = currentNextBillingDate ? `次回課金日（${fmtDate(currentNextBillingDate)}）` : '次回課金日';
+  }
+
   const canceled = ['CANCELED', 'DEACTIVATED'].includes((sub.status || '').toUpperCase());
   if (canceled) {
     $('change-card').classList.add('hidden');
@@ -386,6 +398,7 @@ function showLoggedOutState() {
   currentSubId = null;
   currentEmail = null;
   currentFacilityId = null;
+  currentNextBillingDate = null;
   isSessionLogin = false;
 }
 
@@ -466,7 +479,19 @@ $('change-btn').addEventListener('click', async () => {
     showMsg('change-msg', '現在と同じ施設が選択されています。', 'info');
     return;
   }
-  if (!confirm(`支援先を「${$('new-facility').selectedOptions[0].textContent}」に変更します。よろしいですか？`)) return;
+  const newLabel = $('new-facility').selectedOptions[0].textContent;
+  const currentLabel = (() => {
+    const cur = allFacilities.find(x => x.id === currentFacilityId);
+    return cur ? `${cur.name}${cur.location ? `（${cur.location}）` : ''}` : (currentFacilityId || '未設定');
+  })();
+  const effDateStr = currentNextBillingDate ? fmtDate(currentNextBillingDate) : '次回課金日';
+  const msg = `支援先を変更します。よろしいですか？\n\n`
+    + `  現在 : ${currentLabel}\n`
+    + `  変更後: ${newLabel}\n\n`
+    + `※ 適用は次回課金日（${effDateStr}）からです。\n`
+    + `  本日から ${effDateStr} までは現在の支援先のままとなります。\n`
+    + `  日割り精算は行いません。`;
+  if (!confirm(msg)) return;
   setLoading('change-btn', true);
   try {
     let r;
@@ -486,7 +511,8 @@ $('change-btn').addEventListener('click', async () => {
     currentFacilityId = newFid;
     const f = allFacilities.find(x => x.id === newFid);
     $('info-facility').textContent = f ? `${f.name}（${f.location || ''}）` : newFid;
-    showMsg('change-msg', '支援先を変更しました。次回課金分から反映されます。', 'success');
+    const effDateStr2 = currentNextBillingDate ? fmtDate(currentNextBillingDate) : '次回課金日';
+    showMsg('change-msg', `支援先を変更しました。次回課金日（${effDateStr2}）から「${f ? f.name : newFid}」に充てられます。`, 'success');
   } catch (e) {
     showMsg('change-msg', 'ネットワークエラーが発生しました。', 'error');
   } finally {
