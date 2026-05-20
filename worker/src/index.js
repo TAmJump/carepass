@@ -847,7 +847,15 @@ async function handleMeSubscription(request, env, origin) {
     ? await retrieveCustomer(env, auth.account.square_customer_id)
     : { email_address: auth.account.email, given_name: '', family_name: '' };
 
-  return jsonResponse(buildLookupPayload(env, sub, customer), 200, env, origin);
+  const payload = buildLookupPayload(env, sub, customer);
+  // members テーブル由来の追加情報をマージ
+  payload.member = {
+    total_paid_jpy:      member.total_paid_jpy || 0,
+    current_facility_id: member.current_facility_id,
+    applied_at:          member.applied_at,
+    last_billed_at:      member.last_billed_at,
+  };
+  return jsonResponse(payload, 200, env, origin);
 }
 
 async function handleMeChangeFacility(request, env, origin) {

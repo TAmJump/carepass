@@ -319,6 +319,7 @@
       <div class="status-row"><span class="k">メールアドレス</span><span class="v" id="info-email"></span></div>
       <div class="status-row"><span class="k">開始日</span><span class="v" id="info-start"></span></div>
       <div class="status-row"><span class="k">次回課金日</span><span class="v" id="info-next"></span></div>
+      <div class="status-row"><span class="k">累計支援額</span><span class="v" id="info-total-paid" style="font-family:'Inter','Noto Sans JP',sans-serif;font-weight:600"></span></div>
       <div class="status-row"><span class="k">現在の支援先</span><span class="v" id="info-facility" style="color:var(--accent);font-weight:600"></span></div>
       <div id="info-reports" class="hidden" style="margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)">
         <div class="facility-report-card" id="info-facility-report-card">
@@ -555,6 +556,9 @@ function renderInfo(payload) {
   $('info-email').textContent = cust.email_address || '—';
   $('info-start').textContent = fmtDate(sub.start_date);
   $('info-next').textContent = sub.canceled_date ? `解約予定: ${fmtDate(sub.canceled_date)}` : fmtDate(sub.next_billing_date);
+  // 累計支援額 (members.total_paid_jpy)
+  const totalPaid = payload.member?.total_paid_jpy || 0;
+  $('info-total-paid').textContent = `¥${totalPaid.toLocaleString('ja-JP')}`;
   $('info-facility').textContent = payload.facility ? `${payload.facility.name}（${payload.facility.location || ''}）` : (payload.facility_id || '未設定');
   $('info-card').classList.remove('hidden');
 
