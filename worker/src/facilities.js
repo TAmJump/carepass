@@ -43,7 +43,7 @@ export async function searchFacilitiesDirectory(env, query) {
 
   const r = await env.DB.prepare(`
     SELECT id, name, name_kana, prefecture, location, category, description,
-           accepting, website, report_base_url, logo_url, created_at
+           accepting, rank, website, report_base_url, logo_url, created_at
       FROM facilities
       ${where}
       ORDER BY created_at DESC, id DESC

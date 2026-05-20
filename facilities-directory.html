@@ -46,6 +46,7 @@
 .card .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
 .card .badge.accepting{background:#dcfce7;color:#166534}
 .card .badge.closed{background:#fee2e2;color:#991b1b}
+.card .badge.trial{background:#fef3c7;color:#92400e}
 .card .desc{font-size:12px;color:var(--sub);line-height:1.6;flex-grow:1}
 .card .report-cta{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#fafafa;border-radius:8px;font-size:12px;margin-top:8px}
 .card .report-cta strong{color:var(--ink);font-weight:600}
@@ -108,13 +109,16 @@
           <label>カテゴリ</label>
           <select id="category">
             <option value="">すべて</option>
+            <option>住宅型有料老人ホーム</option>
+            <option>有料老人ホーム</option>
             <option>特別養護老人ホーム</option>
             <option>グループホーム</option>
+            <option>サービス付き高齢者向け住宅</option>
+            <option>小規模多機能型居宅介護</option>
+            <option>小規模多機能</option>
             <option>デイサービス</option>
             <option>訪問介護</option>
-            <option>有料老人ホーム</option>
-            <option>サービス付き高齢者向け住宅</option>
-            <option>小規模多機能</option>
+            <option>訪問介護・住まい相談</option>
             <option>その他</option>
           </select>
         </div>
@@ -184,13 +188,19 @@ function buildQuery(opts={}){
 function renderCard(f){
   const acceptingClass = f.accepting ? 'accepting' : 'closed';
   const acceptingText  = f.accepting ? '受付中' : '休止';
+  const isTrial = f.rank === 'trial';
   const initial = (f.name || '?').slice(0,1);
-  const reportCta = f.latest_report
-    ? `<div class="report-cta">
+  let reportCta;
+  if (f.latest_report) {
+    reportCta = `<div class="report-cta">
          <strong>${escapeHtml(fmtPeriodJa(f.latest_report.period))} の活動報告</strong>
          <a href="${escapeHtml(f.latest_report.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">見る ↗</a>
-       </div>`
-    : `<div class="report-cta"><span class="none">月次報告書は未公開です</span></div>`;
+       </div>`;
+  } else if (isTrial) {
+    reportCta = `<div class="report-cta"><span class="none">加盟準備中の施設です</span></div>`;
+  } else {
+    reportCta = `<div class="report-cta"><span class="none">月次報告書は近日公開予定</span></div>`;
+  }
   return `
     <div class="card" data-fid="${escapeHtml(f.id)}">
       <div class="head">
@@ -200,6 +210,7 @@ function renderCard(f){
           <div class="meta">
             ${escapeHtml(f.prefecture || f.location || '')}${f.category ? ' · ' + escapeHtml(f.category) : ''}
             <span class="badge ${acceptingClass}" style="margin-left:6px">${acceptingText}</span>
+            ${isTrial ? '<span class="badge trial" style="margin-left:4px">加盟予定</span>' : ''}
           </div>
         </div>
       </div>
