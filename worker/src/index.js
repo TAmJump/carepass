@@ -57,6 +57,8 @@ import {
   markWebhookProcessed,
   grantPublishedCouponsToMember,
   verifyPassword,
+  hashPassword,
+  setAccountPassword,
 } from './db.js';
 import {
   SESSION_COOKIE_NAME,
@@ -294,9 +296,12 @@ async function handleSubscribe(request, env, origin) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
 
-  const { source_id, verification_token, buyer, facility_id } = body;
+  const { source_id, verification_token, buyer, facility_id, password } = body;
   if (!source_id || !buyer || !buyer.email_address) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  }
+  if (!password || String(password).length < 8) {
+    return jsonResponse({ error: 'password_too_short' }, 400, env, origin);
   }
   if (!isValidFacilityId(env, facility_id)) {
     return jsonResponse({ error: 'invalid_facility' }, 400, env, origin);
@@ -375,6 +380,13 @@ async function handleSubscribe(request, env, origin) {
         square_subscription_id: subscription.id,
         current_facility_id: facility_id,
       });
+      // パスワードハッシュを保存 (申込時に必須化、PBKDF2-SHA256)
+      try {
+        const ph = await hashPassword(password);
+        await setAccountPassword(env, account.id, ph);
+      } catch (e) {
+        console.error('[subscribe] hashPassword failed:', e.message);
+      }
       // 公開中クーポンを新規会員に配布 (best-effort; 失敗してもサブスクは成立)
       try { await grantPublishedCouponsToMember(env, account.id); }
       catch (e) { console.warn('[subscribe] grant coupons failed:', e.message); }

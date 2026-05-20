@@ -1838,6 +1838,11 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
             <div class="form-row"><label>メールアドレス<span class="req">必須</span></label><input type="email" name="email_address" placeholder="example@mail.com" required></div>
             <div class="form-row"><label>電話番号<span class="opt">任意</span></label><input type="tel" name="phone_number" placeholder="090-0000-0000"></div>
           </div>
+          <div class="form-row">
+            <label>マイページ ログイン用パスワード<span class="req">必須</span></label>
+            <input type="password" name="password" placeholder="8文字以上" minlength="8" autocomplete="new-password" required>
+            <p class="card-note" style="margin-top:6px">マイページにログインする際にお使いください。ご登録のメールアドレスとこのパスワードでログインできます (8文字以上)。</p>
+          </div>
           <div class="form-grid-2">
             <div class="form-row"><label>郵便番号<span class="req">必須</span></label><input type="text" name="postal_code" placeholder="123-4567" required></div>
             <div class="form-row"><label>居住地域<span class="opt">任意</span></label><input type="text" name="area" placeholder="例：東京都足立区"></div>

@@ -223,8 +223,7 @@
         <button class="btn primary" id="magic-btn">ログインリンクを送る</button>
       </div>
       <p class="alt-mode-link" style="margin-top:18px">
-        パスワードをお持ちの方は <a id="show-password-link">パスワードでログイン</a> /
-        申込番号でログインする場合は <a id="show-legacy-link">こちら</a>
+        パスワードをお持ちの方は <a id="show-password-link">パスワードでログイン</a>
       </p>
     </section>
 
@@ -245,27 +244,6 @@
       </div>
       <p class="alt-mode-link">
         メールでログインする場合は <a id="show-magic-from-pw-link">こちら</a>
-      </p>
-    </section>
-
-    <!-- ログインフォーム (申込番号 + メアド, フォールバック) -->
-    <section class="card hidden" id="legacy-card">
-      <h2>申込番号でログイン</h2>
-      <div id="legacy-msg"></div>
-      <div class="field">
-        <label for="sub-id">お申し込み番号</label>
-        <input type="text" id="sub-id" placeholder="例: 798c1c46-c53a-432f-96be-f64a554539ec" autocomplete="off">
-        <div class="hint">お申込み完了画面または Square からの請求書メールに記載されています。</div>
-      </div>
-      <div class="field">
-        <label for="email">登録メールアドレス</label>
-        <input type="email" id="email" placeholder="example@email.com" autocomplete="email">
-      </div>
-      <div class="btn-row">
-        <button class="btn primary" id="login-btn">ご契約状況を表示</button>
-      </div>
-      <p class="alt-mode-link">
-        メールでログインする場合は <a id="show-magic-link">こちら</a>
       </p>
     </section>
 
@@ -721,14 +699,12 @@ async function loadMyFacilityReports() {
 function showLoggedInState() {
   // ログインフォームを隠してログアウトボタン表示
   $('magic-card').classList.add('hidden');
-  $('legacy-card').classList.add('hidden');
   $('password-card').classList.add('hidden');
   $('logout-row').classList.remove('hidden');
 }
 
 function showLoggedOutState() {
   $('magic-card').classList.remove('hidden');
-  $('legacy-card').classList.add('hidden');
   $('password-card').classList.add('hidden');
   $('logout-row').classList.add('hidden');
   $('info-card').classList.add('hidden');
@@ -742,19 +718,8 @@ function showLoggedOutState() {
 }
 
 // === モード切替 ===
-$('show-legacy-link').addEventListener('click', () => {
-  $('magic-card').classList.add('hidden');
-  $('password-card').classList.add('hidden');
-  $('legacy-card').classList.remove('hidden');
-});
-$('show-magic-link').addEventListener('click', () => {
-  $('legacy-card').classList.add('hidden');
-  $('password-card').classList.add('hidden');
-  $('magic-card').classList.remove('hidden');
-});
 $('show-password-link').addEventListener('click', () => {
   $('magic-card').classList.add('hidden');
-  $('legacy-card').classList.add('hidden');
   $('password-card').classList.remove('hidden');
   // メアドが入力済なら引き継ぐ
   const e = $('magic-email').value.trim();
@@ -819,36 +784,6 @@ $('magic-btn').addEventListener('click', async () => {
     showMsg('magic-msg', 'ネットワークエラーが発生しました。', 'error');
   } finally {
     setLoading('magic-btn', false);
-  }
-});
-
-// === Legacy: 申込番号 + メアド ログイン ===
-$('login-btn').addEventListener('click', async () => {
-  showMsg('legacy-msg', '', 'info');
-  const sid = $('sub-id').value.trim();
-  const email = $('email').value.trim();
-  if (!sid || !email) {
-    showMsg('legacy-msg', 'お申し込み番号とメールアドレスを入力してください。', 'error');
-    return;
-  }
-  setLoading('login-btn', true);
-  try {
-    const r = await apiPost('/api/lookup', { subscription_id: sid, email });
-    if (!r.ok) {
-      showMsg('legacy-msg', errorMsgFor(r.data?.error), 'error');
-      return;
-    }
-    currentSubId = sid;
-    currentEmail = email;
-    currentFacilityId = r.data.facility_id;
-    isSessionLogin = false;
-    renderInfo(r.data);
-    showLoggedInState();
-    setTimeout(() => $('info-card').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-  } catch (e) {
-    showMsg('legacy-msg', 'ネットワークエラーが発生しました。', 'error');
-  } finally {
-    setLoading('login-btn', false);
   }
 });
 
@@ -1019,10 +954,8 @@ async function init() {
     showMsg('magic-msg', errorMsgFor(params.get('login_error')), 'error');
     history.replaceState(null, '', location.pathname);
   }
-  // 旧仕様: thanks.html からの sid/email プリフィル
-  if (params.get('sid')) $('sub-id').value = params.get('sid');
+  // thanks.html からの email プリフィル (sid は撤廃)
   if (params.get('email')) {
-    $('email').value = params.get('email');
     $('magic-email').value = params.get('email');
   }
 

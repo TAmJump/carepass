@@ -92,6 +92,30 @@ export async function verifyPassword(plain, storedHash) {
   return timingSafeEqualHex(actualHex, expectedHex);
 }
 
+// 新規パスワードを PBKDF2-SHA256 でハッシュ化 (登録/変更時)
+export async function hashPassword(plain, iter = 100000) {
+  const saltBytes = new Uint8Array(16);
+  crypto.getRandomValues(saltBytes);
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', enc.encode(plain), 'PBKDF2', false, ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: saltBytes, iterations: iter, hash: 'SHA-256' },
+    keyMaterial,
+    256,
+  );
+  return `pbkdf2$${iter}$${bytesToHex(saltBytes)}$${bytesToHex(bits)}`;
+}
+
+// account の password_hash を更新
+export async function setAccountPassword(env, accountId, passwordHash) {
+  await db(env)
+    .prepare('UPDATE accounts SET password_hash = ?, updated_at = datetime(\'now\') WHERE id = ?')
+    .bind(passwordHash, accountId)
+    .run();
+}
+
 // =====================================================================
 // accounts
 // =====================================================================

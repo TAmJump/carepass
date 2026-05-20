@@ -177,8 +177,15 @@
     buyer.metadata = collectMetadata(fd, [
       'given_name', 'family_name', 'email_address', 'phone_number',
       'company_name', 'postal_code', 'address_line_1', 'address_line_2',
-      'facility_id', 'consent',
+      'facility_id', 'consent', 'password',
     ]);
+
+    const password = fd.get('password') || '';
+    if (!password || password.length < 8) {
+      setStatus('パスワードを 8 文字以上で設定してください。', 'error');
+      disableSubmit(false);
+      return;
+    }
 
     try {
       const r = await fetch(API_BASE + '/api/subscribe', {
@@ -189,11 +196,19 @@
           verification_token: tokenResult.verificationToken,
           facility_id: facilityId,
           buyer,
+          password,
         }),
       });
       const data = await r.json();
       if (!r.ok || !data.ok) {
-        throw new Error(data?.error || data?.message || 'subscribe_failed');
+        const err = data?.error || data?.message || 'subscribe_failed';
+        const niceMsg = {
+          password_too_short: 'パスワードは 8 文字以上で設定してください。',
+          missing_fields: '必須項目が入力されていません。',
+          invalid_facility: '選択された施設は現在受付できません。',
+          plan_not_configured: 'システム準備中です。お手数ですが時間をおいて再度お試しください。',
+        }[err] || ('お申し込みに失敗しました。もう一度お試しください。(' + err + ')');
+        throw new Error(niceMsg);
       }
       const params = new URLSearchParams({
         type: 'individual',
@@ -203,7 +218,7 @@
       window.location.href = '/thanks.html?' + params.toString();
     } catch (e) {
       console.error(e);
-      setStatus('お申し込みに失敗しました。もう一度お試しください。(' + e.message + ')', 'error');
+      setStatus(e.message || 'お申し込みに失敗しました。', 'error');
       disableSubmit(false);
     }
   }
