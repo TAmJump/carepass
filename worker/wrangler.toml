@@ -41,3 +41,11 @@ migrations_dir = "migrations"
 # Phase 2 で追加:
 #   COUPON_HMAC_KEY                  (クーポン QR 短期トークンの HMAC-SHA256 鍵.
 #                                     32 byte以上のランダム文字列を投入する)
+
+# === Cron Triggers (定期実行) ===
+# 報告書URL ヘルスチェック: 週1回、UTC日曜15時 (JST月曜0時)
+# 公開済み (published) と 切断中 (broken) の facility_reports を全件チェックし、
+# 到達不能なものは broken に、復活したものは published に戻す。
+# src/index.js の scheduled() ハンドラ → runReportHealthCheck() で実装。
+[triggers]
+crons = ["0 15 * * 0"]

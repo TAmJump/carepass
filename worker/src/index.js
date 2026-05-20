@@ -286,7 +286,115 @@ export default {
       return jsonResponse({ error: 'internal_error', message: e.message }, 500, env, origin);
     }
   },
+
+  // ===================================================================
+  // Cron Trigger: 報告書URL定期ヘルスチェック
+  // ===================================================================
+  // wrangler.toml の [triggers] crons = ["0 15 * * 0"] (UTC日曜15時 = JST月曜0時)
+  // 公開済み (status='published') の facility_reports を全件 HEAD し、
+  // 失敗したものは status='broken' に。復活したものは 'published' に戻す。
+  async scheduled(event, env, ctx) {
+    console.log('[cron] scheduled event:', event.cron, event.scheduledTime);
+    ctx.waitUntil(runReportHealthCheck(env));
+  },
 };
+
+// =====================================================================
+// 報告書URL ヘルスチェック実装
+// =====================================================================
+
+async function runReportHealthCheck(env) {
+  if (!env.DB) {
+    console.warn('[cron] DB not configured, skipping');
+    return;
+  }
+  const startedAt = Date.now();
+  // published + broken の両方を対象 (broken は復活確認のため)
+  const rows = await env.DB
+    .prepare(`SELECT id, facility_id, period, url, status FROM facility_reports
+              WHERE status IN ('published', 'broken')
+              ORDER BY (verified_at IS NULL) DESC, verified_at ASC
+              LIMIT 200`)
+    .all();
+  const reports = rows?.results || rows || [];
+  console.log(`[cron] checking ${reports.length} reports`);
+
+  let okCount = 0, brokenCount = 0, restoredCount = 0;
+  const nowIsoStr = new Date().toISOString();
+
+  for (const rep of reports) {
+    const result = await checkReportUrl(rep.url);
+    if (result.ok) {
+      // 成功 → verified_at を更新。broken だったものは published に復活
+      if (rep.status === 'broken') {
+        await env.DB.prepare(
+          `UPDATE facility_reports SET status='published', verified_at=?, notes=? WHERE id=?`
+        ).bind(nowIsoStr, `auto-restored at ${nowIsoStr} (HTTP ${result.code})`, rep.id).run();
+        restoredCount++;
+        console.log(`[cron] restored: ${rep.facility_id}/${rep.period} (${rep.url}) → ${result.code}`);
+      } else {
+        await env.DB.prepare(
+          `UPDATE facility_reports SET verified_at=? WHERE id=?`
+        ).bind(nowIsoStr, rep.id).run();
+        okCount++;
+      }
+    } else {
+      // 失敗 → broken に。既に broken のものは notes だけ更新
+      const noteText = `auto-checked-broken at ${nowIsoStr} (${result.reason})`;
+      if (rep.status !== 'broken') {
+        await env.DB.prepare(
+          `UPDATE facility_reports SET status='broken', notes=? WHERE id=?`
+        ).bind(noteText, rep.id).run();
+        brokenCount++;
+        console.warn(`[cron] broken: ${rep.facility_id}/${rep.period} (${rep.url}) ← ${result.reason}`);
+      } else {
+        await env.DB.prepare(
+          `UPDATE facility_reports SET notes=? WHERE id=?`
+        ).bind(noteText, rep.id).run();
+      }
+    }
+  }
+
+  const ms = Date.now() - startedAt;
+  console.log(`[cron] done in ${ms}ms: ok=${okCount}, newly_broken=${brokenCount}, restored=${restoredCount}, total=${reports.length}`);
+}
+
+async function checkReportUrl(url) {
+  if (!url || !/^https?:\/\//.test(url)) {
+    return { ok: false, reason: 'invalid_url' };
+  }
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    // HEAD で試す
+    let res;
+    try {
+      res = await fetch(url, {
+        method: 'HEAD',
+        signal: controller.signal,
+        redirect: 'follow',
+        cf: { cacheTtl: 0 },
+      });
+    } catch (e) {
+      // HEAD 拒否されるサイトもあるので GET で再試行 (Range で1KBだけ)
+      res = await fetch(url, {
+        method: 'GET',
+        signal: controller.signal,
+        redirect: 'follow',
+        headers: { 'Range': 'bytes=0-1023' },
+        cf: { cacheTtl: 0 },
+      });
+    }
+    clearTimeout(timeout);
+    if (res.status >= 200 && res.status < 400) {
+      return { ok: true, code: res.status };
+    }
+    return { ok: false, reason: `HTTP ${res.status}`, code: res.status };
+  } catch (e) {
+    if (e.name === 'AbortError') return { ok: false, reason: 'timeout' };
+    return { ok: false, reason: e.message || 'fetch_error' };
+  }
+}
 
 // =====================================================================
 // /api/subscribe
