@@ -6,11 +6,12 @@
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';
   script-src 'self' https://*.squarecdn.com https://*.squareupsandbox.com https://*.squareup.com 'unsafe-inline' 'unsafe-eval';
-  frame-src https://*.squarecdn.com https://*.squareupsandbox.com https://*.squareup.com;
-  connect-src 'self' https://*.squarecdn.com https://*.squareupsandbox.com https://*.squareup.com https://carepass-api.tamjump.com https://o160250.ingest.sentry.io;
+  frame-src https://*.squarecdn.com https://*.squareupsandbox.com https://*.squareup.com https://*.cardinalcommerce.com https://*.vcas.visa.com https://*.mastercard.com https://*.mcsecure.com https://*.jcbsecurecode.com https://*.americanexpress.com https://*.aexp-static.com;
+  connect-src 'self' https://*.squarecdn.com https://*.squareupsandbox.com https://*.squareup.com https://carepass-api.tamjump.com https://o160250.ingest.sentry.io https://*.cardinalcommerce.com;
   style-src 'self' https://fonts.googleapis.com https://*.squarecdn.com 'unsafe-inline';
   font-src 'self' data: https://fonts.gstatic.com https://*.squarecdn.com https://*.cloudfront.net;
   img-src 'self' data: blob: https:;
+  form-action 'self' https://*.cardinalcommerce.com https://*.vcas.visa.com https://*.squareup.com;
 ">
 <meta name="description" content="Care Support Pass は、月100円から参加できる生活応援パスです。提携店優待を使えて、売上の一部が高齢者の住まい支援に活用されます。">
 <title>Care Support Pass | 月100円で、生活と住まいを支える</title>
