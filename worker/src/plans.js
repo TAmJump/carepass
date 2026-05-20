@@ -36,3 +36,16 @@ export function isValidFacilityId(env, facilityId) {
   const facilities = getFacilities(env);
   return facilities.some((f) => f.id === facilityId && f.accepting !== false);
 }
+
+// source.name (例: "Care Support Pass / facility_a") から facility_id を抽出
+export function parseFacilityFromSourceName(sourceName) {
+  if (!sourceName || typeof sourceName !== 'string') return null;
+  const m = sourceName.match(/Care Support Pass\s*\/\s*([\w-]+)/);
+  return m ? m[1] : null;
+}
+
+// facility_id から表示用情報を取得
+export function findFacility(env, facilityId) {
+  if (!facilityId) return null;
+  return getFacilities(env).find((f) => f.id === facilityId) || null;
+}

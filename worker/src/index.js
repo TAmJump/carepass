@@ -18,11 +18,14 @@ import {
   retrieveSubscription,
   retrieveCustomer,
   cancelSubscription,
+  updateSubscription,
 } from './square.js';
 import {
   getMembershipVariationId,
   getFacilities,
   isValidFacilityId,
+  parseFacilityFromSourceName,
+  findFacility,
 } from './plans.js';
 import { verifySquareSignature, handleEvent } from './webhook.js';
 
@@ -58,6 +61,14 @@ export default {
 
       if (path === '/api/cancel' && request.method === 'POST') {
         return await handleCancel(request, env, origin);
+      }
+
+      if (path === '/api/lookup' && request.method === 'POST') {
+        return await handleLookup(request, env, origin);
+      }
+
+      if (path === '/api/change-facility' && request.method === 'POST') {
+        return await handleChangeFacility(request, env, origin);
       }
 
       if (path === '/api/webhook' && request.method === 'POST') {
@@ -179,26 +190,103 @@ async function handleCancel(request, env, origin) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
 
-  const { subscription_id, customer_email } = body;
-  if (!subscription_id || !customer_email) {
+  // 互換: customer_email でも email でも受ける
+  const subscription_id = body.subscription_id;
+  const email = body.email || body.customer_email;
+  if (!subscription_id || !email) {
     return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
   }
 
-  const sub = await retrieveSubscription(env, subscription_id);
-  if (!sub) return jsonResponse({ error: 'not_found' }, 404, env, origin);
-
-  // customer email 照合（簡易本人確認）
-  const customer = await retrieveCustomer(env, sub.customer_id);
-  const actualEmail = customer?.email_address;
-  if (!actualEmail || actualEmail.toLowerCase() !== customer_email.toLowerCase()) {
-    return jsonResponse({ error: 'email_mismatch' }, 403, env, origin);
-  }
+  const auth = await authBySubAndEmail(env, subscription_id, email);
+  if (auth.error) return jsonResponse({ error: auth.error }, auth.status, env, origin);
 
   const canceled = await cancelSubscription(env, subscription_id);
   return jsonResponse({
     ok: true,
     status: canceled.status,
     canceled_date: canceled.canceled_date,
+  }, 200, env, origin);
+}
+
+// 共通: subscription_id + email でユーザー本人確認、sub と customer を返す
+async function authBySubAndEmail(env, subscriptionId, email) {
+  const sub = await retrieveSubscription(env, subscriptionId);
+  if (!sub) return { error: 'not_found', status: 404 };
+  const customer = await retrieveCustomer(env, sub.customer_id);
+  const actualEmail = customer?.email_address;
+  if (!actualEmail || actualEmail.toLowerCase() !== String(email).toLowerCase()) {
+    return { error: 'email_mismatch', status: 403 };
+  }
+  return { sub, customer };
+}
+
+// === /api/lookup — マイページ用：subscription_id + email で現状取得 ===
+
+async function handleLookup(request, env, origin) {
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
+
+  const { subscription_id, email } = body;
+  if (!subscription_id || !email) {
+    return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  }
+
+  const auth = await authBySubAndEmail(env, subscription_id, email);
+  if (auth.error) return jsonResponse({ error: auth.error }, auth.status, env, origin);
+
+  const { sub, customer } = auth;
+  const facilityId = parseFacilityFromSourceName(sub.source?.name);
+  const facility = findFacility(env, facilityId);
+
+  return jsonResponse({
+    ok: true,
+    subscription: {
+      id: sub.id,
+      status: sub.status,
+      start_date: sub.start_date,
+      charged_through_date: sub.charged_through_date,
+      paid_until_date: sub.paid_until_date,
+      canceled_date: sub.canceled_date || null,
+      next_billing_date: sub.charged_through_date || null,
+    },
+    customer: {
+      given_name: customer?.given_name || '',
+      family_name: customer?.family_name || '',
+      email_address: customer?.email_address || '',
+    },
+    facility_id: facilityId,
+    facility, // {id,name,location,accepting} or null
+    facilities: getFacilities(env), // 切替候補
+  }, 200, env, origin);
+}
+
+// === /api/change-facility — 支援先変更（解約せずに） ===
+
+async function handleChangeFacility(request, env, origin) {
+  const body = await request.json().catch(() => null);
+  if (!body) return jsonResponse({ error: 'invalid_json' }, 400, env, origin);
+
+  const { subscription_id, email, new_facility_id } = body;
+  if (!subscription_id || !email || !new_facility_id) {
+    return jsonResponse({ error: 'missing_fields' }, 400, env, origin);
+  }
+  if (!isValidFacilityId(env, new_facility_id)) {
+    return jsonResponse({ error: 'invalid_facility' }, 400, env, origin);
+  }
+
+  const auth = await authBySubAndEmail(env, subscription_id, email);
+  if (auth.error) return jsonResponse({ error: auth.error }, auth.status, env, origin);
+
+  // source.name を新 facility_id で書き換え
+  const updated = await updateSubscription(env, subscription_id, {
+    source: { name: `Care Support Pass / ${new_facility_id}` },
+  });
+
+  return jsonResponse({
+    ok: true,
+    subscription_id: updated.id,
+    facility_id: new_facility_id,
+    source_name: updated.source?.name,
   }, 200, env, origin);
 }
 

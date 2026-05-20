@@ -142,9 +142,8 @@
     </div>
 
     <p class="cancel-link">
-      退会をご希望の場合は、お申し込み番号と登録メールアドレスを記載の上、<br>
-      <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせフォーム</a> よりご連絡ください。
-      次回の課金日前日までにご連絡いただければ、それ以降の課金は発生しません。
+      退会や支援先の変更は <a href="/mypage.html" id="mypage-link">マイページ</a> からいつでも手続きできます。<br>
+      お申し込み番号と登録メールアドレスをご用意ください。
     </p>
 
     <p class="quote">
@@ -177,6 +176,7 @@
       <div class="footer-col">
         <h5>Support</h5>
         <a href="/#faq">FAQ</a>
+        <a href="/mypage.html">マイページ（解約・支援先変更）</a>
         <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a>
         <a href="/#apply">お申し込み</a>
       </div>
@@ -222,6 +222,9 @@ if (type === 'partner') {
 if (sid) {
   subInfo.style.display = 'block';
   subIdEl.textContent = sid;
+  // マイページリンクに sid を引き継ぐ
+  const mypageLink = document.getElementById('mypage-link');
+  if (mypageLink) mypageLink.href = `/mypage.html?sid=${encodeURIComponent(sid)}`;
 }
 
 // 施設指名情報を /api/config から取得して表示

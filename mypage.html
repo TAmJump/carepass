@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';
+  script-src 'self' 'unsafe-inline';
+  connect-src 'self' https://carepass-api.tamjump.com;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' data: https://fonts.gstatic.com;
+  img-src 'self' data: blob: https:;
+">
+<meta name="description" content="Care Support Pass のマイページ。支援先の変更や退会手続きができます。">
+<meta name="robots" content="noindex,nofollow">
+<title>マイページ | Care Support Pass</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+.mypage{
+  min-height:80vh;padding:96px 24px 96px;
+  background:radial-gradient(900px 500px at 50% -10%,rgba(233,68,54,.06),transparent 60%),#fff;
+}
+.mypage-wrap{max-width:720px;margin:0 auto}
+.mypage h1{
+  font-size:clamp(24px,3vw,32px);line-height:1.45;
+  font-weight:700;margin:0 0 8px;color:var(--ink);letter-spacing:-.005em;
+}
+.mypage .desc{
+  font-size:14px;color:var(--sub);margin:0 0 32px;line-height:1.8;
+}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:28px 28px;margin:0 0 20px;
+  box-shadow:0 4px 14px rgba(0,0,0,.04);
+}
+.card h2{
+  font-size:16px;font-weight:700;margin:0 0 18px;color:var(--ink);
+  display:flex;align-items:center;gap:10px;
+}
+.card h2::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);
+}
+.field{margin:0 0 16px}
+.field label{
+  display:block;font-size:12px;font-weight:600;color:var(--sub);
+  margin:0 0 6px;letter-spacing:.02em;
+}
+.field input,.field select{
+  width:100%;padding:12px 14px;border:1px solid var(--line);
+  border-radius:10px;font-size:14px;color:var(--ink);
+  background:#fff;font-family:inherit;box-sizing:border-box;
+}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(233,68,54,.1);
+}
+.field .hint{font-size:11px;color:var(--sub);margin-top:6px;line-height:1.6}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn-row .btn{flex:1;min-width:140px}
+.status-row{
+  display:flex;justify-content:space-between;padding:10px 0;
+  border-bottom:1px solid var(--line);font-size:13px;
+}
+.status-row:last-child{border-bottom:none}
+.status-row .k{color:var(--sub)}
+.status-row .v{color:var(--ink);font-weight:500;text-align:right}
+.status-badge{
+  display:inline-block;padding:3px 10px;border-radius:999px;
+  font-size:11px;font-weight:600;
+}
+.status-badge.active{background:#E8F5EE;color:#16794C}
+.status-badge.canceled{background:#FCE9E7;color:#B23A2C}
+.status-badge.pending{background:#FEF3C7;color:#92400E}
+.msg{
+  padding:12px 16px;border-radius:10px;font-size:13px;
+  margin:0 0 16px;line-height:1.6;
+}
+.msg.error{background:#FEE2E2;color:#991B1B;border:1px solid #FECACA}
+.msg.success{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0}
+.msg.info{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.danger-zone{border-color:#FECACA;background:#FFFBFB}
+.danger-zone h2::before{background:#DC2626}
+.btn.danger{background:#DC2626;color:#fff;border:1px solid #DC2626}
+.btn.danger:hover{background:#B91C1C;border-color:#B91C1C}
+.hidden{display:none !important}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-symbol{height:28px;width:auto;margin-left:8px;opacity:.85}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
+    <div class="nav-menu"></div>
+    <div class="nav-cta">
+      <a class="btn ghost" href="/">トップに戻る</a>
+    </div>
+  </div>
+</nav>
+
+<main class="mypage">
+  <div class="mypage-wrap">
+    <h1>マイページ</h1>
+    <p class="desc">お申し込み番号と登録メールアドレスを入力すると、ご契約状況の確認、支援先施設の変更、退会手続きができます。</p>
+
+    <!-- ログインフォーム -->
+    <section class="card" id="login-card">
+      <h2>ご本人確認</h2>
+      <div id="login-msg"></div>
+      <div class="field">
+        <label for="sub-id">お申し込み番号</label>
+        <input type="text" id="sub-id" placeholder="例: 798c1c46-c53a-432f-96be-f64a554539ec" autocomplete="off">
+        <div class="hint">お申込み完了画面または Square からの請求書メールに記載されています。</div>
+      </div>
+      <div class="field">
+        <label for="email">登録メールアドレス</label>
+        <input type="email" id="email" placeholder="example@email.com" autocomplete="email">
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="login-btn">ご契約状況を表示</button>
+      </div>
+    </section>
+
+    <!-- 契約情報 -->
+    <section class="card hidden" id="info-card">
+      <h2>ご契約状況</h2>
+      <div class="status-row"><span class="k">お申し込み番号</span><span class="v" id="info-sub-id" style="font-family:monospace;font-size:11px"></span></div>
+      <div class="status-row"><span class="k">ステータス</span><span class="v"><span id="info-status" class="status-badge"></span></span></div>
+      <div class="status-row"><span class="k">お名前</span><span class="v" id="info-name"></span></div>
+      <div class="status-row"><span class="k">メールアドレス</span><span class="v" id="info-email"></span></div>
+      <div class="status-row"><span class="k">開始日</span><span class="v" id="info-start"></span></div>
+      <div class="status-row"><span class="k">次回課金日</span><span class="v" id="info-next"></span></div>
+      <div class="status-row"><span class="k">現在の支援先</span><span class="v" id="info-facility" style="color:var(--accent);font-weight:600"></span></div>
+    </section>
+
+    <!-- 支援先変更 -->
+    <section class="card hidden" id="change-card">
+      <h2>支援先を変更する</h2>
+      <p style="font-size:13px;color:var(--sub);margin:0 0 18px;line-height:1.8">解約せずに、別の加盟予定施設に支援先を切り替えられます。次回課金分から変更後の施設に充てられます。</p>
+      <div id="change-msg"></div>
+      <div class="field">
+        <label for="new-facility">変更先の施設</label>
+        <select id="new-facility"></select>
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="change-btn">支援先を変更する</button>
+      </div>
+    </section>
+
+    <!-- 退会 -->
+    <section class="card danger-zone hidden" id="cancel-card">
+      <h2>退会する</h2>
+      <p style="font-size:13px;color:var(--sub);margin:0 0 18px;line-height:1.8">退会手続きをすると、次回の課金日以降の自動課金が停止します。当月分は既に課金済みの場合、日割り返金はありません。</p>
+      <div id="cancel-msg"></div>
+      <div class="btn-row">
+        <button class="btn danger" id="cancel-btn">退会する</button>
+      </div>
+    </section>
+
+    <p style="text-align:center;font-size:12px;color:var(--sub);margin-top:32px">
+      ご不明点は <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener" style="color:var(--accent)">お問い合わせフォーム</a> よりご連絡ください。
+    </p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-in">
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <div class="footer-brand"><img src="/assets/images/logo-wordmark-white.png" alt="Care Support Pass" height="22"><img src="/assets/images/logo-symbol.png" alt="" class="footer-symbol" aria-hidden="true"></div>
+        <p class="footer-tagline">月100円で、生活と住まいを支える。<br>若い世代が、先輩世代を支える新しい生活インフラ。</p>
+      </div>
+      <div class="footer-col">
+        <h5>Service</h5>
+        <a href="/#statement">コンセプト</a>
+        <a href="/#how">仕組み</a>
+        <a href="/concept.html">詳しい理念</a>
+      </div>
+      <div class="footer-col">
+        <h5>Account</h5>
+        <a href="/mypage.html">マイページ</a>
+        <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a>
+      </div>
+      <div class="footer-col">
+        <h5>For Partners</h5>
+        <a href="/partners.html">協力会社の方へ</a>
+        <a href="/facilities.html">介護施設の方へ</a>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <div>© Care Support Pass / TAMJ.Corp All Rights Reserved.</div>
+      <div><a href="https://tamjump.com/terms.html" target="_blank" rel="noopener">利用規約</a> ・ <a href="https://tamjump.com/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> ・ <a href="https://tamjump.com/commerce.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_BASE = 'https://carepass-api.tamjump.com';
+
+const $ = (id) => document.getElementById(id);
+
+// 状態
+let currentSubId = null;
+let currentEmail = null;
+let currentFacilityId = null;
+let allFacilities = [];
+
+function showMsg(elId, text, kind) {
+  const el = $(elId);
+  if (!text) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="msg ${kind}">${text}</div>`;
+}
+
+function setLoading(btnId, on, normalText) {
+  const b = $(btnId);
+  if (on) { b.disabled = true; b.dataset.normal = b.textContent; b.textContent = '処理中…'; }
+  else { b.disabled = false; if (b.dataset.normal) b.textContent = b.dataset.normal; }
+}
+
+function fmtDate(s) {
+  if (!s) return '—';
+  // YYYY-MM-DD or ISO
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return s;
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+function statusLabel(s) {
+  switch ((s || '').toUpperCase()) {
+    case 'ACTIVE': return ['有効', 'active'];
+    case 'PENDING': return ['開始準備中', 'pending'];
+    case 'CANCELED': case 'DEACTIVATED': return ['解約済み', 'canceled'];
+    default: return [s || '不明', 'pending'];
+  }
+}
+
+async function api(path, body) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  let data = null;
+  try { data = await res.json(); } catch {}
+  return { ok: res.ok, status: res.status, data };
+}
+
+function errorMsgFor(err) {
+  switch (err) {
+    case 'missing_fields': return '入力に不足があります。';
+    case 'invalid_json': return '入力データに誤りがあります。';
+    case 'not_found': return 'お申し込み番号が見つかりませんでした。番号をご確認ください。';
+    case 'email_mismatch': return 'メールアドレスがお申し込み時のものと一致しません。';
+    case 'invalid_facility': return '選択された施設は現在受付できません。';
+    case 'internal_error': return 'サーバーエラーが発生しました。時間をおいて再度お試しください。';
+    default: return `エラーが発生しました（${err || '不明'}）`;
+  }
+}
+
+function renderInfo(payload) {
+  const sub = payload.subscription;
+  const cust = payload.customer;
+  $('info-sub-id').textContent = sub.id;
+  const [label, kls] = statusLabel(sub.status);
+  const badge = $('info-status');
+  badge.textContent = label;
+  badge.className = `status-badge ${kls}`;
+  $('info-name').textContent = `${cust.family_name || ''} ${cust.given_name || ''}`.trim() || '—';
+  $('info-email').textContent = cust.email_address || '—';
+  $('info-start').textContent = fmtDate(sub.start_date);
+  $('info-next').textContent = sub.canceled_date ? `解約予定: ${fmtDate(sub.canceled_date)}` : fmtDate(sub.next_billing_date);
+  $('info-facility').textContent = payload.facility ? `${payload.facility.name}（${payload.facility.location || ''}）` : (payload.facility_id || '未設定');
+  $('info-card').classList.remove('hidden');
+
+  // 解約済みなら変更/退会セクションは隠す
+  const canceled = ['CANCELED', 'DEACTIVATED'].includes((sub.status || '').toUpperCase());
+  if (canceled) {
+    $('change-card').classList.add('hidden');
+    $('cancel-card').classList.add('hidden');
+  } else {
+    // 施設選択 dropdown を埋める
+    const sel = $('new-facility');
+    sel.innerHTML = '';
+    allFacilities = payload.facilities || [];
+    for (const f of allFacilities) {
+      if (!f.accepting) continue;
+      const opt = document.createElement('option');
+      opt.value = f.id;
+      opt.textContent = `${f.name}${f.location ? `（${f.location}）` : ''}`;
+      if (f.id === payload.facility_id) opt.selected = true;
+      sel.appendChild(opt);
+    }
+    $('change-card').classList.remove('hidden');
+    $('cancel-card').classList.remove('hidden');
+  }
+}
+
+// === Login ===
+$('login-btn').addEventListener('click', async () => {
+  showMsg('login-msg', '', 'info');
+  const sid = $('sub-id').value.trim();
+  const email = $('email').value.trim();
+  if (!sid || !email) {
+    showMsg('login-msg', 'お申し込み番号とメールアドレスを入力してください。', 'error');
+    return;
+  }
+  setLoading('login-btn', true);
+  try {
+    const r = await api('/api/lookup', { subscription_id: sid, email });
+    if (!r.ok) {
+      showMsg('login-msg', errorMsgFor(r.data?.error), 'error');
+      return;
+    }
+    currentSubId = sid;
+    currentEmail = email;
+    currentFacilityId = r.data.facility_id;
+    renderInfo(r.data);
+    // ログインカードは非表示にせず、フォームの上に状態出すだけ
+    showMsg('login-msg', 'ご本人確認できました。下の情報をご確認ください。', 'success');
+    // スクロール
+    setTimeout(() => $('info-card').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  } catch (e) {
+    showMsg('login-msg', 'ネットワークエラーが発生しました。', 'error');
+  } finally {
+    setLoading('login-btn', false);
+  }
+});
+
+// === Change Facility ===
+$('change-btn').addEventListener('click', async () => {
+  showMsg('change-msg', '', 'info');
+  const newFid = $('new-facility').value;
+  if (!newFid) {
+    showMsg('change-msg', '変更先の施設を選択してください。', 'error');
+    return;
+  }
+  if (newFid === currentFacilityId) {
+    showMsg('change-msg', '現在と同じ施設が選択されています。', 'info');
+    return;
+  }
+  if (!confirm(`支援先を「${$('new-facility').selectedOptions[0].textContent}」に変更します。よろしいですか？`)) return;
+  setLoading('change-btn', true);
+  try {
+    const r = await api('/api/change-facility', {
+      subscription_id: currentSubId,
+      email: currentEmail,
+      new_facility_id: newFid,
+    });
+    if (!r.ok) {
+      showMsg('change-msg', errorMsgFor(r.data?.error), 'error');
+      return;
+    }
+    // 成功 → 再取得して表示更新
+    currentFacilityId = newFid;
+    const f = allFacilities.find(x => x.id === newFid);
+    $('info-facility').textContent = f ? `${f.name}（${f.location || ''}）` : newFid;
+    showMsg('change-msg', '支援先を変更しました。次回課金分から反映されます。', 'success');
+  } catch (e) {
+    showMsg('change-msg', 'ネットワークエラーが発生しました。', 'error');
+  } finally {
+    setLoading('change-btn', false);
+  }
+});
+
+// === Cancel ===
+$('cancel-btn').addEventListener('click', async () => {
+  showMsg('cancel-msg', '', 'info');
+  if (!confirm('本当に退会しますか？\n\n次回の課金日以降の自動課金が停止します。\n当月分は既に課金済みのため、日割り返金はありません。')) return;
+  setLoading('cancel-btn', true);
+  try {
+    const r = await api('/api/cancel', {
+      subscription_id: currentSubId,
+      email: currentEmail,
+    });
+    if (!r.ok) {
+      showMsg('cancel-msg', errorMsgFor(r.data?.error), 'error');
+      return;
+    }
+    showMsg('cancel-msg', `退会手続きが完了しました。解約予定日: ${fmtDate(r.data.canceled_date)}。ご利用ありがとうございました。`, 'success');
+    // 退会後は変更/退会ボタンを隠す
+    $('change-card').classList.add('hidden');
+    $('cancel-btn').disabled = true;
+    // ステータス badge も更新
+    const badge = $('info-status');
+    badge.textContent = '解約済み';
+    badge.className = 'status-badge canceled';
+    $('info-next').textContent = `解約予定: ${fmtDate(r.data.canceled_date)}`;
+  } catch (e) {
+    showMsg('cancel-msg', 'ネットワークエラーが発生しました。', 'error');
+  } finally {
+    setLoading('cancel-btn', false);
+  }
+});
+
+// URLパラメータで初期値（thanks.html からのリンクをサポート）
+const params = new URLSearchParams(location.search);
+if (params.get('sid')) $('sub-id').value = params.get('sid');
+if (params.get('email')) $('email').value = params.get('email');
+</script>
+
+</body>
+</html>

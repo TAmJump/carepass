@@ -137,3 +137,11 @@ export async function cancelSubscription(env, subscriptionId) {
   const res = await sq(env, 'POST', `/v2/subscriptions/${subscriptionId}/cancel`);
   return res.subscription;
 }
+
+// UpdateSubscription: source.name の書き換え等に使う（支援先施設の変更）
+export async function updateSubscription(env, subscriptionId, patch) {
+  const res = await sq(env, 'PUT', `/v2/subscriptions/${subscriptionId}`, {
+    subscription: patch,
+  });
+  return res.subscription;
+}
