@@ -1627,6 +1627,163 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
   .showcase-card-photo-caption{font-size:13px;padding:18px 14px 14px;margin:0 -14px -14px}
 }
 
+/* ====================================================================
+   PILLARS section — 何のためにやっているのか (3カテゴリ × 12項目)
+   ==================================================================== */
+.pillars{
+  padding:80px 24px 90px;
+  background:#fff;
+  position:relative;
+}
+.pillars-in{
+  max-width:1200px;margin:0 auto;
+}
+.pillars-eyebrow{
+  display:flex;align-items:center;gap:12px;
+  font-family:monospace;font-size:11px;letter-spacing:.18em;
+  color:var(--ink);text-transform:uppercase;
+  margin-bottom:14px;
+  opacity:.6;
+}
+.pillars-eyebrow::before{
+  content:"";display:inline-block;width:36px;height:1px;background:var(--ink);opacity:.5;
+}
+.pillars-title{
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(28px,4vw,40px);font-weight:700;color:var(--ink);
+  line-height:1.22;margin:0 0 14px;letter-spacing:-.01em;
+}
+.pillars-title em{
+  font-style:normal;color:var(--accent);
+}
+.pillars-lead{
+  font-size:15px;color:var(--sub);line-height:1.85;
+  max-width:780px;margin:0 0 48px;
+}
+.pillars-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-bottom:40px;
+}
+.pillar{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:32px 30px 28px;
+  display:flex;flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  transition:all .2s ease;
+}
+.pillar:hover{
+  border-color:var(--ink);
+  transform:translateY(-2px);
+  box-shadow:0 16px 48px rgba(15,20,40,.08);
+}
+.pillar-num{
+  font-family:Georgia,serif;font-style:italic;
+  font-size:11px;color:var(--accent);font-weight:600;
+  letter-spacing:.18em;margin-bottom:8px;
+}
+.pillar-title{
+  font-family:'Noto Serif JP',serif;
+  font-size:20px;font-weight:700;color:var(--ink);
+  line-height:1.35;margin:0 0 10px;
+}
+.pillar-tagline{
+  font-family:'Noto Serif JP',serif;
+  font-size:13.5px;color:var(--sub);line-height:1.7;
+  margin:0 0 22px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+.pillar-hero{
+  display:flex;align-items:baseline;gap:8px;
+  margin:6px 0 22px;
+}
+.pillar-hero-value{
+  font-family:Georgia,serif;font-weight:700;
+  font-size:42px;color:var(--accent);
+  line-height:1;letter-spacing:-.02em;
+}
+.pillar-hero-label{
+  font-size:11.5px;color:var(--muted,#8a8275);line-height:1.5;
+  font-family:monospace;letter-spacing:.04em;
+}
+.pillar-items{
+  list-style:none;padding:0;margin:0;
+  display:flex;flex-direction:column;gap:14px;
+}
+.pillar-item{
+  font-size:13px;line-height:1.5;
+}
+.pillar-item-label{
+  display:block;
+  font-family:monospace;font-size:10px;letter-spacing:.1em;
+  color:var(--muted,#8a8275);text-transform:uppercase;
+  margin-bottom:4px;font-weight:500;
+}
+.pillar-item-change{
+  display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;
+}
+.pillar-item-from{
+  color:var(--muted,#8a8275);font-size:12.5px;
+  text-decoration:line-through;text-decoration-thickness:1px;
+  text-decoration-color:rgba(138,130,117,.4);
+}
+.pillar-item-arrow{
+  color:var(--accent);font-weight:600;font-size:13px;
+}
+.pillar-item-to{
+  color:var(--ink);font-weight:600;font-size:13px;
+}
+
+/* 締めのプルクオート */
+.pillars-quote{
+  background:linear-gradient(135deg,var(--ink) 0%,#1a2940 100%);
+  color:#fff;
+  border-radius:20px;
+  padding:44px 48px;
+  position:relative;
+  overflow:hidden;
+}
+.pillars-quote::before{
+  content:"\201C";
+  position:absolute;top:-10px;left:30px;
+  font-family:Georgia,serif;font-size:120px;
+  color:var(--accent);opacity:.5;line-height:1;
+}
+.pillars-quote-label{
+  font-family:monospace;font-size:10px;letter-spacing:.2em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:14px;
+  font-weight:600;
+}
+.pillars-quote-text{
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(17px,2.2vw,22px);font-weight:500;
+  line-height:1.85;color:#fff;
+  margin:0;letter-spacing:.01em;
+  position:relative;z-index:1;
+}
+.pillars-quote-text em{
+  font-style:normal;
+  background:linear-gradient(180deg,transparent 60%,rgba(233,68,54,.4) 60%);
+  padding:0 3px;
+}
+
+@media (max-width:980px){
+  .pillars-grid{grid-template-columns:1fr;gap:18px}
+  .pillar{padding:28px 26px 24px}
+}
+@media (max-width:540px){
+  .pillars{padding:56px 16px 64px}
+  .pillars-quote{padding:32px 26px 28px}
+  .pillars-quote::before{font-size:90px;top:-6px;left:18px}
+  .pillar{padding:24px 22px 22px}
+  .pillar-hero-value{font-size:36px}
+}
+
 </style>
 <link rel="stylesheet" href="/assets/mobile-nav.css?v=20260521a">
 </head>
@@ -1637,6 +1794,7 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
   <div class="nav-in">
     <div class="brand"><a href="/"><img src="/assets/images/logo-wordmark-nav.png" alt="Care Support Pass" height="22"></a></div>
     <div class="nav-menu">
+      <button class="nav-link" onclick="go('pillars')" style="color:var(--accent);font-weight:600">目的</button>
       <button class="nav-link" onclick="go('showcase')" style="color:var(--accent);font-weight:600">実績</button>
       <button class="nav-link" onclick="go('statement')">コンセプト</button>
       <button class="nav-link" onclick="go('how')">仕組み</button>
@@ -1668,6 +1826,7 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
     <span class="title">メニュー</span>
   </div>
   <nav class="nav-drawer-links">
+    <button onclick="go('pillars')" style="color:var(--accent);font-weight:600">★ 目的 (何を変えるのか)</button>
     <button onclick="go('showcase')" style="color:var(--accent);font-weight:600">★ 導入施設の実績</button>
     <button onclick="go('statement')">コンセプト</button>
     <button onclick="go('how')">仕組み</button>
@@ -1692,7 +1851,7 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
       <p class="hero-sub">Care Support Pass は、飲食店・薬局・ドラッグストアなどの提携店優待を使える月額会員サービスです。売上の一部は、高齢者の住まい支援に活用されます。</p>
       <div class="hero-cta">
         <button class="btn primary large" onclick="go('apply')">月100円で参加する</button>
-        <button class="btn large" onclick="go('showcase')">導入施設の実績を見る</button>
+        <button class="btn large" onclick="go('pillars')">何を変えるのか? 見る</button>
       </div>
       <div class="hero-points">
         <div class="hero-point">
@@ -1735,15 +1894,177 @@ button#pay-submit:disabled{opacity:.55;cursor:not-allowed}
   </div>
 </div>
 
+<!-- ============ PILLARS (何のためにやっているのか) ============ -->
+<section id="pillars" class="pillars">
+  <div class="pillars-in">
+    <div class="pillars-eyebrow">Why · What CSP changes</div>
+    <h2 class="pillars-title">何のために、これをやるのか。<br><em>3つの軸で、介護施設の構造を変える。</em></h2>
+    <p class="pillars-lead">
+      Care Support Pass は、寄附ではありません。チャリティでもありません。<br>
+      <strong>入居者の暮らし</strong>・<strong>国の財源との関係</strong>・<strong>スタッフと現場</strong> ── この3つを同時に動かすために、月¥100の支援を集める仕組みです。
+    </p>
+
+    <div class="pillars-grid">
+
+      <!-- ★ Pillar 01: 入居者の暮らし -->
+      <article class="pillar">
+        <div class="pillar-num">01 / RESIDENT</div>
+        <h3 class="pillar-title">入居者の暮らし</h3>
+        <p class="pillar-tagline">年金で安心して暮らせる場所を、当たり前にする。</p>
+        <div class="pillar-hero">
+          <span class="pillar-hero-value">▲86%</span>
+          <span class="pillar-hero-label">入居者本人の<br>月額負担を下げる</span>
+        </div>
+        <ul class="pillar-items">
+          <li class="pillar-item">
+            <span class="pillar-item-label">月額負担</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">通常 ¥215,000/月</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">CSP ¥30,000/月</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">入居対象</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">中重度寄りに偏る</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">要支援〜要介護1・2も受入</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">説明責任</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">通常の運営報告のみ</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">月次活動報告を全公開</span>
+            </span>
+          </li>
+        </ul>
+      </article>
+
+      <!-- ★ Pillar 02: 国とお金の流れ -->
+      <article class="pillar">
+        <div class="pillar-num">02 / FINANCE</div>
+        <h3 class="pillar-title">国とお金の流れ</h3>
+        <p class="pillar-tagline">税金に頼らずに、施設を回す。それでも利益は残す。</p>
+        <div class="pillar-hero">
+          <span class="pillar-hero-value">3.7倍</span>
+          <span class="pillar-hero-label">施設の安定利益が<br>増える</span>
+        </div>
+        <ul class="pillar-items">
+          <li class="pillar-item">
+            <span class="pillar-item-label">国費依存</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">介護・医療保険に依存</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">軽介護度+CSP原資で支える</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">本業売上</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">高い (本人から徴収)</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">下げる (意図的に)</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">販管費/紹介費</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">広告・紹介会社に依存</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">CSP会員・地域導線へ</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">施設安定利益</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">¥22.4M/年</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">¥82.8M/年 (+¥60.4M)</span>
+            </span>
+          </li>
+        </ul>
+      </article>
+
+      <!-- ★ Pillar 03: スタッフと現場 -->
+      <article class="pillar">
+        <div class="pillar-num">03 / STAFF</div>
+        <h3 class="pillar-title">スタッフと現場</h3>
+        <p class="pillar-tagline">人は削らない。むしろ増やす。賃金も上げる。</p>
+        <div class="pillar-hero">
+          <span class="pillar-hero-value">+12名</span>
+          <span class="pillar-hero-label">スタッフを増やし<br>賃金は +50万/年</span>
+        </div>
+        <ul class="pillar-items">
+          <li class="pillar-item">
+            <span class="pillar-item-label">スタッフ人数</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">必要最低限に偏る</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">配置増 70→82名</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">スタッフ賃金</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">圧縮対象になりがち</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">改善対象 +50万/年</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">作業負担</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">中重度+人手不足で過密</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">作業密度を下げる</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">不正・虐待・事故</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">人手不足でリスク上昇</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">目を増やし内部統制を強化</span>
+            </span>
+          </li>
+          <li class="pillar-item">
+            <span class="pillar-item-label">DS区画</span>
+            <span class="pillar-item-change">
+              <span class="pillar-item-from">9室規模で人件費効率悪い</span>
+              <span class="pillar-item-arrow">→</span>
+              <span class="pillar-item-to">DS→HS転換で最適化</span>
+            </span>
+          </li>
+        </ul>
+      </article>
+
+    </div>
+
+    <!-- 締めの引用 -->
+    <blockquote class="pillars-quote">
+      <div class="pillars-quote-label">FINAL MESSAGE</div>
+      <p class="pillars-quote-text">
+        Care Support Pass 導入モデルは、<em>人件費削減モデルではない</em>。<br>
+        本人負担を下げ、国費使用を下げ、軽介護度者も受け入れ、<br>
+        人を増やし、賃金も上げ、目を増やし、説明責任を強め、<br>
+        <em>それでも施設利益を上げるモデル</em>。
+      </p>
+    </blockquote>
+  </div>
+</section>
+
 <!-- ============ SHOWCASE (導入施設の実績) ============ -->
 <section id="showcase" class="showcase">
   <div class="showcase-in">
-    <div class="showcase-eyebrow">Live · Monthly Care Report</div>
-    <h2 class="showcase-title">いま、Care Support Pass が動いている施設。</h2>
+    <div class="showcase-eyebrow">Live · Proof in numbers</div>
+    <h2 class="showcase-title">この3つを、すでに実現している施設があります。</h2>
     <p class="showcase-lead">
-      理念より先に、結果を見てください。<br>
-      タムジレジデンス日本橋では、導入1年で「入居者の月額負担 ▲86%」「施設利益 3.7倍」を同時に達成しました。<br>
-      この仕組み、ちょっと面白いと思いませんか?
+      タムジレジデンス日本橋 (東京・日本橋本町、住宅型有料老人ホーム 60室)。<br>
+      2025年6月に Care Support Pass を導入してから1年。
+      <strong>入居者の月額負担 ▲86%</strong>、<strong>施設利益 3.7倍</strong>、<strong>スタッフ +12名 / 賃金 +50万/年</strong> ── 上の3つの軸すべてを、数字で実現済みです。
     </p>
 
     <div class="showcase-card">
