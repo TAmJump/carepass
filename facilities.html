@@ -294,6 +294,7 @@
 .btn-outline-white{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
 .btn-outline-white:hover{background:rgba(255,255,255,.1);border-color:#fff}
 </style>
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=20260521a">
 </head>
 <body>
 
@@ -314,7 +315,34 @@
       <a class="btn primary" href="#apply-fac">加盟相談する</a>
     </div>
   </div>
+    <button class="nav-toggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-drawer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer-backdrop" aria-hidden="true"></div>
+<aside class="nav-drawer" id="nav-drawer" aria-label="メニュー">
+  <div class="nav-drawer-head">
+    <span class="label">Care Support Pass</span>
+    <span class="title">メニュー</span>
+  </div>
+  <nav class="nav-drawer-links">
+    <a href="/">Care Support Pass トップ</a>
+    <a href="/facilities-directory.html">導入施設を見る</a>
+    <a href="/partners.html">協力会社の方へ</a>
+    <a href="/facilities.html" class="active">介護施設の方へ</a>
+    <a href="/concept.html">コンセプト</a>
+    <a href="/mypage.html">マイページ</a>
+  </nav>
+  <div class="nav-drawer-cta">
+    <a class="btn primary" href="/#apply">今すぐ参加する</a>
+  </div>
+</aside>
 
 <!-- ============ HERO ============ -->
 <header class="facility-hero">
@@ -791,5 +819,6 @@
 <script>window.CSP_API_BASE = "https://carepass-api.tamjump.com";</script>
 <script src="/assets/payment.js" defer></script>
 
+<script src="/assets/mobile-ux.js?v=20260521a" defer></script>
 </body>
 </html>

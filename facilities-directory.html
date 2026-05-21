@@ -69,6 +69,7 @@
 .modal .reports a:hover{background:#fff;border-color:var(--accent);color:var(--accent)}
 .modal .close{display:block;margin:20px auto 0;padding:10px 24px;background:#f5f5f5;color:var(--ink);border:none;border-radius:8px;font-family:inherit;font-size:13px;cursor:pointer;font-weight:600}
 </style>
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=20260521a">
 </head>
 <body>
 
@@ -85,7 +86,34 @@
       <a class="btn primary" href="/#join">支援を始める</a>
     </div>
   </div>
+    <button class="nav-toggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-drawer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer-backdrop" aria-hidden="true"></div>
+<aside class="nav-drawer" id="nav-drawer" aria-label="メニュー">
+  <div class="nav-drawer-head">
+    <span class="label">Care Support Pass</span>
+    <span class="title">メニュー</span>
+  </div>
+  <nav class="nav-drawer-links">
+    <a href="/">Care Support Pass トップ</a>
+    <a href="/facilities-directory.html" class="active">導入施設を見る</a>
+    <a href="/partners.html">協力会社の方へ</a>
+    <a href="/facilities.html">介護施設の方へ</a>
+    <a href="/concept.html">コンセプト</a>
+    <a href="/mypage.html">マイページ</a>
+  </nav>
+  <div class="nav-drawer-cta">
+    <a class="btn primary" href="/#apply">今すぐ参加する</a>
+  </div>
+</aside>
 
 <main class="dir">
   <div class="dir-wrap">
@@ -279,5 +307,6 @@ $('facility-modal').addEventListener('click', e => { if(e.target.id==='facility-
 search();
 </script>
 
+<script src="/assets/mobile-ux.js?v=20260521a" defer></script>
 </body>
 </html>

@@ -244,6 +244,7 @@
 .footer-brand{display:flex;align-items:center;gap:10px}
 .footer-symbol{height:28px;width:auto;margin-left:8px;opacity:.85}
 </style>
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=20260521a">
 </head>
 <body>
 
@@ -255,7 +256,31 @@
       <a class="btn ghost" href="/">トップに戻る</a>
     </div>
   </div>
+    <button class="nav-toggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-drawer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer-backdrop" aria-hidden="true"></div>
+<aside class="nav-drawer" id="nav-drawer" aria-label="メニュー">
+  <div class="nav-drawer-head">
+    <span class="label">Care Support Pass</span>
+    <span class="title">メニュー</span>
+  </div>
+  <nav class="nav-drawer-links">
+    <a href="/">Care Support Pass トップ</a>
+    <a href="/facilities-directory.html">導入施設を見る</a>
+    <a href="/partners.html">協力会社の方へ</a>
+    <a href="/facilities.html">介護施設の方へ</a>
+    <a href="/concept.html">コンセプト</a>
+    <a href="/mypage.html" class="active">マイページ</a>
+  </nav>
+</aside>
 
 <main class="mypage">
   <div class="mypage-wrap">
@@ -1136,5 +1161,6 @@ async function init() {
 init();
 </script>
 
+<script src="/assets/mobile-ux.js?v=20260521a" defer></script>
 </body>
 </html>

@@ -98,6 +98,7 @@ table th{font-weight:600;color:var(--sub);background:#fafafa;font-size:11px;lett
 .modal h3{margin:0 0 16px;font-size:16px;font-weight:700}
 .modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
 </style>
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=20260521a">
 </head>
 <body>
 
@@ -109,7 +110,31 @@ table th{font-weight:600;color:var(--sub);background:#fafafa;font-size:11px;lett
       <a class="btn ghost" href="/mypage.html">マイページ</a>
     </div>
   </div>
+    <button class="nav-toggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-drawer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer-backdrop" aria-hidden="true"></div>
+<aside class="nav-drawer" id="nav-drawer" aria-label="メニュー">
+  <div class="nav-drawer-head">
+    <span class="label">Care Support Pass</span>
+    <span class="title">メニュー</span>
+  </div>
+  <nav class="nav-drawer-links">
+    <a href="/">Care Support Pass トップ</a>
+    <a href="/facilities-directory.html">導入施設を見る</a>
+    <a href="/partners.html">協力会社の方へ</a>
+    <a href="/facilities.html">介護施設の方へ</a>
+    <a href="/concept.html">コンセプト</a>
+    <a href="/mypage.html">マイページ</a>
+  </nav>
+</aside>
 
 <main class="dash">
   <div class="dash-wrap">
@@ -514,5 +539,6 @@ async function init(){
 init();
 </script>
 
+<script src="/assets/mobile-ux.js?v=20260521a" defer></script>
 </body>
 </html>
