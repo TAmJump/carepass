@@ -65,7 +65,7 @@ var PROJECT_CONFIG = {
     adminEmail: null,                                    // env.ADMIN_EMAIL を使う
     fromEmail: null,                                     // env.FROM_EMAIL を使う
     subjectPrefix: "【Care Support Pass】",
-    companyName: "Care Support Pass / TAMJ.Corp",
+    companyName: "Care Support Pass / 株式会社GMS",
     siteUrl: "https://carepass.tamjump.com",
     contactEmail: "info@tamjump.com"
   }
