@@ -37,8 +37,8 @@ var PROJECT_CONFIG = {
     prefix: "TAMJ",
     adminEmail: null,
     fromEmail: null,
-    subjectPrefix: "【タムジ】",
-    companyName: "タムジ株式会社",
+    subjectPrefix: "【GMS】",
+    companyName: "株式会社GMS",
     siteUrl: "https://tamjump.com",
     contactEmail: "info@tamjump.com"
   },
@@ -56,7 +56,7 @@ var PROJECT_CONFIG = {
     adminEmail: null,
     fromEmail: null,
     subjectPrefix: "【KINGMAKER 23:23】",
-    companyName: "KINGMAKER 23:23 / タムジ株式会社",
+    companyName: "KINGMAKER 23:23 / Tiger.J.Bob",
     siteUrl: "https://king2323.tamjump.com",
     contactEmail: "info@tamjump.com"
   },
