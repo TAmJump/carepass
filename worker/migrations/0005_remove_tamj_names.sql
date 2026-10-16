@@ -3,6 +3,5 @@
 UPDATE facilities SET
   name = REPLACE(REPLACE(name, 'タムジcare株式会社', 'サンプル運営会社'), 'タムジ', 'サンプル'),
   name_kana = REPLACE(name_kana, 'たむじ', 'さんぷる'),
-  description = REPLACE(REPLACE(description, 'タムジcare株式会社', 'サンプル運営会社'), 'タムジ', 'サンプル'),
-  website = CASE WHEN website = 'https://tamjump.com' THEN NULL ELSE website END
+  description = REPLACE(REPLACE(description, 'タムジcare株式会社', 'サンプル運営会社'), 'タムジ', 'サンプル')
 WHERE name LIKE '%タムジ%' OR description LIKE '%タムジ%' OR name_kana LIKE '%たむじ%';
