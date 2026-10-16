@@ -37,10 +37,10 @@ var PROJECT_CONFIG = {
     prefix: "TAMJ",
     adminEmail: null,
     fromEmail: null,
-    subjectPrefix: "【GMS】",
-    companyName: "株式会社GMS",
+    subjectPrefix: "【Tiger.J.Bob】",
+    companyName: "Tiger.J.Bob",
     siteUrl: "https://tamjump.com",
-    contactEmail: "info@tamjump.com"
+    contactEmail: "animalb001@gmail.com"
   },
   scsgo: {
     prefix: "SCS",
@@ -58,7 +58,7 @@ var PROJECT_CONFIG = {
     subjectPrefix: "【KINGMAKER 23:23】",
     companyName: "KINGMAKER 23:23 / Tiger.J.Bob",
     siteUrl: "https://king2323.tamjump.com",
-    contactEmail: "info@tamjump.com"
+    contactEmail: "animalb001@gmail.com"
   },
   carepass: {
     prefix: "CSP",
