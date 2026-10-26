@@ -3,4 +3,4 @@ Allow: /
 Disallow: /thanks.html
 Disallow: /404.html
 
-Sitemap: https://carepass.tamjump.com/sitemap.xml
+Sitemap: https://carepass.115en.com/sitemap.xml

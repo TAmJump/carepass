@@ -9,13 +9,13 @@ compatibility_flags = ["nodejs_compat"]
 #  もに同じアカウントに紐付けられる。)
 account_id = "b9de28abfd009bbf696ceec4da62c5b8"
 
-# カスタムドメイン: carepass-api.tamjump.com (Cloudflare の Custom Domain で割当済)
+# カスタムドメイン: carepass-api.115en.com (Cloudflare の Custom Domain で割当済)
 
 [vars]
 SQUARE_ENV = "production"
-SITE_BASE_URL = "https://carepass.tamjump.com"
+SITE_BASE_URL = "https://carepass.115en.com"
 MAIL_FROM = "Care Support Pass <no-reply@carepass.tamjump.com>"
-MAIL_ADMIN = "tiger@tamjump.com"
+MAIL_ADMIN = "tiger@115en.com"
 
 # === Cloudflare D1 binding ===
 # 初回作成手順 (ユーザーPCで実行):

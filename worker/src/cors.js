@@ -1,11 +1,11 @@
-// CORS ヘルパー — carepass.tamjump.com からのリクエストのみ許可
+// CORS ヘルパー — carepass.115en.com からのリクエストのみ許可
 // セッションクッキーを送受信するため credentials: include に対応
 
 export function corsHeaders(env, origin) {
   const allowed = (env.ALLOWED_ORIGIN || '').split(',').map((s) => s.trim()).filter(Boolean);
   // credentials を許可する場合、Allow-Origin はワイルドカード不可。
   // origin が allowed に含まれていなければ最初の allowed (本番URL) にフォールバック。
-  const allowOrigin = allowed.includes(origin) ? origin : (allowed[0] || 'https://carepass.tamjump.com');
+  const allowOrigin = allowed.includes(origin) ? origin : (allowed[0] || 'https://carepass.115en.com');
   return {
     'Access-Control-Allow-Origin': allowOrigin,
     'Access-Control-Allow-Credentials': 'true',

@@ -15,7 +15,7 @@ Care Support Pass は、月100円から参加できる**月額会員サービス
 
 ## デプロイ
 
-- 想定本番: **carepass.tamjump.com** (Cloudflare Pages)
+- 想定本番: **carepass.115en.com** (Cloudflare Pages)
 - プレビュー: 各 PR ごとに `*.pages.dev` URL
 
 ## 中心思想

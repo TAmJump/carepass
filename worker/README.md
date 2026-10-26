@@ -33,7 +33,7 @@ npx wrangler secret put SQUARE_LOCATION_ID
 npx wrangler secret put SQUARE_APPLICATION_ID
 npx wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY
 npx wrangler secret put PLAN_VARIATION_IDS_JSON     # plans.json の中身を貼る
-npx wrangler secret put ALLOWED_ORIGIN              # https://carepass.tamjump.com
+npx wrangler secret put ALLOWED_ORIGIN              # https://carepass.115en.com
 npx wrangler secret put WEBHOOK_NOTIFICATION_URL    # 後述のWebhook URLと一致
 ```
 
@@ -44,11 +44,11 @@ npx wrangler deploy
 
 ### 6. カスタムドメイン (Cloudflare Dashboard)
 - Workers & Pages → carepass-api → Settings → Triggers
-- Routes: `carepass-api.tamjump.com/*` (Zone: tamjump.com)
-- DNS で `carepass-api.tamjump.com` を Workers に自動マッピング
+- Routes: `carepass-api.115en.com/*` (Zone: 115en.com)
+- DNS で `carepass-api.115en.com` を Workers に自動マッピング
 
 ### 7. Webhook 登録 (Square Dashboard)
-- URL: `https://carepass-api.tamjump.com/api/webhook`
+- URL: `https://carepass-api.115en.com/api/webhook`
 - イベント: `subscription.*`, `invoice.*`, `card.automatically_updated`
 - 発行された Signature Key を `SQUARE_WEBHOOK_SIGNATURE_KEY` に登録
 

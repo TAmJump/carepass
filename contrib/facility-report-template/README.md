@@ -50,7 +50,7 @@ https://example.com/carepass/
 
 ### Step 3. CSP のダッシュボードに URL を登録
 
-- [https://carepass.tamjump.com/facility-dashboard.html](https://carepass.tamjump.com/facility-dashboard.html) にログイン
+- [https://carepass.115en.com/facility-dashboard.html](https://carepass.115en.com/facility-dashboard.html) にログイン
 - 「月次活動報告書」タブ → 対象月を選択 →「この月の報告書を登録」
 - ステータスが `published` になれば公開完了です。会員のマイページに表示されます
 
@@ -93,4 +93,4 @@ HTMLが書ける担当者がいない場合、運営にご相談いただけれ�
 
 ## 連絡先
 
-不明点はサポート窓口までお問合せください: [info@tamjump.com](mailto:info@tamjump.com)
+不明点はサポート窓口までお問合せください: [info@115en.com](mailto:info@115en.com)

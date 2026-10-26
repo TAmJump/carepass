@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';
   script-src 'self' 'unsafe-inline';
-  connect-src 'self' https://carepass-api.tamjump.com;
+  connect-src 'self' https://carepass-api.115en.com;
   style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
   font-src 'self' data: https://fonts.gstatic.com;
   img-src 'self' data: blob: https:;
@@ -185,7 +185,7 @@
 </footer>
 
 <script>
-const API_BASE = 'https://carepass-api.tamjump.com';
+const API_BASE = 'https://carepass-api.115en.com';
 const $ = (id) => document.getElementById(id);
 
 async function apiGet(path){ const r=await fetch(`${API_BASE}${path}`,{credentials:'include'}); let d=null; try{d=await r.json();}catch{} return {ok:r.ok,status:r.status,data:d}; }

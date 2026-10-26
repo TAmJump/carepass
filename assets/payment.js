@@ -6,12 +6,12 @@
  *  2) <form id="csp-form" data-type="partner|facility">  加盟店/施設申込（決済なし）
  *
  * 必要なグローバル設定:
- *   window.CSP_API_BASE = "https://carepass-api.tamjump.com"
+ *   window.CSP_API_BASE = "https://carepass-api.115en.com"
  */
 (function () {
   'use strict';
 
-  const API_BASE = window.CSP_API_BASE || 'https://carepass-api.tamjump.com';
+  const API_BASE = window.CSP_API_BASE || 'https://carepass-api.115en.com';
 
   const form = document.getElementById('csp-form');
   if (!form) return;

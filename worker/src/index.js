@@ -500,8 +500,8 @@ async function handleSubscribe(request, env, origin) {
       catch (e) { console.warn('[subscribe] grant coupons failed:', e.message); }
       // マジックリンク発行
       const { token } = await createLoginToken(env, account.id, 60 * 24 * 7); // 申込完了メール用は7日有効
-      const siteBase = env.SITE_BASE_URL || 'https://carepass.tamjump.com';
-      magicLinkUrl = `https://carepass-api.tamjump.com/api/auth/verify-magic-link?token=${token}&next=${encodeURIComponent(siteBase + '/mypage.html')}`;
+      const siteBase = env.SITE_BASE_URL || 'https://carepass.115en.com';
+      magicLinkUrl = `https://carepass-api.115en.com/api/auth/verify-magic-link?token=${token}&next=${encodeURIComponent(siteBase + '/mypage.html')}`;
     } catch (e) {
       // DB エラーはログだけしてレスポンスは成功扱い (Subscription は完了している)
       console.error('[subscribe] D1 sync failed:', e.message, e.stack);
@@ -522,8 +522,8 @@ async function handleSubscribe(request, env, origin) {
       displayName: `${buyer.family_name || ''} ${buyer.given_name || ''}`.trim(),
       subscriptionId: subscription.id,
       facilityName: facility ? `${facility.name}${facility.location ? `（${facility.location}）` : ''}` : facility_id,
-      mypageUrl: (env.SITE_BASE_URL || 'https://carepass.tamjump.com') + '/mypage.html',
-      magicLinkUrl: magicLinkUrl || ((env.SITE_BASE_URL || 'https://carepass.tamjump.com') + `/mypage.html?sid=${subscription.id}&email=${encodeURIComponent(buyer.email_address)}`),
+      mypageUrl: (env.SITE_BASE_URL || 'https://carepass.115en.com') + '/mypage.html',
+      magicLinkUrl: magicLinkUrl || ((env.SITE_BASE_URL || 'https://carepass.115en.com') + `/mypage.html?sid=${subscription.id}&email=${encodeURIComponent(buyer.email_address)}`),
       initialAmountJpy: 100,
       initialPaidAt: new Date().toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' }),
       firstBillingDate,
@@ -729,8 +729,8 @@ async function handleRequestMagicLink(request, env, origin) {
   const account = await findAccountByEmail(env, email);
   if (account) {
     const { token } = await createLoginToken(env, account.id, 15);
-    const siteBase = env.SITE_BASE_URL || 'https://carepass.tamjump.com';
-    const magicLinkUrl = `https://carepass-api.tamjump.com/api/auth/verify-magic-link?token=${token}&next=${encodeURIComponent(siteBase + '/mypage.html')}`;
+    const siteBase = env.SITE_BASE_URL || 'https://carepass.115en.com';
+    const magicLinkUrl = `https://carepass-api.115en.com/api/auth/verify-magic-link?token=${token}&next=${encodeURIComponent(siteBase + '/mypage.html')}`;
     try {
       await sendMagicLink(env, { to: email, magicLinkUrl, displayName: account.display_name });
     } catch (e) {
@@ -748,7 +748,7 @@ async function handleVerifyMagicLink(request, env, origin, url) {
     return jsonResponse({ error: 'db_not_configured' }, 500, env, origin);
   }
   const token = url.searchParams.get('token');
-  const next = url.searchParams.get('next') || ((env.SITE_BASE_URL || 'https://carepass.tamjump.com') + '/mypage.html');
+  const next = url.searchParams.get('next') || ((env.SITE_BASE_URL || 'https://carepass.115en.com') + '/mypage.html');
   if (!token) {
     return jsonResponse({ error: 'missing_token' }, 400, env, origin);
   }

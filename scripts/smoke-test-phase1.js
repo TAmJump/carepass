@@ -6,7 +6,7 @@
 // 2. メアドを引数に渡せば /api/auth/request-magic-link を叩いて結果を表示
 //    (実際のメール送信は RESEND_API_KEY が設定されていれば届く)
 
-const API = 'https://carepass-api.tamjump.com';
+const API = 'https://carepass-api.115en.com';
 
 async function main() {
   const email = process.argv[2];
@@ -22,7 +22,7 @@ async function main() {
     console.log(`\n--- /api/auth/request-magic-link (email=${email}) ---`);
     const r = await fetch(`${API}/api/auth/request-magic-link`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Origin': 'https://carepass.tamjump.com' },
+      headers: { 'Content-Type': 'application/json', 'Origin': 'https://carepass.115en.com' },
       body: JSON.stringify({ email }),
     });
     const rj = await r.json().catch(() => ({}));

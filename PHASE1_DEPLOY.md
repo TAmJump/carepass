@@ -41,7 +41,7 @@ npx wrangler d1 migrations apply carepass-db --remote
    Workers & Pages → `tamjump-contact-api` → **Edit code** → 全選択削除 → 貼り付け → **Save and deploy**
 
 差分:
-- ALLOWED_ORIGINS に `https://carepass.tamjump.com` を追加
+- ALLOWED_ORIGINS に `https://carepass.115en.com` を追加
 - PROJECT_CONFIG に `carepass` を追加
 - `/transactional` エンドポイント新設（service-to-service用）
 - carepass 用メールテンプレ 3種追加（subscribe_welcome / magic_link / cancel_confirmation）
@@ -92,7 +92,7 @@ npx wrangler deploy
 #### a. ヘルスチェック
 
 ```cmd
-curl https://carepass-api.tamjump.com/api/health
+curl https://carepass-api.115en.com/api/health
 ```
 
 期待値: `{"ok":true,"env":"production","db":true,"mail":true}`
@@ -103,7 +103,7 @@ curl https://carepass-api.tamjump.com/api/health
 #### b. マジックリンクテスト
 
 ```cmd
-curl -X POST https://carepass-api.tamjump.com/api/auth/request-magic-link -H "Content-Type: application/json" -H "Origin: https://carepass.tamjump.com" -d "{\"email\":\"your-test@example.com\"}"
+curl -X POST https://carepass-api.115en.com/api/auth/request-magic-link -H "Content-Type: application/json" -H "Origin: https://carepass.115en.com" -d "{\"email\":\"your-test@example.com\"}"
 ```
 
 期待値: `{"ok":true,...}`
@@ -113,13 +113,13 @@ curl -X POST https://carepass-api.tamjump.com/api/auth/request-magic-link -H "Co
 
 #### c. ブラウザ確認
 
-1. https://carepass.tamjump.com/mypage.html
+1. https://carepass.115en.com/mypage.html
 2. メアド入力 → ログインリンク送信
 3. 届いたメールの URL → 自動ログイン
 
 ### 6. テスト購入フローでの最終確認
 
-1. https://carepass.tamjump.com/#apply
+1. https://carepass.115en.com/#apply
 2. 自分のメアドで申込
 3. 申込完了メール（CSP-プレフィックス、送信元 `noreply@tamjump.com`）が届く
 4. マイページのログインリンクが動作
@@ -138,8 +138,8 @@ INTERNAL_TOKEN と MAIL_API_TOKEN の値が一致していない。両方とも�
 
 ### CSP / CORS エラー
 
-- mypage.html の CSP `connect-src` に `https://carepass-api.tamjump.com` が含まれているか確認 (含まれている)
-- carepass-api 側の `ALLOWED_ORIGIN` secret が `https://carepass.tamjump.com` であること
+- mypage.html の CSP `connect-src` に `https://carepass-api.115en.com` が含まれているか確認 (含まれている)
+- carepass-api 側の `ALLOWED_ORIGIN` secret が `https://carepass.115en.com` であること
 
 ### "db_not_configured"
 

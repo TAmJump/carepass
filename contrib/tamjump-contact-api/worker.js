@@ -7,10 +7,10 @@ var __name = (target, value) => __defProp(target, "name", { value, configurable:
 // ALLOWED_ORIGINS (carepass を追加)
 // ══════════════════════════════════════
 var ALLOWED_ORIGINS = [
-  "https://tamjump.com",
-  "https://www.tamjump.com",
-  "https://develop.tamjump.com",
-  "https://one-touch.tamjump.com",
+  "https://115en.com",
+  "https://115en.com",
+  "https://develop.115en.com",
+  "https://tyaruze.115en.com",
   "https://sitecoding.tamjump.com",
   "https://entry.tamjump.com",
   // ── さかえケアサービス ──
@@ -18,9 +18,9 @@ var ALLOWED_ORIGINS = [
   "https://www.scsgo.co.jp",
   "https://site.scsgo.co.jp",
   // ── KINGMAKER 23:23 ──
-  "https://king2323.tamjump.com",
+  "https://king2323.115en.com",
   // ── Care Support Pass ──
-  "https://carepass.tamjump.com",
+  "https://carepass.115en.com",
   // GitHub Pages（ドメイン設定前のテスト用）
   "https://tamjump.github.io",
   // 開発時
@@ -39,7 +39,7 @@ var PROJECT_CONFIG = {
     fromEmail: null,
     subjectPrefix: "【Tiger.J.Bob】",
     companyName: "Tiger.J.Bob",
-    siteUrl: "https://tamjump.com",
+    siteUrl: "https://115en.com",
     contactEmail: "animalb001@gmail.com"
   },
   scsgo: {
@@ -57,7 +57,7 @@ var PROJECT_CONFIG = {
     fromEmail: null,
     subjectPrefix: "【KINGMAKER 23:23】",
     companyName: "KINGMAKER 23:23 / Tiger.J.Bob",
-    siteUrl: "https://king2323.tamjump.com",
+    siteUrl: "https://king2323.115en.com",
     contactEmail: "animalb001@gmail.com"
   },
   carepass: {
@@ -66,8 +66,8 @@ var PROJECT_CONFIG = {
     fromEmail: null,                                     // env.FROM_EMAIL を使う
     subjectPrefix: "【Care Support Pass】",
     companyName: "Care Support Pass / 株式会社GMS",
-    siteUrl: "https://carepass.tamjump.com",
-    contactEmail: "info@tamjump.com"
+    siteUrl: "https://carepass.115en.com",
+    contactEmail: "info@115en.com"
   }
 };
 
@@ -526,8 +526,8 @@ not stored value, not investment product, not exchangeable for cash.
 ──────────────
 KINGMAKER 23:23
 ${config.siteUrl}
-Rules:https://king2323.tamjump.com/rules.html
-Important Notices:https://king2323.tamjump.com/risk.html
+Rules:https://king2323.115en.com/rules.html
+Important Notices:https://king2323.115en.com/risk.html
 Operator(運営):${config.companyName}
 Contact:${config.contactEmail}
 ──────────────

@@ -1,6 +1,6 @@
 # Square 決済統合 — 設計書 v2
 
-> Care Support Pass (carepass.tamjump.com) の月額課金実装。
+> Care Support Pass (carepass.115en.com) の月額課金実装。
 > **個人会員の月100円・1プランのみ**。加盟店・介護施設は申込受付（課金なし）。
 > 支援者は施設指名制で、どの施設を支援するかを選択する。
 
@@ -10,7 +10,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  carepass.tamjump.com  (GitHub Pages・静的)                     │
+│  carepass.115en.com  (GitHub Pages・静的)                     │
 │                                                                  │
 │  index.html  個人会員フォーム                                    │
 │   └ 施設選択(select) + Square card-container                    │
@@ -24,7 +24,7 @@
 └─────────────────────────────────────────────────────────────────┘
                               ↓ HTTPS
 ┌─────────────────────────────────────────────────────────────────┐
-│  carepass-api.tamjump.com  (Cloudflare Workers)                 │
+│  carepass-api.115en.com  (Cloudflare Workers)                 │
 │                                                                  │
 │  GET  /api/config        application_id + location_id + 施設一覧 │
 │  POST /api/subscribe     個人会員(Square Subscription作成)        │
@@ -100,7 +100,7 @@ SQUARE_WEBHOOK_SIGNATURE_KEY # Webhook署名検証用
 WEBHOOK_NOTIFICATION_URL     # Square Dashboardに登録したURLと同じ文字列
 PLAN_VARIATION_IDS_JSON      # {"care100":"XXX"}
 FACILITIES_JSON              # 施設リスト（上記参照）
-ALLOWED_ORIGIN               # "https://carepass.tamjump.com"
+ALLOWED_ORIGIN               # "https://carepass.115en.com"
 ```
 
 `wrangler.toml` の `vars`:
@@ -255,17 +255,17 @@ npx wrangler secret put SQUARE_WEBHOOK_SIGNATURE_KEY   # Webhook登録後
 npx wrangler secret put WEBHOOK_NOTIFICATION_URL
 npx wrangler secret put PLAN_VARIATION_IDS_JSON       # plans.jsonの中身
 npx wrangler secret put FACILITIES_JSON               # 施設リスト
-npx wrangler secret put ALLOWED_ORIGIN                # "https://carepass.tamjump.com"
+npx wrangler secret put ALLOWED_ORIGIN                # "https://carepass.115en.com"
 
 npx wrangler deploy
 ```
 
 ### Phase 4: カスタムドメイン
 - Cloudflare Dashboard → Workers → Settings → Triggers
-- Route: `carepass-api.tamjump.com/*` (Zone: tamjump.com)
+- Route: `carepass-api.115en.com/*` (Zone: 115en.com)
 
 ### Phase 5: Webhook 登録 (Square Dashboard)
-- URL: `https://carepass-api.tamjump.com/api/webhook`
+- URL: `https://carepass-api.115en.com/api/webhook`
 - イベント: `subscription.*`, `invoice.*`, `card.automatically_updated`
 - 発行された Signature Key を `SQUARE_WEBHOOK_SIGNATURE_KEY` に登録
 
@@ -301,7 +301,7 @@ npx wrangler deploy
 ### セキュリティ
 - access_token は絶対にフロントエンドに出さない（Worker側のみ）
 - Webhook 署名検証なしの POST は全部 403
-- CORS は `https://carepass.tamjump.com` のみ許可
+- CORS は `https://carepass.115en.com` のみ許可
 
 ---
 

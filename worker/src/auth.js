@@ -2,8 +2,8 @@
 //
 // クッキー名: __Host-csp_sess
 //   ・__Host- プレフィックス: Path=/ + Secure + 同一オリジン (Domain属性なし) が必須
-//   ・本Workerはサブドメイン (carepass-api.tamjump.com) で動くため、
-//     mypage.html (carepass.tamjump.com) から見ると別オリジン扱い。
+//   ・本Workerはサブドメイン (carepass-api.115en.com) で動くため、
+//     mypage.html (carepass.115en.com) から見ると別オリジン扱い。
 //     → クロスサイトでクッキーを送るためには SameSite=None; Secure が必要。
 //     → __Host- プレフィックスは SameSite=None を許容するので問題なし。
 //   ・CORS 側で credentials: 'include' を許可する設定が必要。

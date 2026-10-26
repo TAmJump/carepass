@@ -173,13 +173,13 @@
         <a href="/facilities-directory.html">導入施設を見る</a>
         <a href="/partners.html">協力会社の方へ</a>
         <a href="/facilities.html">介護施設の方へ</a>
-        <a href="https://tamjump.com/" target="_blank" rel="noopener">運営について</a>
+        <a href="https://115en.com/" target="_blank" rel="noopener">運営について</a>
       </div>
       <div class="footer-col">
         <h5>Support</h5>
         <a href="/#faq">FAQ</a>
         <a href="/mypage.html">マイページ（解約・支援先変更）</a>
-        <a href="https://tamjump.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a>
+        <a href="https://115en.com/contact.html" target="_blank" rel="noopener">お問い合わせ</a>
         <a href="/#apply">お申し込み</a>
       </div>
     </div>
@@ -191,7 +191,7 @@
     </div>
     <div class="footer-bot">
       <div>© Care Support Pass / 株式会社GMS All Rights Reserved.</div>
-      <div><a href="https://tamjump.com/terms.html" target="_blank" rel="noopener">利用規約</a> ・ <a href="https://tamjump.com/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> ・ <a href="https://tamjump.com/commerce.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a></div>
+      <div><a href="https://115en.com/terms.html" target="_blank" rel="noopener">利用規約</a> ・ <a href="https://115en.com/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> ・ <a href="https://115en.com/commerce.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a></div>
     </div>
   </div>
 </footer>
@@ -231,7 +231,7 @@ if (sid) {
 
 // 施設指名情報を /api/config から取得して表示
 if (facilityId && type === 'individual') {
-  fetch((window.CSP_API_BASE || 'https://carepass-api.tamjump.com') + '/api/config')
+  fetch((window.CSP_API_BASE || 'https://carepass-api.115en.com') + '/api/config')
     .then((r) => r.json())
     .then((cfg) => {
       const f = (cfg.facilities || []).find((x) => x.id === facilityId);
