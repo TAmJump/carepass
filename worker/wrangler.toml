@@ -2,6 +2,10 @@ name = "carepass-api"
 main = "src/index.js"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
+routes = [
+  { pattern = "carepass-api.115en.com", custom_domain = true },
+  { pattern = "carepass-api.tamjump.com", custom_domain = true }
+]
 
 # Cloudflare アカウント明示
 # (D1 migrations apply で 'given account is not valid' (code: 7403) エラーを

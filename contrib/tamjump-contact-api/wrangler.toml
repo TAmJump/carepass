@@ -1,0 +1,10 @@
+name = "tamjump-contact-api"
+main = "worker.js"
+compatibility_date = "2025-06-01"
+
+# ダッシュボードで設定済みの変数・シークレットは --keep-vars で残す
+#   npx wrangler deploy --keep-vars
+[[d1_databases]]
+binding = "DB"
+database_name = "tamjump_contact_db"
+database_id = "ba5cf621-d8c7-49db-90cd-e1fe8ece8437"
