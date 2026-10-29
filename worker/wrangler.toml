@@ -58,4 +58,4 @@ migrations_dir = "migrations"
 # 到達不能なものは broken に、復活したものは published に戻す。
 # src/index.js の scheduled() ハンドラ → runReportHealthCheck() で実装。
 [triggers]
-crons = ["0 15 * * 0"]
+crons = ["0 15 * * SUN"]
