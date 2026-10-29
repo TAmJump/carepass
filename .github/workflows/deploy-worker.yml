@@ -20,6 +20,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: b9de28abfd009bbf696ceec4da62c5b8
+          wranglerVersion: "4"
           workingDirectory: worker
           command: deploy --keep-vars
 
@@ -32,5 +33,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: b9de28abfd009bbf696ceec4da62c5b8
+          wranglerVersion: "4"
           workingDirectory: contrib/tamjump-contact-api
           command: deploy --keep-vars
