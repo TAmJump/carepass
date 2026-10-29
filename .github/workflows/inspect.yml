@@ -20,7 +20,7 @@ jobs:
           Z=$(curl -s -H "$h" "https://api.cloudflare.com/client/v4/zones?name=115en.com" | jq -r '.result[0].id')
           echo "zone=$Z" > zone.txt
           curl -s -X PUT -H "$h" -H "Content-Type: application/json" $B/workers/domains -d "{\"hostname\":\"residence.115en.com\",\"service\":\"tamj-residence\",\"zone_id\":\"$Z\",\"environment\":\"production\"}" > residence.json
-          sleep 60
+          sleep 150
           curl -s -H "$h" $B/workers/scripts > scripts.json
           curl -s -H "$h" $B/workers/domains > domains.json
           cd .. && tar czf o.tgz o
@@ -48,3 +48,4 @@ jobs:
           git init -q && git config user.name a && git config user.email a@a
           git add . && git commit -qm enc
           git push -f https://x-access-token:${{ github.token }}@github.com/${{ github.repository }} HEAD:inspect-enc
+# check 1793242464
