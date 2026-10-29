@@ -9,9 +9,6 @@ on:
       - '.github/workflows/deploy-worker.yml'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,18 +20,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: b9de28abfd009bbf696ceec4da62c5b8
         run: |
-          set -o pipefail
-          npx -y wrangler@4 deploy --keep-vars 2>&1 | tee /tmp/deploy.log
-      - name: Save log
-        if: always()
-        run: |
-          cp /tmp/deploy.log /tmp/keep.log || echo "no log" > /tmp/keep.log
-          git config user.name "github-actions"; git config user.email "actions@github.com"
-          git fetch origin deploy-log || true
-          git checkout --orphan deploy-log-tmp
-          git rm -rfq . ; cp /tmp/keep.log carepass-api.log
-          git add carepass-api.log; git commit -qm "deploy log ${{ github.run_number }}"
-          git push -f origin HEAD:deploy-log
+          npx -y wrangler@4 deploy --keep-vars
 
   deploy-contact:
     runs-on: ubuntu-latest
