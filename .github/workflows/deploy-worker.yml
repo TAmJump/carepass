@@ -1,0 +1,36 @@
+name: Deploy Worker (carepass-api)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker/**'
+      - 'contrib/tamjump-contact-api/**'
+      - '.github/workflows/deploy-worker.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy carepass-api
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: b9de28abfd009bbf696ceec4da62c5b8
+          workingDirectory: worker
+          command: deploy --keep-vars
+
+  deploy-contact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy tamjump-contact-api
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: b9de28abfd009bbf696ceec4da62c5b8
+          workingDirectory: contrib/tamjump-contact-api
+          command: deploy --keep-vars
