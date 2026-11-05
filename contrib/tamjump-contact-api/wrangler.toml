@@ -2,8 +2,16 @@ name = "tamjump-contact-api"
 main = "worker.js"
 compatibility_date = "2025-06-01"
 
-# ダッシュボードで設定済みの変数・シークレットは --keep-vars で残す
-#   npx wrangler deploy --keep-vars
+# 変数はここに書いておく（デプロイしても消えないように）。シークレットは画面側で管理
+[vars]
+ADMIN_EMAIL = "info@115en.com"
+FROM_EMAIL = "noreply@tamjump.com"   # SESで認証済みの送り主。tamjump.com 終了前に差し替える
+AWS_REGION = "ap-northeast-1"
+CURRENT_CYCLE = "1"
+SQUARE_APPLICATION_ID = "sandbox-sq0idb-MY9vIVgq9Qv-Me01b4ck6w"
+SQUARE_ENV = "sandbox"
+SQUARE_LOCATION_ID = "LYFS542ADA78W"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "tamjump_contact_db"
