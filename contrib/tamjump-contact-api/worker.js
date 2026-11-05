@@ -17,6 +17,8 @@ var ALLOWED_ORIGINS = [
   "https://scsgo.co.jp",
   "https://www.scsgo.co.jp",
   "https://site.scsgo.co.jp",
+  // ── 株式会社GMS ──
+  "https://gms.115en.com",
   // ── KINGMAKER 23:23 ──
   "https://king2323.115en.com",
   // ── Care Support Pass ──
@@ -49,6 +51,24 @@ var PROJECT_CONFIG = {
     subjectPrefix: "【さかえケア】",
     companyName: "株式会社さかえケアサービス",
     siteUrl: "https://scsgo.co.jp",
+    contactEmail: "info@115en.com"
+  },
+  npo: {
+    prefix: "NPO",
+    adminEmail: "info@115en.com",
+    fromEmail: null,
+    subjectPrefix: "【GO TO HAPPY LIFE】",
+    companyName: "NPO法人 GO TO HAPPY LIFE",
+    siteUrl: "https://tamjump.github.io/GoTo_Site/",
+    contactEmail: "info@115en.com"
+  },
+  gms: {
+    prefix: "GMS",
+    adminEmail: "info@115en.com",
+    fromEmail: null,
+    subjectPrefix: "【GMS】",
+    companyName: "株式会社GMS",
+    siteUrl: "https://gms.115en.com",
     contactEmail: "info@115en.com"
   },
   kingmaker: {
@@ -392,11 +412,12 @@ __name(verifyTurnstile, "verifyTurnstile");
 function buildAdminEmail({ name, email, phone, category, message, project, ticketNumber, config }) {
   return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  新しいお問い合わせが届きました
+  ${config.companyName} にお問い合わせが届きました
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 受付番号:${ticketNumber}
-サイト:${config.companyName}(${project})
+受付会社:${config.companyName}
+受付サイト:${config.siteUrl}
 日時:${(new Date()).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
 
 ──────────────────────────
