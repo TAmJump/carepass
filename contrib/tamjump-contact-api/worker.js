@@ -40,16 +40,16 @@ var PROJECT_CONFIG = {
     subjectPrefix: "【Tiger.J.Bob】",
     companyName: "Tiger.J.Bob",
     siteUrl: "https://115en.com",
-    contactEmail: "animalb001@gmail.com"
+    contactEmail: "info@115en.com"
   },
   scsgo: {
     prefix: "SCS",
-    adminEmail: "info@scsgo.co.jp",
+    adminEmail: "info@115en.com",
     fromEmail: null,
     subjectPrefix: "【さかえケア】",
     companyName: "株式会社さかえケアサービス",
     siteUrl: "https://scsgo.co.jp",
-    contactEmail: "info@scsgo.co.jp"
+    contactEmail: "info@115en.com"
   },
   kingmaker: {
     prefix: "KM",
@@ -58,7 +58,7 @@ var PROJECT_CONFIG = {
     subjectPrefix: "【KINGMAKER 23:23】",
     companyName: "KINGMAKER 23:23 / Tiger.J.Bob",
     siteUrl: "https://king2323.115en.com",
-    contactEmail: "animalb001@gmail.com"
+    contactEmail: "info@115en.com"
   },
   carepass: {
     prefix: "CSP",
